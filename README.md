@@ -53,6 +53,8 @@ The app is intended for people who are traveling or simply looking for a day out
   - "As an administrator, I want to monitor which locations are most frequently searched so I can improve the database."
   - "As an administrator, I want to update the recommendation algorithm based on user feedback."
 
+---
+
 ## Why "Kaja"?
 
 So, why did we name the app "Kaja"? It's actually a nod to the Korean phrase for "Let's go," which pretty much sums up what we're all about—getting you out the door and into new experiences. It's catchy, easy to remember, and it cuts right to the chase. Plus, it adds a bit of international flair, which we think is pretty cool. So next time you're itching to go on an adventure but don't know where to start, just remember "Kaja" and let us handle the planning part.
