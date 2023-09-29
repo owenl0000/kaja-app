@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import '../../styles/Slideshow.css';
 
 export default function Slideshow() {
   const [slideIndex, setSlideIndex] = useState(0);

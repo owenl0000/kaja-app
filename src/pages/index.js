@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import '../../styles/globals.css';
 import Header from '../components/Header.js';
 import Slideshow from '../components/Slideshow.js'
 
