@@ -1,28 +1,83 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --coral: #FF6B6B;
+  --turquoise-dark: #30C0B0; /* Adjust as needed for hover effect */
+  --off-white: #F5F5F5;
+  --off-whitep: #9c9c9c;
+  --bright-blue: #007BFF;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.bg-coral {
+  background-color: var(--coral);
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.bg-bright-blue {
+  background-color: var(--bright-blue);
+}
+
+.text-off-white {
+  color: var(--off-white);
+}
+
+.text-off-whitep {
+  color: var(--off-whitep);
+}
+
+.bg-off-white {
+  background-color: var(--off-white);
+}
+
+.about-section {
+  height: 700px;
+}
+
+.loader {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+}
+
+.bg-cerulean {
+  background-color: #4a90e2;
+}
+
+.bg-forest-green {
+  background-color: #4CAF50;
+}
+
+.bg-dreamy-purple {
+  background-color: #9370DB;
+}
+
+.bg-earthy-brown {
+  background-color: #A0522D;
+}
+
+.text-cerulean {
+  color: #4a90e2;
+}
+
+.text-forest-green {
+  color: #4CAF50;
+}
+
+.text-dreamy-purple {
+  color: #9370DB;
+}
+
+.text-earthy-brown {
+  color: #A0522D;
+}
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
