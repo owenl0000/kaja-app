@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Header from '../components/Header.js';
 import Slideshow from '../components/Slideshow.js'
+import Footer from "../components/Footer";
 
 export default function Home() {
   return (
@@ -29,6 +30,8 @@ export default function Home() {
             </section>
           </div>
       </main>
+
+      <Footer />
     </>
   )
 }
