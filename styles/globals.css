@@ -9,6 +9,7 @@
   --off-white: #F5F5F5;
   --off-whitep: #9c9c9c;
   --bright-blue: #007BFF;
+  --black: #000;
 }
 
 .bg-coral {
@@ -25,6 +26,10 @@
 
 .text-off-whitep {
   color: var(--off-whitep);
+}
+
+.text-black {
+  color: var(--black);
 }
 
 .bg-off-white {

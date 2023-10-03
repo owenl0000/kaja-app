@@ -11,6 +11,7 @@ export default function Slideshow() {
   ];
 
   useEffect(() => {
+    console.log('Use Effect');
     const timer = setInterval(() => {
       setSlideIndex((prevIndex) => {
         const newIndex = (prevIndex + 1) % images.length;

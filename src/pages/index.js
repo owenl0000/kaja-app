@@ -1,12 +1,13 @@
 import Image from 'next/image'
 import Header from '../components/Header.js';
-import Slideshow from '../components/Slideshow.js'
+import Slideshow from '../components/Slideshow.js';
 import Footer from "../components/Footer";
+import Link from 'next/link';
 
 export default function Home() {
   return (
     <>
-      <Header />
+      <Header page="Home"/>
       
       <main className="bg-off-white">
           {/* Welcome Section */}
@@ -21,12 +22,12 @@ export default function Home() {
               Turn Your Travel Dreams into Reality with Kaja!
                 
               </p>
-              <a
-                href="/plan"
+              <Link
+                href="/AfterSearch"
                 className="font-trend bg-coral text-off-white px-6 py-2 rounded-md text-center hover:bg-turquoise-dark inline-block pb-3"
               >
                 Start Planning
-              </a>
+              </Link>
             </section>
           </div>
       </main>
