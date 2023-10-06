@@ -21,9 +21,10 @@ const handleSmoothScroll = (e) => {
 function Header({ page }) {
   const headerClass = page === 'AfterSearch' ? 'bg-white border-b border-gray-300 text-black' : 'bg-opacity-0 text-off-white';
   const navClass = page === 'AfterSearch' ? 'text-black' : 'text-off-white';
+  const positionClass = page === 'AfterSearch' ? ' ' : 'absolute';
 
   return (
-    <header className={`flex justify-between items-center h-20 ${headerClass} font-trend lg:px-10 md:px-4 sm:px-2 absolute w-full z-10`}>
+    <header className={`flex justify-between items-center h-20 ${headerClass} font-trend lg:px-10 md:px-4 sm:px-2 ${positionClass} w-full z-10`}>
       <div className="flex items-center">
         <h6 className="text-4xl m-0 mb-4 lg:text-4xl md:text-3xl sm:text-2xl">Kaja</h6>
       </div>

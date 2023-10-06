@@ -1,8 +1,8 @@
-import Image from 'next/image'
 import Header from '../components/Header.js';
 import Slideshow from '../components/Slideshow.js';
 import Footer from "../components/Footer";
 import Link from 'next/link';
+import Filters from "../components/Filters";
 
 export default function Home() {
   return (
@@ -33,6 +33,7 @@ export default function Home() {
       </main>
 
       <Footer />
+
     </>
   )
 }

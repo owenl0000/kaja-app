@@ -1,0 +1,34 @@
+:root {
+    --speed: 0.5s;
+}
+
+.filter-container > .open {
+    display: block;
+    opacity: 1;
+    transition: max-height var(--speed) ease-in, opacity var(--speed) ease-in;
+    max-height: 500px;
+}
+
+.filter-container > .closed {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height var(--speed) ease-out, opacity var(--speed) ease-out;
+}
+
+.title-container > .open {
+    transform: rotate(270deg);
+    transition: transform var(--speed) ease;
+}
+
+.title-container > .closed {
+    transform: rotate(90deg);
+    transition: transform var(--speed) ease;
+}
+
+.clicked {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
