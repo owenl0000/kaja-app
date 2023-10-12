@@ -5,6 +5,8 @@
 
 :root {
   --coral: #FF6B6B;
+  --light-coral: #FB7F7F;
+  --dark-coral: #EE5656;
   --turquoise-dark: #30C0B0; /* Adjust as needed for hover effect */
   --off-white: #F5F5F5;
   --off-whitep: #9c9c9c;
@@ -14,6 +16,14 @@
 
 .bg-coral {
   background-color: var(--coral);
+}
+
+.bg-light-coral {
+  background-color: var(--light-coral);
+}
+
+.bg-dark-coral {
+  background-color: var(--dark-coral);
 }
 
 .bg-bright-blue {

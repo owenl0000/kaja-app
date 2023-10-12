@@ -2,7 +2,7 @@ import Header from '../components/Header.js';
 import Slideshow from '../components/Slideshow.js';
 import Footer from "../components/Footer";
 import Link from 'next/link';
-import Filters from "../components/Filters";
+import Sidebar from "../components/Sidebar";
 
 export default function Home() {
   return (
