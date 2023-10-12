@@ -67,7 +67,7 @@ function Recommendations({ type }) {
       
       
   return (
-    <div className="flex flex-col p-4 md:ml-20 md:w-4/5 mx-auto mt-10">
+    <div className="flex flex-col w-full p-5 mx-auto">
       {Object.keys(recommendations).map((section) => (
         <div key={section} className="mb-8 border rounded p-6"> 
           <div className="flex justify-between items-center cursor-pointer" onClick={() => toggleSection(section)}>
