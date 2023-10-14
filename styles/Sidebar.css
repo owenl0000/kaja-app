@@ -1,0 +1,29 @@
+:root {
+    --speed: 0.5s;
+    --divs: 5;
+}
+
+.active {
+    width: 300%;
+    transition: width var(--speed) ease-out;
+    filter: brightness(110%);
+}
+
+.inactive {
+    width: calc(100% / var(--divs));
+    transition: width var(--speed) ease-out;
+}
+
+.active:hover,
+.inactive:hover,
+.reset:hover {
+    filter: brightness(130%);
+    transition: var(--speed) ease;
+}
+
+.active:active,
+.inactive:active,
+.reset:active {
+    filter: brightness(90%);
+    transition: var(--speed) ease;
+}

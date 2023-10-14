@@ -1,29 +1,48 @@
+import React, {useState} from "react";
+
 export default function Sidebar(){
   return (
       <div className={"flex flex-col align-middle"}>
-        <div className={"p-5 pb-0 text-center text-2xl"}>Filters</div>
+        <div className={"p-5 pb-0 mb-5 text-center text-2xl"}>Filters</div>
         <Price number={5} symbol={'$'} />
       </div>
   );
 }
 
+
 function Price(props){
 
+  const[selected, setSelected] = useState({});
+
+  const clickSelect = (div) => {
+    setSelected({active: div});
+  }
+
   let character = props.symbol;
-  let priceArray = [];
+  const itemArray = [];
 
   for(let i = 0; i < props.number; i++){
-    priceArray.push(character);
+    itemArray.push(character);
     character += character[0];
   }
 
   return (
-      <div className={`grid lg:grid-cols-${props.number} md:grid-cols-1 text-white bg-coral m-5 rounded-2xl overflow-hidden`}>
-        {priceArray.map((item) => (
-            <div key={item.id} className={`flex justify-center align-middle p-5 hover:bg-[var(--light-coral)] active:bg-[var(--dark-coral)] last:border-none md:border-b lg:border-r lg:border-b-0 border-white cursor-pointer caret-transparent`}>
-              {item}
-            </div>
-        ))}
+      <div className={"flex w-full justify-center"}>
+
+        <div className={"flex overflow-hidden m-2 rounded-2xl w-full text-center"}>
+          {itemArray.map((item) => (
+              <div onClick={() => clickSelect(`${item}-div`)}
+                   className={`${selected.active === `${item}-div` ? `active` : `inactive`} flex justify-center text-sm bg-coral text-white p-5 border-r border-white last:border-none overflow-hidden cursor-pointer`}
+                   key={item.id}>
+                {item}
+              </div>
+          ))}
+        </div>
+
+        <div>
+          <div onClick={() => clickSelect("")} className={"bg-coral py-5 px-2 m-2 ml-0 rounded-2xl text-white text-center cursor-pointer reset"}>Reset</div>
+        </div>
+
       </div>
   );
 }
