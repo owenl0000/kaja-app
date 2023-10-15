@@ -3,7 +3,6 @@ import Header from '../components/Header.js';
 import Filters from "../components/Filters";
 import Sidebar from "@/components/Sidebar";
 import dynamic from 'next/dynamic';
-import CommonAncestor from '@/components/CommonAncenstor.js';
 import React, { useState, useEffect } from 'react';
 
 export default function AfterSearch() {
@@ -39,9 +38,7 @@ export default function AfterSearch() {
                     <Sidebar />
                 </div>
                 <div className="w-3/4">
-                    <DraggableSectionsWrapper onAddPlace={handleAddPlace} />
-                    <CommonAncestor onAddPlace={handleAddPlace} addedPlaces={addedPlaces} />      
-
+                    <DraggableSectionsWrapper onAddPlace={handleAddPlace} />   
                 </div>
             </div>
 
