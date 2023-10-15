@@ -59,6 +59,12 @@
   animation: spin 2s linear infinite;
 }
 
+.dragging {
+  @apply border border-dashed border-blue-300;
+  animation: glow 1.5s infinite alternate;
+}
+
+
 .bg-cerulean {
   background-color: #4a90e2;
 }

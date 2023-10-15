@@ -3,8 +3,9 @@ import recommendations from '../api/recommendationData';
 import TriangleToggle from '../utils/TriangleToggle';
 import YelpStars from '@/utils/YelpStars';
 import Image from 'next/image';
+import 'font-awesome/css/font-awesome.min.css';
 
-function Recommendations({ type }) {
+function Recommendations({ type, onAddPlace = () => {} }) {
 
   const [isOpen, setIsOpen] = useState({
       area: true,
@@ -66,7 +67,7 @@ function Recommendations({ type }) {
   };
       
     return (
-      <div key={index} className="w-[250px] 2xl:w-[350px] 2xl:h-[350px] px-3 mb-4 mx-2 border rounded p-1 shadow-lg relative">
+      <div key={index} className="w-[250px] 2xl:w-[350px] 2xl:h-[350px] px-3 mb-4 mx-2 border rounded p-1 shadow-lg relative bg-white">
         <div className="relative h-48 2xl:h-[228px] bg-gray-200 mt-2">
           <div className="w-full h-full flex justify-center items-center">
             <span>Image</span>
@@ -75,7 +76,15 @@ function Recommendations({ type }) {
         <div className="pt-2 px-2 pb-1">
           <div className="flex justify-between items-center mb-2">
             <h3>{place.name}</h3>
-            <button className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center">+</button>
+            <button 
+                className="rounded-full w-6 h-6 flex items-center justify-center bg-transparent" 
+                onClick={() => {console.log("Button clicked, place:", place); 
+                onAddPlace(place); }}
+            >
+                <i className="fa fa-plus text-red-500"></i>
+            </button>
+
+
           </div>
           <div className="flex flex-col xl:flex-row xl:items-center mt-1">
             <div className="stars flex-shrink-0">

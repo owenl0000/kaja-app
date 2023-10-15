@@ -1,0 +1,98 @@
+.time-picker {
+    display: flex;
+    align-items: center;
+    border-radius: 0.7rem;
+    padding: 0.815rem 1.232rem;
+    background: white;
+    transition: background .4s linear;
+  }
+  
+  .time-picker:hover {
+    background: #FF6B6B;
+  }
+  
+  .time-section {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  .time-input {
+    border: none;
+    background: transparent;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: black;
+    outline: none;
+    width: 2em;
+    text-align: center;
+  }
+  
+  .time-select {
+    width: auto; /* Add this */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
+    appearance: none;
+    border: none;
+    background: transparent;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: black;
+    cursor: pointer;
+    outline: none;
+    padding: 0; /* Add this */
+  }
+  
+  .time-select::-ms-expand {
+    display: none;
+  }
+  
+  .time-colon {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: black;
+    margin: 0 0.2rem; /* Add this */
+  }
+  
+  .time-to {
+    margin: 0 1rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: black;
+  }
+  
+/* Updated styles for budget and notes input */
+.budget-input,
+.notes-input {
+  border: 1px solid #ccc; /* Added border */
+  background: transparent;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: black;
+  outline: none;
+  padding: 0.815rem 1.232rem;
+  border-radius: 0.7rem;
+  transition: background .4s linear, border-color .4s linear; /* Updated transition */
+}
+
+.budget-input:hover,
+.notes-input:hover {
+  border-color: #FF6B6B; /* Added border color on hover */
+}
+
+/* Updated style for Remove button */
+.remove-button {
+  border: 1px solid red; /* Added border */
+  background-color: red;
+  color: white;
+  border-radius: 0.7rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background .4s linear, border-color .4s linear; /* Updated transition */
+}
+
+.remove-button:hover {
+  background-color: darkred;
+  border-color: darkred; /* Added border color on hover */
+}

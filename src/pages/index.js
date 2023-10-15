@@ -23,7 +23,7 @@ export default function Home() {
                 
               </p>
               <Link
-                href="/AfterSearch"
+                href="/Planner"
                 className="font-trend bg-coral text-off-white px-6 py-2 rounded-md text-center hover:bg-turquoise-dark inline-block pb-3"
               >
                 Start Planning
