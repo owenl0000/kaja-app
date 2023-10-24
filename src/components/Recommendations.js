@@ -65,12 +65,11 @@ function Recommendations({ type, onAddPlace = () => {} }) {
       if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
       return num;
   };
-      
     return (
       <div key={index} className="w-[250px] 2xl:w-[350px] 2xl:h-[350px] px-3 mb-4 mx-2 border rounded p-1 shadow-lg relative bg-white">
         <div className="relative h-48 2xl:h-[228px] bg-gray-200 mt-2">
           <div className="w-full h-full flex justify-center items-center">
-            <span>Image</span>
+            <img src={place.image}></img> 
           </div>
         </div>
         <div className="pt-2 px-2 pb-1">

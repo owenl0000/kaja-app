@@ -1,23 +1,57 @@
-const generatePlaces = (name, count) => {
-  return Array.from({ length: count }, (_, i) => ({
-    id: `${name.replace(/\s+/g, '_').toLowerCase()}_${i + 1}`, // Unique ID
-    name: `${name} ${i + 1}`,
-    image: 'https://via.placeholder.com/150',
-    stars: 4.5,
-    reviews: 2000,
-    yelpLink: `https://yelp.com/${name.toLowerCase().replace(/\s+/g, '-')}-${i + 1}`,
-  }));
-};
 
-const recommendations = {
-  area: generatePlaces('Area', 12),
-  morning: generatePlaces('Morning Place', 12),
-  breakfast: generatePlaces('Breakfast Spot', 12),
-  lunch: generatePlaces('Lunch Spot', 12),
-  afternoon: generatePlaces('Afternoon Place', 12),
-  night: generatePlaces('Nightlife Spot', 12),
-  dinner: generatePlaces('Dinner Place', 12),
-  hotels: generatePlaces('Hotel', 12),
+/*
+
+fetchedData.id will be what is used for avoiding key errors so it will be the unique key you can use for the place
+fetchedData.price is self explanatory
+fetchedData.rating is rating
+fetchedData.image_url get the url attribute
+
+id: fetchedData.id, // Unique ID
+              name: fetchedData.name,
+              image: fetchedData.image_url,
+              stars: fetchedData.rating,
+              reviews: fetchedData.review_count,
+              yelpLink: fetchedData.url,
+
+
+*/
+
+//connection to backend
+
+var recommendations = {
+  area: [],
+  morning: [],
+  breakfast: [],
+  lunch: [],
+  afternoon: [],
+  night: [],
+  dinner: [],
+  hotels: [],
 };
+//work on making it such that at each category we can map to it something.
+
+
+//had to fix this so that we could still use the same concept but it has to be reworked
+
+//use useeffect to handle api request here
+
+//const n = 12; //how much boxes to create within the sections
+fetch("http://127.0.0.1:3000/sample")
+      .then(response => response.json())
+      .then(fetchedData => {
+        for (let block in recommendations){
+          recommendations[block] = new Array(12).fill(({
+            name: fetchedData.name,
+            image: fetchedData.image_url,
+            stars: fetchedData.rating,
+            reviews: fetchedData.review_count,
+            yelpLink: fetchedData.url
+          }))
+        }
+        return recommendations
+      })
+      .catch(err => console.error(err))
 
 export default recommendations;
+
+
