@@ -8,7 +8,7 @@
 .active {
     width: 300%;
     transition: width var(--speed) ease-out;
-    filter: brightness(110%);
+    filter: brightness(120%);
 }
 
 .inactive {
@@ -19,7 +19,7 @@
 .active:hover,
 .inactive:hover,
 .reset:hover {
-    filter: brightness(130%);
+    filter: brightness(140%);
     transition: var(--speed) ease;
 }
 
@@ -38,4 +38,54 @@
 
 .flip {
     transform: rotateX(360deg);
+}
+
+/*Calender component styles*/
+
+.bottom-open {
+    padding-top: 0.5rem;
+    display: block;
+    opacity: 1;
+    transition: max-height var(--speed) ease-in, opacity var(--speed) ease-in, padding-top var(--speed) ease-in;
+    max-height: 500px;
+}
+
+.bottom-closed {
+    padding-top: 0;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height calc(var(--speed) + (var(--speed)/2)) ease-out, opacity var(--speed) ease-out, padding-top var(--speed) ease-out;
+}
+
+.month-open {
+    display: block;
+    opacity: 1;
+    transition: max-height calc(var(--speed) + (var(--speed)/2)) ease-in, opacity calc(var(--speed)*3) ease-in;
+    max-height: 500px;
+}
+
+.month-closed {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height var(--speed) ease-out, opacity var(--speed) ease-out;
+}
+
+.year-open {
+    display: block;
+    opacity: 1;
+    transition: max-height calc(var(--speed) + (var(--speed)/2)) ease-in, opacity calc(var(--speed)*3) ease-in;
+    max-height: 500px;
+}
+
+.year-closed {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height var(--speed) ease-out, opacity var(--speed) ease-out;
+}
+
+.max-height {
+    max-height: 200px;
 }
