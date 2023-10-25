@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import arrow from "/public/arrow.svg"
 
-export default function CalenderTop(){
+export default function TimeSelector(){
   const [time, setTime] = useState({
     daytime: "am",
     hours: 12,
@@ -84,7 +84,7 @@ export default function CalenderTop(){
   const containerStyles = "flex justify-center rounded-2xl cursor-pointer active:scale-[130%]";
 
   return (
-      <div className={"flex justify-center w-full bg-coral rounded-2xl my-3 p-2 select-none"}>
+      <div className={"flex justify-center w-full bg-coral rounded-2xl p-2 select-none"}>
         <div className={"grid grid-cols-3 text-center gap-y-1 text-white w-1/3"}> {/*need to make responsive*/}
 
           <div onClick={addHours} className={containerStyles}><img src={arrow} className={`${imageStyles} rotate-[270deg]`} alt={"arrow"}/></div>
