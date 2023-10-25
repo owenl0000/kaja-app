@@ -1,0 +1,42 @@
+{
+  "name": "@tonybadguy/call-me-maybe",
+  "version": "2.1.1",
+  "description": "A Node.js module for creating REST clients with easy request model templating and straightforward extensibility",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "tap ./lib/*/*.test.*js ./lib/*.test.*js --coverage",
+    "cover": "tap --coverage-report=lcov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "tonybadguy/call-me-maybe"
+  },
+  "keywords": [
+    "REST",
+    "template",
+    "promise",
+    "request",
+    "http",
+    "https",
+    "callmemaybe"
+  ],
+  "author": "Tony Liu",
+  "license": "MIT",
+  "dependencies": {
+    "caseless": "^0.11.0",
+    "error": "^7.0.2",
+    "small-request": "^2.1.0",
+    "string-template": "^1.0.0"
+  },
+  "devDependencies": {
+    "proxyquire": "^1.7.10",
+    "sinon": "^1.17.6",
+    "tap": "^8.0.0"
+  },
+  "nyc": {
+    "exclude": [
+      "lib/*.test.*js",
+      "lib/*/*.test.*js"
+    ]
+  }
+}
