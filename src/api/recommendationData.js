@@ -21,12 +21,8 @@ id: fetchedData.id, // Unique ID
 var recommendations = {
   area: [],
   morning: [],
-  breakfast: [],
-  lunch: [],
   afternoon: [],
   night: [],
-  dinner: [],
-  hotels: [],
 };
 //work on making it such that at each category we can map to it something.
 

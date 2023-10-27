@@ -59,6 +59,18 @@
   animation: spin 2s linear infinite;
 }
 
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #333;
+  color: white;
+  padding: 16px;
+  z-index: 1000;
+  border-radius: 4px;
+  opacity: 0.9;
+}
+
 .dragging {
   @apply border border-dashed border-blue-300;
   animation: glow 1.5s infinite alternate;

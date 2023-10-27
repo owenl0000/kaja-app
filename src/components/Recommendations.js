@@ -1,34 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import recommendations from '../api/recommendationData'; 
+import sampleData from '@/api/sampleData';
 import TriangleToggle from '../utils/TriangleToggle';
 import YelpStars from '@/utils/YelpStars';
 import Image from 'next/image';
 import 'font-awesome/css/font-awesome.min.css';
 
-function Recommendations({ type, onAddPlace = () => {} }) {
+function Recommendations({  onAddPlace = () => {} }) {
 
-  const [isOpen, setIsOpen] = useState({
-      area: true,
-      morning: true,
-      breakfast: true,
-      lunch: false,
-      afternoon: false,
-      night: false,
-      dinner: false,
-      hotels: false,
-  });
+  const [addedPlaceIndex, setAddedPlaceIndex] = useState(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [addedIconIndex, setAddedIconIndex] = useState(null);
+
+  useEffect(() => {
+    if (addedIconIndex !== null) {
+      const timer = setTimeout(() => setAddedIconIndex(null), 3000); // Reset after 3 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [addedIconIndex]);
+
+  const handleAddPlace = (place, index) => {
+    onAddPlace(place);
+    setToastMessage(`${place.name} has been added.`);
+    setShowToast(true);
+    setAddedIconIndex(index);
+    setTimeout(() => setShowToast(false), 3000); // Hide toast after 3 seconds
+  };
 
   const getUpdatedSectionName = (sectionId) => {
     const mapping = {
       'area': 'Recommendations Around Your Area',
       'morning': 'Morning Recommendations',
-      'breakfast': 'Best Places for Breakfast',
-      'lunch': 'Top Spots for Lunch',
       'afternoon': 'Afternoon Delights',
       'night': 'Nightlife Recommendations',
-      'dinner': 'Dinner Destinations',
-      'hotels': 'Recommended Hotels',
-      // ... add more mappings here
     };
     return mapping[sectionId] || sectionId; // Fallback to sectionId if not found in mapping
   };
@@ -36,17 +41,9 @@ function Recommendations({ type, onAddPlace = () => {} }) {
   const [startIndex, setStartIndex] = useState({
     area: 0,
     morning: 0,
-    breakfast: 0,
-    lunch: 0,
     afternoon: 0,
     night: 0,
-    dinner: 0,
-    hotels: 0,
   });
-  
-  const toggleSection = (section) => {
-    setIsOpen((prev) => ({ ...prev, [section]: !prev[section] }));
-  };
 
   const nextPage = (section) => {
     setStartIndex((prev) => ({ ...prev, [section]: prev[section] + 3 }));
@@ -57,7 +54,7 @@ function Recommendations({ type, onAddPlace = () => {} }) {
   };
 
   const isPrevDisabled = (section) => startIndex[section] === 0;
-  const isNextDisabled = (section) => startIndex[section] >= recommendations[section].length - 3;
+  const isNextDisabled = (section) => startIndex[section] >= sampleData[section].length - 3;
 
   const renderPlace = (place, index) => {
     // Abbreviate the review count
@@ -66,7 +63,7 @@ function Recommendations({ type, onAddPlace = () => {} }) {
       return num;
   };
     return (
-      <div key={index} className="w-[250px] 2xl:w-[350px] 2xl:h-[350px] px-3 mb-4 mx-2 border rounded p-1 shadow-lg relative bg-white">
+      <div key={index} className={`w-[250px] 2xl:w-[350px] 2xl:h-[350px] px-3 mb-4 mx-2 border rounded p-1 shadow-lg relative bg-white ${addedPlaceIndex === index ? 'border-green-500' : ''}`}>
         <div className="relative h-48 2xl:h-[228px] bg-gray-200 mt-2">
           <div className="w-full h-full flex justify-center items-center">
             <img src={place.image}></img> 
@@ -78,9 +75,9 @@ function Recommendations({ type, onAddPlace = () => {} }) {
             <button 
                 className="rounded-full w-6 h-6 flex items-center justify-center bg-transparent" 
                 onClick={() => {console.log("Button clicked, place:", place); 
-                onAddPlace(place); }}
+                handleAddPlace(place, index); }}
             >
-                <i className="fa fa-plus text-red-500"></i>
+                <i className={`fa ${addedIconIndex === index ? 'fa-check text-green-500' : 'fa-plus text-red-500'}`}></i>
             </button>
 
 
@@ -102,34 +99,35 @@ function Recommendations({ type, onAddPlace = () => {} }) {
     );
   };
     
-  const section = type;
-  const sectionData = recommendations[section];
 
   return (
     <div className="flex flex-col p-4 md:mx-20 md:w-6/7 mx-auto">
-      <div className="border rounded p-6 md:w-[80%] lg:w-[90%] xl:w-[100%]">
-        <div className="flex justify-between items-center ">
-          <h2 className="text-2xl">{getUpdatedSectionName(section)}</h2>
-          <button className="text-blue-500" onClick={() => toggleSection(section)}>{isOpen[section] ? 'Close' : 'Open'}</button>
-        </div>
-        {isOpen[section] && (
-          <div className="flex flex-col items-center mt-4">
-            <div className="flex items-center justify-center w-full">
-              <div onClick={() => !isPrevDisabled(section) && prevPage(section)} className={`h-8 ${isPrevDisabled(section) ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                <TriangleToggle isOpen={false} />
-              </div>
-              <div className="flex flex-wrap justify-center md:justify-center">
-                {sectionData.slice(startIndex[section], startIndex[section] + 3).map((place, placeIndex) => (
-                  renderPlace(place, placeIndex)
-                ))}
-              </div>
-              <div onClick={() => !isNextDisabled(section) && nextPage(section)} className={`h-8 ${isNextDisabled(section) ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                <TriangleToggle isOpen={true} />
-              </div>
+      {showToast && <div className="toast">{toastMessage}</div>}
+      {Object.keys(sampleData).map((section) => {
+        const sectionData = sampleData[section];
+        return (
+          <div key={section} className="border rounded p-6 md:w-[80%] lg:w-[90%] xl:w-[100%] mb-5">
+            <div className="flex justify-between items-center ">
+              <h2 className="text-2xl">{getUpdatedSectionName(section)}</h2>
             </div>
+              <div className="flex flex-col items-center mt-4">
+                <div className="flex items-center justify-center w-full">
+                  <div onClick={() => !isPrevDisabled(section) && prevPage(section)} className={`h-8 ${isPrevDisabled(section) ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                    <TriangleToggle isOpen={false} />
+                  </div>
+                  <div className="flex flex-wrap justify-center md:justify-center">
+                    {sectionData.slice(startIndex[section], startIndex[section] + 3).map((place, placeIndex) => (
+                      renderPlace(place, placeIndex)
+                    ))}
+                  </div>
+                  <div onClick={() => !isNextDisabled(section) && nextPage(section)} className={`h-8 ${isNextDisabled(section) ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                    <TriangleToggle isOpen={true} />
+                  </div>
+                </div>
+              </div>
           </div>
-        )}
-      </div>
+        );
+      })}
     </div>
   );
 }  
