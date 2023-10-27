@@ -4,6 +4,7 @@ import Filters from "../components/Filters";
 import Sidebar from "@/components/Sidebar";
 import dynamic from 'next/dynamic';
 import React, { useState, useEffect } from 'react';
+import Recommendations from '@/components/Recommendations.js';
 
 export default function AfterSearch() {
     const [addedPlaces, setAddedPlaces] = useState([]);
@@ -23,11 +24,6 @@ export default function AfterSearch() {
         console.log("AfterSearch: Adding place:", place);
         setAddedPlaces([...addedPlaces, place]);
     };
-  
-    const DraggableSectionsWrapper = dynamic(
-        () => import('@/components/DraggableSectionsWrapper'),
-        { ssr: false }
-      );
 
     return (
         <>
@@ -38,7 +34,7 @@ export default function AfterSearch() {
                     <Sidebar />
                 </div>
                 <div className="w-3/4">
-                    <DraggableSectionsWrapper onAddPlace={handleAddPlace} />   
+                  <Recommendations onAddPlace={handleAddPlace} />   
                 </div>
             </div>
 

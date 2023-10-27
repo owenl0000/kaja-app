@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import TimePicker from './TimePicker';
 import Image from 'next/image';
+import sampleData from '@/api/sampleData';
 import 'font-awesome/css/font-awesome.min.css';
 
 
@@ -12,10 +13,13 @@ const PlanCreator = ({ addedPlaces = [] }) => {
     const [localAddedPlaces, setLocalAddedPlaces] = useState(addedPlaces);
 
     useEffect(() => {
-        const savedPlaces = localStorage.getItem('addedPlaces');
-        if (savedPlaces) {
+      const savedPlaces = localStorage.getItem('addedPlaces');
+      if (savedPlaces) {
         setLocalAddedPlaces(JSON.parse(savedPlaces));
-        }
+      } else {
+        // If there's nothing in localStorage, use sampleData
+        setLocalAddedPlaces(sampleData.area); // or any other part of sampleData
+      }
     }, []);
 
     const [places, setPlaces] = useState([
@@ -30,11 +34,11 @@ const PlanCreator = ({ addedPlaces = [] }) => {
       },
     ]);
 
-    const removePlace = (id) => {
-        const updatedPlaces = localAddedPlaces.filter(place => place.id !== id);
-        setLocalAddedPlaces(updatedPlaces);
-        localStorage.setItem('addedPlaces', JSON.stringify(updatedPlaces));
-      };
+    const removePlace = (indexToRemove) => {
+      const updatedPlaces = localAddedPlaces.filter((_, index) => index !== indexToRemove);
+      setLocalAddedPlaces(updatedPlaces);
+      localStorage.setItem('addedPlaces', JSON.stringify(updatedPlaces));
+    };
   
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [placeToRemove, setPlaceToRemove] = useState(null);
@@ -57,7 +61,7 @@ const PlanCreator = ({ addedPlaces = [] }) => {
     const totalPlaceholders = 5 - places.length;
 
   return (
-    <div className="flex flex-col items-start h-screen bg-gray-100">
+    <div className="flex flex-col items-start bg-gray-100">
       {/* Large Box */}
       <div className="flex flex-col w-3/4 bg-white rounded-lg shadow-lg mt-10 ml-10 p-4">
         {/* Render addedPlaces here */}
@@ -70,10 +74,10 @@ const PlanCreator = ({ addedPlaces = [] }) => {
             
             <div className="ml-6 flex flex-row w-full h-full">
               <div className="flex flex-col">
-                <div className="text-lg font-semibold">{place.name}</div>
-                <div className="text-sm">{place.address}</div> {/* Added address */}
-                <div className="text-sm">{place.contact}</div> {/* Added contact information */}
-                <div className="text-sm">Description: {place.description}</div>
+                <div className="text-lg font-semibold min-w-[100px]">{place.name}</div>
+                <div className="text-sm min-w-[200px]">{place.address || 'N/A'}</div> {/* Added min-width */}
+                <div className="text-sm min-w-[200px]">{place.contact || 'N/A'}</div> {/* Added min-width */}
+                <div className="text-sm min-w-[200px]">Description: {place.description || 'N/A'}</div> {/* Added min-width */}
                 <a href={place.yelpLink} target="_blank" rel="noopener noreferrer" className='my-1'>
                     <Image src="/images/yelp_logo.png" alt="Yelp" width={40} height={10}/>
                 </a>
@@ -91,9 +95,9 @@ const PlanCreator = ({ addedPlaces = [] }) => {
                 />
                 {/* Remove Icon */}
                 <button 
-                    className=" absolute top-0 right-0" 
-                    onClick={() => { setShowConfirmModal(true); setPlaceToRemove(place.id); }}
-                    >
+                  className="absolute top-0 right-0" 
+                  onClick={() => { setShowConfirmModal(true); setPlaceToRemove(index); }}
+                >
                     <i className="fa fa-trash fa-lg text-red-500"></i>
                 </button>
                 </div>

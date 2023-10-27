@@ -10,7 +10,9 @@ const db = pgp(connectionString);//we need some sort of connection as the parame
 
 //const apiKey = "apiKey string here...."
 //yelp api fusion key
+const apiKey = "";
 const client = yelp.client(apiKey);
+
 //setting up yelp api client
 
 //this way we only have to change the location we want by only changing the location here!!!!
