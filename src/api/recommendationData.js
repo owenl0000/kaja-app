@@ -36,17 +36,23 @@ var recommendations = {
 //use useeffect to handle api request here
 
 //const n = 12; //how much boxes to create within the sections
+
+
 fetch("http://127.0.0.1:3000/sample")
       .then(response => response.json())
-      .then(fetchedData => {
+      .then(body => body.businesses)
+      .then(fetchedData => { //fetched data is an array with 10 objects
         for (let block in recommendations){
-          recommendations[block] = new Array(12).fill(({
-            name: fetchedData.name,
-            image: fetchedData.image_url,
-            stars: fetchedData.rating,
-            reviews: fetchedData.review_count,
-            yelpLink: fetchedData.url
-          }))
+          for(let i = 0; i < 12; i++){
+            const load = fetchedData[Math.floor(Math.random() * 10)]; //access one of the objects
+            recommendations[block].push({
+              name: load.name,
+              image: load.image_url,
+              stars: load.rating,
+              reviews: load.review_count,
+              yelpLink: load.url
+            })
+          }
         }
         return recommendations
       })
