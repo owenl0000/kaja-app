@@ -5,7 +5,7 @@ const connectionString = 'postgres://brandonvasquez:0000@localhost:5432/test';
 const api = require('api')('@yelp-developers/v1.0#9nl412lo4fa3f9')
 const db = pgp(connectionString);//we need some sort of connection as the parameter 
 
-const apiKey = "Bearer xeieSk97CiewFoEHF2ibqs-AopR4lQGJYTtMxF9eaWrUqOOmOaNk6PLycTOewHxvzSTq69thVngMvHslAyIx4IXOQ0l0vOBvDNppDFonvq_MSrN9Qjlogj33URE4ZXYx";
+const apikey = "";
 
 //the powerrrrrr
 const query = {
