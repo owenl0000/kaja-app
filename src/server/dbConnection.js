@@ -8,11 +8,10 @@ const connectionString = 'postgres://brandonvasquez:0000@localhost:5432/test';
 //typical style of connectionString is postgres://username:password@host:port/database?ssl=false&application_name=name&fallback_application_name=name&client_encoding=encoding
 const db = pgp(connectionString);//we need some sort of connection as the parameter 
 
-//const apiKey = "apiKey string here...."
-//yelp api fusion key
-const apiKey = "";
-const client = yelp.client(apiKey);
 
+const apiKey = "";
+//yelp api fusion key
+const client = yelp.client(apiKey);
 //setting up yelp api client
 
 //this way we only have to change the location we want by only changing the location here!!!!

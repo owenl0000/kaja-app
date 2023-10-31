@@ -3,7 +3,6 @@ const express = require("express");
 const router = express.Router();
 const db = require("../dbConnection");
 
-
 //route looks something like this 
 
 router.get('/', (req, res) => {//get data from PostgreSQL
