@@ -7,7 +7,7 @@ import 'font-awesome/css/font-awesome.min.css';
 
 
 
-const PlanCreator = ({ addedPlaces = [] }) => {
+const PlanCreator = ({ addedPlaces = [], selectedDate }) => {
     console.log("Received addedPlaces in PlanCreator:", addedPlaces);
 
     const [localAddedPlaces, setLocalAddedPlaces] = useState(addedPlaces);

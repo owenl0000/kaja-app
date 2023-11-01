@@ -2,6 +2,7 @@ import React from "react";
 import TimeSelector from "./TimeSelector"
 import Calendar from "./Calendar";
 import PriceSelector from "@/components/PriceSelector";
+import CalendarChange from "./CalendarChange.js"
 
 export default function Sidebar(){
   return (
@@ -10,6 +11,7 @@ export default function Sidebar(){
         <PriceSelector number={5} symbol={'$'} />
         <TimeSelector />
         <Calendar />
+        <CalendarChange />
       </div>
   );
 }

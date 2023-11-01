@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import PlanCreator from '../components/PlanCreator';
 import Calendar from '../components/Sidebar'; // Import the Calendar component
+import CalendarChange from '../components/Sidebar';
 
 const Planner = () => {
   const [addedPlaces, setAddedPlaces] = useState([]);
