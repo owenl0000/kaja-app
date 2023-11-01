@@ -40,7 +40,7 @@ export default function Calendar({ setSelectedDate }){
 
   const handleDateChange = newDate => {
     setDate(newDate);
-    setSelectedDate = newDate;  // Update the selected date in parent component
+    setSelectedDate(newDate);  // Update the selected date in parent component
   };
 
   const dropBottom = () => setBottomOpen(!bottomOpen);
