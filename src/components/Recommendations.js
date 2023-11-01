@@ -79,8 +79,6 @@ function Recommendations({  onAddPlace = () => {} }) {
             >
                 <i className={`fa ${addedIconIndex === index ? 'fa-check text-green-500' : 'fa-plus text-red-500'}`}></i>
             </button>
-
-
           </div>
           <div className="flex flex-col xl:flex-row xl:items-center mt-1">
             <div className="stars flex-shrink-0">

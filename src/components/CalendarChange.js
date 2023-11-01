@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from "react";
 
 export default function Calendar({ setSelectedDate }){
+  console.log(typeof setSelectedDate); // Should log 'function'
+
 
   /*
   function Calendar({ setSelectedDate }) {
@@ -40,7 +42,9 @@ export default function Calendar({ setSelectedDate }){
 
   const handleDateChange = newDate => {
     setDate(newDate);
-    setSelectedDate(newDate);  // Update the selected date in parent component
+    if (setSelectedDate) {  // Check if setSelectedDate is provided
+      setSelectedDate(newDate);  // Update the selected date in parent component
+    }
   };
 
   const dropBottom = () => setBottomOpen(!bottomOpen);
