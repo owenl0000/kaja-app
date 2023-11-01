@@ -1,6 +1,32 @@
 import React, {useEffect, useState} from "react";
 
-export default function Calendar(){
+export default function Calendar({ setSelectedDate }){
+
+  /*
+  function Calendar({ setSelectedDate }) {
+  // ... existing code
+
+  const handleDateChange = (newDate) => {
+    setDate(newDate);
+    setSelectedDate(newDate);  // Update the selected date in parent component
+  };
+
+  // ... existing code
+
+  // Update the onClick inside the daysArray.map
+  <div onClick={() => {
+    handleDateChange({
+      month: date.month,
+      day: day,
+      year: date.year
+    });
+  }} className={"hover:bg-gray-500 cursor-pointer select-none"} key={day.id}>
+    {day}
+  </div>
+
+  // ... existing code
+  }
+   */
 
   const [bottomOpen, setBottomOpen] = useState(false);
   const [monthOpen, setMonthOpen] = useState(false);
@@ -11,6 +37,11 @@ export default function Calendar(){
     day: 1,
     year: 2023
   })
+
+  const handleDateChange = newDate => {
+    setDate(newDate);
+    setSelectedDate(newDate);  // Update the selected date in parent component
+  };
 
   const dropBottom = () => setBottomOpen(!bottomOpen);
   const dropMonth = () => setMonthOpen(!monthOpen);
@@ -114,11 +145,11 @@ export default function Calendar(){
                 <div className={`${monthOpen ? "month-open" : "month-closed"} grid grid-cols-1 overflow-hidden`}>
                   {monthsOfYear.map(month => (
                       <div onClick={() => {
-                        setDate({
+                        handleDateChange({
                           month: month,
                           day: date.day,
                           year: date.year
-                        })
+                        });
                         dropMonth()
                       }} className={`${month === date.month ? "text-gray-400" : ""} text-sm p-2 border-white border-b-2 last:border-none cursor-pointer select-none`} key={month}>
                         {month}
@@ -131,11 +162,11 @@ export default function Calendar(){
                 <div className={`${yearOpen ? "year-open" : "year-closed"} grid grid-cols-1 overflow-hidden`}>
                   {years.map(year => (
                       <div onClick={() => {
-                        setDate({
+                        handleDateChange({
                           month: date.month,
                           day: date.day,
                           year: year
-                        })
+                        });
                         dropYear()
                       }} className={`${year === date.year ? "text-gray-400" : ""} text-sm p-2 border-white border-b-2 last:border-none cursor-pointer select-none`} key={year}>
                         {year}
@@ -154,11 +185,11 @@ export default function Calendar(){
             <div className={"grid grid-cols-7 bg-gray-400  pt-0 p-2"}>
               {daysArray.map( day => (
                   <div onClick={() => {
-                    setDate({
+                    handleDateChange({
                       month: date.month,
                       day: day,
                       year: date.year
-                    })
+                    });
                   }} className={"hover:bg-gray-500 cursor-pointer select-none"} key={day.id}>
                     {day}
                   </div>

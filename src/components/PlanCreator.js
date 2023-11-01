@@ -8,7 +8,7 @@ import recommendations from '@/api/recommendationData';
 
 
 
-const PlanCreator = ({ addedPlaces = [] }) => {
+const PlanCreator = ({ addedPlaces = [], selectedDate }) => {
     console.log("Received addedPlaces in PlanCreator:", addedPlaces);
 
     const [localAddedPlaces, setLocalAddedPlaces] = useState(addedPlaces);
