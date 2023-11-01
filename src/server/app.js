@@ -4,12 +4,14 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const app = express();
 const port = process.env.PORT || "3000";//set the port
+const path = require("path");
 
 //routes
 const nameRoute = require("./routes/name");
 const imageRoute = require("./routes/images");
 const urlRoute = require("./routes/url");
 const sampleRoute = require("./routes/rawData");
+
 //
 
 
@@ -22,7 +24,6 @@ app.use(cors()); // allow for comms between front and back
 //we will connect the react side and express server side through fetch.
 //
 app.use(cookieParser()); //body parser I think have to look more into this....
-
 app.set('view engine', 'pug');
 
 app.get('/', (req, res) => {

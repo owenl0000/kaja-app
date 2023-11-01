@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import TimePicker from './TimePicker';
 import Image from 'next/image';
-import sampleData from '@/api/sampleData';
+//import sampleData from '@/api/sampleData';
 import 'font-awesome/css/font-awesome.min.css';
+import recommendations from '@/api/recommendationData';
 
 
 
@@ -18,7 +19,7 @@ const PlanCreator = ({ addedPlaces = [], selectedDate }) => {
         setLocalAddedPlaces(JSON.parse(savedPlaces));
       } else {
         // If there's nothing in localStorage, use sampleData
-        setLocalAddedPlaces(sampleData.area); // or any other part of sampleData
+        setLocalAddedPlaces(recommendations.area); // or any other part of sampleData
       }
     }, []);
 

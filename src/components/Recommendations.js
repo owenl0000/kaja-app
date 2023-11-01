@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import recommendations from '../api/recommendationData'; 
-import sampleData from '@/api/sampleData';
+//import sampleData from '@/api/sampleData';
 import TriangleToggle from '../utils/TriangleToggle';
 import YelpStars from '@/utils/YelpStars';
 import Image from 'next/image';
@@ -54,7 +54,7 @@ function Recommendations({  onAddPlace = () => {} }) {
   };
 
   const isPrevDisabled = (section) => startIndex[section] === 0;
-  const isNextDisabled = (section) => startIndex[section] >= sampleData[section].length - 3;
+  const isNextDisabled = (section) => startIndex[section] >= recommendations[section].length - 3;
 
   const renderPlace = (place, index) => {
     // Abbreviate the review count
@@ -66,7 +66,7 @@ function Recommendations({  onAddPlace = () => {} }) {
       <div key={index} className={`w-[250px] 2xl:w-[350px] 2xl:h-[350px] px-3 mb-4 mx-2 border rounded p-1 shadow-lg relative bg-white ${addedPlaceIndex === index ? 'border-green-500' : ''}`}>
         <div className="relative h-48 2xl:h-[228px] bg-gray-200 mt-2">
           <div className="w-full h-full flex justify-center items-center">
-            <img src={place.image}></img> 
+            <img src={place.image} style={{height: "195px", width: "225px"}}></img> 
           </div>
         </div>
         <div className="pt-2 px-2 pb-1">
@@ -103,8 +103,8 @@ function Recommendations({  onAddPlace = () => {} }) {
   return (
     <div className="flex flex-col p-4 md:mx-20 md:w-6/7 mx-auto">
       {showToast && <div className="toast">{toastMessage}</div>}
-      {Object.keys(sampleData).map((section) => {
-        const sectionData = sampleData[section];
+      {Object.keys(recommendations).map((section) => {
+        const sectionData = recommendations[section];
         return (
           <div key={section} className="border rounded p-6 md:w-[80%] lg:w-[90%] xl:w-[100%] mb-5">
             <div className="flex justify-between items-center ">
