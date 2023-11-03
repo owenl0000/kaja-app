@@ -1,7 +1,8 @@
 import React from "react";
 import TimeSelector from "./TimeSelector"
-import Calendar from "./Calendar";
+//import Calendar from "./Calendar";
 import PriceSelector from "@/components/PriceSelector";
+import Calendar from "./CalendarChange.js"
 
 export default function Sidebar(){
   return (
@@ -9,6 +10,7 @@ export default function Sidebar(){
         <div className={"p-5 pb-0 mb-5 text-center text-2xl"}>Filters</div>
         <PriceSelector number={5} symbol={'$'} />
         <TimeSelector />
+        {/*<Calendar />*/}
         <Calendar />
       </div>
   );
