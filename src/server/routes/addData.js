@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../newDBConnection");
 const api = require('api')('@yelp-developers/v1.0#9nl412lo4fa3f9');
-const apiKey = "Bearer 00odUuU7TchRRbXqu2voHysTJlRDc6xwaI1jdJrO_cuFnBsuwETlNyYuMRgj6oqYLMq2qoW6NwJB6cig00y3K7Hw_K1Q4Aw8bCnPQKGby0--PkgjPWT5sV9bp2tEZXYx";
+const apiKey = "Bearer";
 //adding to the database
 
 const query = {
