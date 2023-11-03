@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import recommendations from '../api/recommendationData'; 
 import TriangleToggle from '../utils/TriangleToggle';
 import YelpStars from '@/utils/YelpStars';
 import Image from 'next/image';
 import 'font-awesome/css/font-awesome.min.css';
+import sampleData from '@/api/recommendationData';
 
 function OldRecommendations({ onAddPlace = () => {} }) {
   const [startIndex, setStartIndex] = useState({
@@ -17,12 +17,8 @@ function OldRecommendations({ onAddPlace = () => {} }) {
     const mapping = {
       'area': 'Recommendations Around Your Area',
       'morning': 'Morning Recommendations',
-      'breakfast': 'Best Places for Breakfast',
-      'lunch': 'Top Spots for Lunch',
       'afternoon': 'Afternoon Delights',
       'night': 'Nightlife Recommendations',
-      'dinner': 'Dinner Destinations',
-      'hotels': 'Recommended Hotels',
       // ... add more mappings here
     };
     return mapping[sectionId] || sectionId; // Fallback to sectionId if not found in mapping
@@ -37,9 +33,9 @@ function OldRecommendations({ onAddPlace = () => {} }) {
   };
 
   const isPrevDisabled = (section) => startIndex[section] === 0;
-  const isNextDisabled = (section) => startIndex[section] >= recommendations[section].length - 3;
+  const isNextDisabled = (section) => startIndex[section] >= sampleData[section].length - 3;
 
-  const renderPlace = (place, index) => {
+  const renderPlace = (place) => {
     const abbreviateNumber = (num) => {
       return num >= 1000 ? (num / 1000).toFixed(1) + 'k' : num.toString();
     };
@@ -47,7 +43,9 @@ function OldRecommendations({ onAddPlace = () => {} }) {
     return (
       <div key={place.id} className="w-[250px] 2xl:w-[350px] 2xl:h-[350px] px-3 mb-4 mx-2 border rounded p-1 shadow-lg relative bg-white">
         <div className="relative h-48 2xl:h-[228px] bg-gray-200 mt-2">
-          <Image src={place.image} alt={place.name} width={225} height={195} layout="responsive" />
+          <div className="w-full h-full flex justify-center items-center">
+            <img src={place.image} style={{height: "195px", width: "225px"}}></img> 
+          </div>
         </div>
         <div className="pt-2 px-2 pb-1">
           <div className="flex justify-between items-center mb-2">
@@ -77,8 +75,8 @@ function OldRecommendations({ onAddPlace = () => {} }) {
 
   return (
     <div className="flex flex-col p-4 md:mx-20 md:w-6/7 mx-auto">
-      {Object.keys(recommendations).map((section) => {
-        const sectionData = recommendations[section];
+      {Object.keys(sampleData).map((section) => {
+        const sectionData = sampleData[section];
         return (
           <div key={section} className="border rounded p-6 md:w-[80%] lg:w-[90%] xl:w-[100%] mb-5">
             <div className="flex justify-between items-center ">

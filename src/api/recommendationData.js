@@ -41,7 +41,7 @@ fetch("http://127.0.0.1:3060/sample")
       .then(fetchedData => { //fetched data is an array with 10 objects
         for (let block in recommendations){
           for(let i = 0; i < 12; i++){
-            const load = fetchedData[Math.floor(Math.random() * 10)]; //access one of the objects
+            const load = fetchedData[Math.floor(Math.random() * fetchedData.length)]; //access one of the objects
             recommendations[block].push({
               id: load.id,
               name: load.name,

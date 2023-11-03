@@ -1,9 +1,12 @@
+require("dotenv").config({ path: '../../.env'}) //configure the api environment
 const http = require("http");
 const pgp = require("pg-promise")();//needs to be like this as we are initializing without options
 const connectionString = 'postgres://brandonvasquez:0000@localhost:5432/test';
 const api = require('api')('@yelp-developers/v1.0#9nl412lo4fa3f9');
 const db = pgp(connectionString);//we need some sort of connection as the parameter 
-const apiKey = "Bearer";
+
+
+const apiKey = `Bearer ${process.env.YELP_API_KEY}`;//setting the API key
 
 
 const query = {
@@ -35,7 +38,7 @@ db.any("SELECT * FROM yelp WHERE key=1")//check if key 1 is populated
                     return ( // populate the db with key and data containing the res body only
                             db.none("INSERT into yelp(key, data) VALUES($<key>, $<data>)", {//write to the yelp DB
                                 key: found.length,
-                                data: data.businesses
+                                data: data
                             }) // do exception/error handling!!!!!!!
                         );
                 })
@@ -56,8 +59,6 @@ In the postgreSQL db the data should look like this
 ]
 
 */
-
-
 
 
 module.exports = db; //export db so that it can be used in other endpoints
