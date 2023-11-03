@@ -4,7 +4,7 @@ const http = require("http");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const app = express();
-const port = process.env.SERVER_PORT || "8080";//set the port
+const port = process.env.SERVER_PORT || "3060";//set the port
 const path = require("path");
 
 
