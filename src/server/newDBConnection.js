@@ -3,7 +3,7 @@ const pgp = require("pg-promise")();//needs to be like this as we are initializi
 const connectionString = 'postgres://brandonvasquez:0000@localhost:5432/test';
 const api = require('api')('@yelp-developers/v1.0#9nl412lo4fa3f9');
 const db = pgp(connectionString);//we need some sort of connection as the parameter 
-const apiKey = "Bearer 00odUuU7TchRRbXqu2voHysTJlRDc6xwaI1jdJrO_cuFnBsuwETlNyYuMRgj6oqYLMq2qoW6NwJB6cig00y3K7Hw_K1Q4Aw8bCnPQKGby0--PkgjPWT5sV9bp2tEZXYx";
+const apiKey = "Bearer";
 
 
 const query = {
