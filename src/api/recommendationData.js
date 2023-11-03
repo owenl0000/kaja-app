@@ -18,6 +18,7 @@ id: fetchedData.id, // Unique ID
 
 //connection to backend
 
+
 var recommendations = {
   area: [],
   morning: [],
@@ -34,7 +35,7 @@ var recommendations = {
 //const n = 12; //how much boxes to create within the sections
 
 
-fetch("http://127.0.0.1:3000/sample")
+fetch("http://127.0.0.1:3060/sample")
       .then(response => response.json())
       .then(body => body.businesses)
       .then(fetchedData => { //fetched data is an array with 10 objects
@@ -42,7 +43,11 @@ fetch("http://127.0.0.1:3000/sample")
           for(let i = 0; i < 12; i++){
             const load = fetchedData[Math.floor(Math.random() * 10)]; //access one of the objects
             recommendations[block].push({
+              id: load.id,
               name: load.name,
+              address: "testing",
+              contact: "testing",
+              description: "some description",
               image: load.image_url,
               stars: load.rating,
               reviews: load.review_count,
