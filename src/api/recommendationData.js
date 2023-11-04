@@ -45,8 +45,8 @@ fetch("http://127.0.0.1:3060/sample")
             recommendations[block].push({
               id: load.id,
               name: load.name,
-              address: "testing",
-              contact: "testing",
+              address: load.display_address,
+              contact: load.display_phone,
               description: "some description",
               image: load.image_url,
               stars: load.rating,

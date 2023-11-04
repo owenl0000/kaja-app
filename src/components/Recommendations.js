@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import sampleData from '@/api/recommendationData';
+import recommendations from '@/api/recommendationData';
 import TriangleToggle from '../utils/TriangleToggle';
 import YelpStars from '@/utils/YelpStars';
 import Image from 'next/image';

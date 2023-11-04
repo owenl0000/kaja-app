@@ -35,7 +35,7 @@ export default function AfterSearch() {
                     <Sidebar />
                 </div>
                 <div className="w-3/4">
-                  <OldRecommendations onAddPlace={handleAddPlace} />   
+                  <Recommendations onAddPlace={handleAddPlace} />   
                 </div>
             </div>
 
