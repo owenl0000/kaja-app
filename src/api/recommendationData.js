@@ -19,12 +19,13 @@ id: fetchedData.id, // Unique ID
 //connection to backend
 
 
-var recommendations = {
-  area: [],
-  morning: [],
-  afternoon: [],
-  night: [],
-};
+// var recommendations = {
+//   area: [],
+//   morning: [],
+//   afternoon: [],
+//   night: [],
+// };
+
 //work on making it such that at each category we can map to it something.
 
 
@@ -35,30 +36,71 @@ var recommendations = {
 //const n = 12; //how much boxes to create within the sections
 
 
-fetch("http://127.0.0.1:3060/sample")
-      .then(response => response.json())
-      .then(body => body.businesses)
-      .then(fetchedData => { //fetched data is an array with 10 objects
-        for (let block in recommendations){
-          for(let i = 0; i < 12; i++){
-            const load = fetchedData[Math.floor(Math.random() * fetchedData.length)]; //access one of the objects
-            recommendations[block].push({
-              id: load.id,
-              name: load.name,
-              address: load.display_address,
-              contact: load.display_phone,
-              description: "some description",
-              image: load.image_url,
-              stars: load.rating,
-              reviews: load.review_count,
-              yelpLink: load.url
-            })
-          }
-        }
-        return recommendations
-      })
-      .catch(err => console.error(err))
+// fetch("http://127.0.0.1:3060/sample")
+//       .then(response => response.json())
+//       .then(body => body.businesses)
+//       .then(fetchedData => { //fetched data is an array with 10 objects
+//         for (let block in recommendations){
+//           for(let i = 0; i < 12; i++){
+//             const load = fetchedData[Math.floor(Math.random() * fetchedData.length)]; //access one of the objects
+//             recommendations[block].push({
+//               id: load.id,
+//               name: load.name,
+//               address: load.display_address,
+//               contact: load.display_phone,
+//               description: "some description",
+//               image: load.image_url,
+//               stars: load.rating,
+//               reviews: load.review_count,
+//               yelpLink: load.url
+//             })
+//           }
+//         }
+//         return recommendations
+//       })
+//       .catch(err => console.error(err))
 
-export default recommendations;
+
+import React, { useState, useEffect } from 'react';
+
+export default function apiData() {
+    const [data, setData] = useState({
+        area: [],
+        morning: [],
+        afternoon: [],
+        night: [],
+    });
+
+    useEffect(() => {
+        fetch("http://127.0.0.1:3060/sample")
+            .then(response => response.json())
+            .then(body => body.businesses)
+            .then(fetchedData => {
+                let newRecommendations = { area: [], morning: [], afternoon: [], night: [] };
+                for (let block in newRecommendations) {
+                    for (let i = 0; i < 12; i++) {
+                        const load = fetchedData[Math.floor(Math.random() * fetchedData.length)];
+                        newRecommendations[block].push({
+                            id: load.id,
+                            name: load.name,
+                            address: "testing",
+                            contact: "testing",
+                            description: "some description",
+                            image: load.image_url,
+                            stars: load.rating,
+                            reviews: load.review_count,
+                            yelpLink: load.url
+                        });
+                    }
+                }
+                setData(newRecommendations);
+            })
+            .catch(err => console.error(err));
+        console.log(data)
+    }, []);
+
+    // Rendering logic goes here
+}   
+
 
 

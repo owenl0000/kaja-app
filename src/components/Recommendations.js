@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import recommendations from '@/api/recommendationData';
+import apiData from '@/api/recommendationData'; //handle how this is recieved
 import TriangleToggle from '../utils/TriangleToggle';
 import YelpStars from '@/utils/YelpStars';
 import Image from 'next/image';
@@ -55,7 +55,7 @@ function Recommendations({  onAddPlace = () => {} }) {
   };
 
   const isPrevDisabled = (section) => startIndex[section] === 0;
-  const isNextDisabled = (section) => startIndex[section] >= recommendations[section].length - 3;
+  const isNextDisabled = (section) => startIndex[section] >= apiData[section].length - 3;
 
   const renderPlace = (place, index) => {
     // Abbreviate the review count
@@ -90,6 +90,7 @@ function Recommendations({  onAddPlace = () => {} }) {
         </div>
         <div className="xl:mb-0 ml-2 mb-0">
           {/* Yelp icon acting as a link */}
+
           <a href={place.yelpLink} target="_blank" rel="noopener noreferrer">
             <Image src="/images/yelp_logo.png" alt="Yelp" width={50} height={20} />
           </a>
@@ -102,8 +103,8 @@ function Recommendations({  onAddPlace = () => {} }) {
   return (
     <div className="flex flex-col p-4 md:mx-20 md:w-6/7 mx-auto">
       {showToast && <div className="toast">{toastMessage}</div>}
-      {Object.keys(recommendations).map((section) => {
-        const sectionData = recommendations[section];
+      {Object.keys(apiData).map((section) => {
+        const sectionData = apiData[section];
         return (
           <div key={section} className="border rounded p-6 md:w-[80%] lg:w-[90%] xl:w-[100%] mb-5">
             <div className="flex justify-between items-center ">
