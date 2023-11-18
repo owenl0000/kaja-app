@@ -5,7 +5,7 @@ import Sidebar from "@/components/Sidebar";
 import dynamic from 'next/dynamic';
 import React, { useState, useEffect } from 'react';
 import Recommendations from '@/components/Recommendations.js';
-import OldRecommendations from '@/components/OldRecommendations.js';
+
 
 export default function AfterSearch() {
 

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import recommendations from '@/api/recommendationData';
 import TriangleToggle from '../utils/TriangleToggle';
 import YelpStars from '@/utils/YelpStars';
 import Image from 'next/image';
@@ -7,6 +6,8 @@ import 'font-awesome/css/font-awesome.min.css';
 import sampleData from '@/api/sampleData';
 
 
+//we are using this for rendering
+//move the recommendationData file into here .
 
 function Recommendations({  onAddPlace = () => {} }) {
 
@@ -14,6 +15,40 @@ function Recommendations({  onAddPlace = () => {} }) {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [addedIconIndex, setAddedIconIndex] = useState(null);
+  const [data, setData] = useState({ // gets the api data
+    area: [],
+    morning: [],
+    afternoon: [],
+    night: [],
+});
+  useEffect(() => { //fetching the actual data 
+    fetch("http://127.0.0.1:3060/sample")
+        .then(response => response.json())
+        .then(body => body.businesses)
+        .then(fetchedData => {
+            let newRecommendations = { area: [], morning: [], afternoon: [], night: [] };
+            for (let block in newRecommendations) {
+                for (let i = 0; i < 12; i++) {
+                    const load = fetchedData[Math.floor(Math.random() * fetchedData.length)];
+                    newRecommendations[block].push({
+                        id: load.id,
+                        name: load.name,
+                        address: "testing",
+                        contact: "testing",
+                        description: "some description",
+                        image: load.image_url,
+                        stars: load.rating,
+                        reviews: load.review_count,
+                        yelpLink: load.url
+                    });
+                }
+            }
+            setData(newRecommendations);
+        })
+        .catch(err => console.error(err));
+    console.log(data)
+  }, []);
+
 
   useEffect(() => {
     if (addedIconIndex !== null) {
@@ -56,6 +91,7 @@ function Recommendations({  onAddPlace = () => {} }) {
   };
 
   const isPrevDisabled = (section) => startIndex[section] === 0;
+
   const isNextDisabled = (section) => startIndex[section] >= sampleData[section].length - 3;
 
   const renderPlace = (place) => {
@@ -91,6 +127,7 @@ function Recommendations({  onAddPlace = () => {} }) {
         </div>
         <div className="xl:mb-0 ml-2 mb-0">
           {/* Yelp icon acting as a link */}
+
           <a href={place.yelpLink} target="_blank" rel="noopener noreferrer">
             <Image src="/images/yelp_logo.png" alt="Yelp" width={50} height={20} />
           </a>
