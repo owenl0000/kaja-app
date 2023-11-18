@@ -6,6 +6,8 @@ import Image from 'next/image';
 import 'font-awesome/css/font-awesome.min.css';
 
 
+//we are using this for rendering
+//move the recommendationData file into here .
 
 function Recommendations({  onAddPlace = () => {} }) {
 
@@ -13,6 +15,40 @@ function Recommendations({  onAddPlace = () => {} }) {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [addedIconIndex, setAddedIconIndex] = useState(null);
+  const [data, setData] = useState({ // gets the api data
+    area: [],
+    morning: [],
+    afternoon: [],
+    night: [],
+});
+  useEffect(() => { //fetching the actual data 
+    fetch("http://127.0.0.1:3060/sample")
+        .then(response => response.json())
+        .then(body => body.businesses)
+        .then(fetchedData => {
+            let newRecommendations = { area: [], morning: [], afternoon: [], night: [] };
+            for (let block in newRecommendations) {
+                for (let i = 0; i < 12; i++) {
+                    const load = fetchedData[Math.floor(Math.random() * fetchedData.length)];
+                    newRecommendations[block].push({
+                        id: load.id,
+                        name: load.name,
+                        address: "testing",
+                        contact: "testing",
+                        description: "some description",
+                        image: load.image_url,
+                        stars: load.rating,
+                        reviews: load.review_count,
+                        yelpLink: load.url
+                    });
+                }
+            }
+            setData(newRecommendations);
+        })
+        .catch(err => console.error(err));
+    console.log(data)
+  }, []);
+
 
   useEffect(() => {
     if (addedIconIndex !== null) {
@@ -55,7 +91,7 @@ function Recommendations({  onAddPlace = () => {} }) {
   };
 
   const isPrevDisabled = (section) => startIndex[section] === 0;
-  const isNextDisabled = (section) => startIndex[section] >= apiData[section].length - 3;
+  const isNextDisabled = (section) => startIndex[section] >= data[section].length - 3;
 
   const renderPlace = (place, index) => {
     // Abbreviate the review count
@@ -103,8 +139,8 @@ function Recommendations({  onAddPlace = () => {} }) {
   return (
     <div className="flex flex-col p-4 md:mx-20 md:w-6/7 mx-auto">
       {showToast && <div className="toast">{toastMessage}</div>}
-      {Object.keys(apiData).map((section) => {
-        const sectionData = apiData[section];
+      {Object.keys(data).map((section) => {
+        const sectionData = data[section];
         return (
           <div key={section} className="border rounded p-6 md:w-[80%] lg:w-[90%] xl:w-[100%] mb-5">
             <div className="flex justify-between items-center ">

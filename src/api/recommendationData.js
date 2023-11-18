@@ -26,14 +26,14 @@ id: fetchedData.id, // Unique ID
 //   night: [],
 // };
 
-//work on making it such that at each category we can map to it something.
+// // work on making it such that at each category we can map to it something.
 
 
-//had to fix this so that we could still use the same concept but it has to be reworked
+// // had to fix this so that we could still use the same concept but it has to be reworked
 
-//use useeffect to handle api request here
+// // use useeffect to handle api request here
 
-//const n = 12; //how much boxes to create within the sections
+// const n = 12; //how much boxes to create within the sections
 
 
 // fetch("http://127.0.0.1:3060/sample")
@@ -60,9 +60,15 @@ id: fetchedData.id, // Unique ID
 //       })
 //       .catch(err => console.error(err))
 
+// export default recommendations;
+
+
+
+////////////////////////////
+////////////////////////////
+////////////////////////////
 
 import React, { useState, useEffect } from 'react';
-
 export default function apiData() {
     const [data, setData] = useState({
         area: [],
@@ -98,7 +104,7 @@ export default function apiData() {
             .catch(err => console.error(err));
         console.log(data)
     }, []);
-
+    return data; //return it
     // Rendering logic goes here
 }   
 
