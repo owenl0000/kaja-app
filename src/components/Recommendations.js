@@ -100,7 +100,7 @@ function Recommendations({  onAddPlace = () => {} }) {
     
 
   return (
-    <div className="flex flex-col p-4 md:mx-20 md:w-6/7 mx-auto">
+    <div className="flex flex-col p-4">
       {showToast && <div className="toast">{toastMessage}</div>}
       {Object.keys(recommendations).map((section) => {
         const sectionData = recommendations[section];

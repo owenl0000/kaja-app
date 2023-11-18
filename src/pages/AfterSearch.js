@@ -30,11 +30,11 @@ export default function AfterSearch() {
         <>
 
             <Header page="AfterSearch"/>
-            <div className="flex min-h-screen h-full">
-                <div className="w-1/4">
+            <div className="flex min-h-screen h-full gap-x-2">
+                <div className="w-1/3">
                     <Sidebar />
                 </div>
-                <div className="w-3/4">
+                <div className="w-2/3">
                   <OldRecommendations onAddPlace={handleAddPlace} />   
                 </div>
             </div>

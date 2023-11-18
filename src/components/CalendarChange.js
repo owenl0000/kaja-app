@@ -34,11 +34,29 @@ export default function Calendar({ setSelectedDate }){
   const [monthOpen, setMonthOpen] = useState(false);
   const [yearOpen, setYearOpen] = useState(false);
 
+  const[stateArray, setStateArray] = useState([]);
+  const[unshiftArray, setUnshiftArray] = useState([]);
+
   const [date, setDate] = useState({
     month: "January",
     day: 1,
     year: 2023
   })
+
+  const monthObject = {
+    January: 31,
+    February: 28,
+    March: 31,
+    April: 30,
+    May: 31,
+    June: 30,
+    July: 31,
+    August: 31,
+    September: 30,
+    October: 31,
+    November: 30,
+    December: 31
+  };
 
   const handleDateChange = newDate => {
     setDate(newDate);
@@ -50,6 +68,13 @@ export default function Calendar({ setSelectedDate }){
   const dropBottom = () => setBottomOpen(!bottomOpen);
   const dropMonth = () => setMonthOpen(!monthOpen);
   const dropYear = () => setYearOpen(!yearOpen);
+
+  useEffect(() => {
+    if(!bottomOpen){
+      setMonthOpen(false);
+      setYearOpen(false);
+    }
+  }, [bottomOpen]);
 
   const daysOfWeek = ['S','M','T','W','T','F','S']; //use Date to map current date in month to week day
   const monthsOfYear = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -78,9 +103,9 @@ export default function Calendar({ setSelectedDate }){
     days = 31;
   }
 
-  let daysArray = [];
+  let dayArray = [];
   for(let i = 1; i <= days; i++){
-    daysArray.push(i.toString());
+    dayArray.push(i);
   }
 
   {/*
@@ -136,13 +161,35 @@ export default function Calendar({ setSelectedDate }){
 
   */}
 
+  const calculateUnshift = () => {
+
+    let unshiftAmount = monthObject[date.month] - 28;
+
+    let innerArray = [];
+    for(let i = 0; i < unshiftAmount; i++) {
+      innerArray.push('0');
+    }
+
+    if(unshiftArray.length >= 7){
+      unshiftArray.length = unshiftArray.length % 7;
+    }
+
+    setUnshiftArray([...innerArray, ...unshiftArray]);
+    console.log(unshiftArray);
+  }
+
+  useEffect(() => {
+    calculateUnshift();
+    setStateArray([...unshiftArray, ...dayArray]);
+  }, [date.month]);
+
   return (
-      <div className={"bg-coral text-white text-center p-5 my-5 w-full rounded-2xl overflow-hidden"}>
+      <div className={"bg-coral text-white text-center p-5 my-5 w-full rounded-md overflow-hidden"}>
         <div onClick={dropBottom} className={"cursor-pointer select-none"}>
           {date.month} {date.day}, {date.year}
         </div>
         <div className={`${bottomOpen ? "bottom-open" : "bottom-closed"}`}>
-          <div className={"flex flex-col rounded-2xl max-height no-scrollbar overflow-scroll"}>
+          <div className={"flex flex-col rounded-md max-height no-scrollbar overflow-scroll"}>
             <div className={"grid grid-cols-2 gap-x-2 bg-dark-coral p-2"}>
               <div>
                 <div onClick={dropMonth} className={"cursor-pointer select-none"}>{date.month}</div>
@@ -179,7 +226,7 @@ export default function Calendar({ setSelectedDate }){
                 </div>
               </div>
             </div>
-            <div className={"grid grid-cols-7 bg-gray-400 p-2 pb-0"}>
+            <div className={"grid grid-cols-7 bg-gray-400 p-2 pb-0 select-none"}>
               {daysOfWeek.map(weekday => (
                   <div key={weekday.id}>
                     {weekday}
@@ -187,14 +234,14 @@ export default function Calendar({ setSelectedDate }){
               ))}
             </div>
             <div className={"grid grid-cols-7 bg-gray-400  pt-0 p-2"}>
-              {daysArray.map( day => (
+              {stateArray.map( day => (
                   <div onClick={() => {
                     handleDateChange({
                       month: date.month,
                       day: day,
                       year: date.year
                     });
-                  }} className={"hover:bg-gray-500 cursor-pointer select-none"} key={day.id}>
+                  }} className={`${day === '0' ? "invisible" : ""} rounded-sm hover:bg-gray-500 cursor-pointer select-none`} key={day.id}>
                     {day}
                   </div>
               ))}

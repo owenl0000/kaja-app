@@ -4,6 +4,7 @@ import '../../styles/Slideshow.css';
 import '../../styles/Filter.css';
 import '../../styles/Sidebar.css';
 import '../../styles/TimePicker.css';
+import '../../styles/Header.css';
 
 function MyApp({ Component, pageProps }) {
   return <Component {...pageProps} />;
