@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import apiData from '@/api/recommendationData'; //handle how this is recieved
 import TriangleToggle from '../utils/TriangleToggle';
 import YelpStars from '@/utils/YelpStars';
 import Image from 'next/image';
