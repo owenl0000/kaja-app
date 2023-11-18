@@ -19,7 +19,7 @@ id: fetchedData.id, // Unique ID
 //connection to backend
 
 
-var recommendations = {
+var apiData = {
   area: [],
   morning: [],
   afternoon: [],
@@ -39,10 +39,10 @@ fetch("http://127.0.0.1:3060/sample")
       .then(response => response.json())
       .then(body => body.businesses)
       .then(fetchedData => { //fetched data is an array with 10 objects
-        for (let block in recommendations){
+        for (let block in apiData){
           for(let i = 0; i < 12; i++){
             const load = fetchedData[Math.floor(Math.random() * fetchedData.length)]; //access one of the objects
-            recommendations[block].push({
+            apiData[block].push({
               id: load.id,
               name: load.name,
               address: "testing",
@@ -55,10 +55,12 @@ fetch("http://127.0.0.1:3060/sample")
             })
           }
         }
-        return recommendations
+        return apiData
       })
       .catch(err => console.error(err))
 
-export default recommendations;
+export default apiData;
+
+
 
 

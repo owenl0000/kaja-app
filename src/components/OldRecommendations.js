@@ -1,17 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import recommendations from '@/api/recommendationData';
 import TriangleToggle from '../utils/TriangleToggle';
 import YelpStars from '@/utils/YelpStars';
 import Image from 'next/image';
 import 'font-awesome/css/font-awesome.min.css';
-import sampleData from '@/api/recommendationData';
+import sampleData from '@/api/sampleData';
 
-function OldRecommendations({ onAddPlace = () => {} }) {
-  const [startIndex, setStartIndex] = useState({
-    area: 0,
-    morning: 0,
-    afternoon: 0,
-    night: 0,
-  });
+
+
+function OldRecommendations({  onAddPlace = () => {} }) {
+
+  const [addedPlaceIndex, setAddedPlaceIndex] = useState(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [addedIconIndex, setAddedIconIndex] = useState(null);
+
+  useEffect(() => {
+    if (addedIconIndex !== null) {
+      const timer = setTimeout(() => setAddedIconIndex(null), 3000); // Reset after 3 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [addedIconIndex]);
+
+  const handleAddPlace = (place) => {
+    onAddPlace(place);
+    setToastMessage(`${place.name} has been added.`);
+    setShowToast(true);
+    setAddedIconIndex(place.id);
+    setTimeout(() => setShowToast(false), 3000); // Hide toast after 3 seconds
+  };
 
   const getUpdatedSectionName = (sectionId) => {
     const mapping = {
@@ -19,10 +36,16 @@ function OldRecommendations({ onAddPlace = () => {} }) {
       'morning': 'Morning Recommendations',
       'afternoon': 'Afternoon Delights',
       'night': 'Nightlife Recommendations',
-      // ... add more mappings here
     };
     return mapping[sectionId] || sectionId; // Fallback to sectionId if not found in mapping
   };
+    
+  const [startIndex, setStartIndex] = useState({
+    area: 0,
+    morning: 0,
+    afternoon: 0,
+    night: 0,
+  });
 
   const nextPage = (section) => {
     setStartIndex((prev) => ({ ...prev, [section]: prev[section] + 3 }));
@@ -36,12 +59,13 @@ function OldRecommendations({ onAddPlace = () => {} }) {
   const isNextDisabled = (section) => startIndex[section] >= sampleData[section].length - 3;
 
   const renderPlace = (place) => {
+    // Abbreviate the review count
     const abbreviateNumber = (num) => {
-      return num >= 1000 ? (num / 1000).toFixed(1) + 'k' : num.toString();
-    };
-    
+      if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
+      return num;
+  };
     return (
-      <div key={place.id} className="w-[250px] 2xl:w-[350px] 2xl:h-[350px] px-3 mb-4 mx-2 border rounded p-1 shadow-lg relative bg-white">
+      <div key={place.id} className={`w-[250px] 2xl:w-[350px] 2xl:h-[350px] px-3 mb-4 mx-2 border rounded p-1 shadow-lg relative bg-white`}>
         <div className="relative h-48 2xl:h-[228px] bg-gray-200 mt-2">
           <div className="w-full h-full flex justify-center items-center">
             <img src={place.image} style={{height: "195px", width: "225px"}}></img> 
@@ -52,19 +76,21 @@ function OldRecommendations({ onAddPlace = () => {} }) {
             <h3>{place.name}</h3>
             <button 
                 className="rounded-full w-6 h-6 flex items-center justify-center bg-transparent" 
-                onClick={() => onAddPlace(place)}
+                onClick={() => {console.log("Button clicked, place:", place); 
+                handleAddPlace(place); }}
             >
-                <i className="fa fa-plus text-red-500"></i>
+                <i className={`fa ${addedIconIndex === place.id ? 'fa-check text-green-500' : 'fa-plus text-red-500'}`}></i>
             </button>
           </div>
           <div className="flex flex-col xl:flex-row xl:items-center mt-1">
-            <YelpStars rating={place.stars} size="small" multiplier="3x" />
-            <span className="mt-1 md:mt-0 xl:ml-2 text-gray-500">
-              {abbreviateNumber(place.reviews)} reviews
-            </span>
+            <div className="stars flex-shrink-0">
+              <YelpStars rating={place.stars} size="small" multiplier="3x"/>
+            </div>
+            <span className="mt-1 md:mt-0 xl:ml-2 text-gray-500">{abbreviateNumber(place.reviews)} reviews</span>
           </div>
         </div>
         <div className="xl:mb-0 ml-2 mb-0">
+          {/* Yelp icon acting as a link */}
           <a href={place.yelpLink} target="_blank" rel="noopener noreferrer">
             <Image src="/images/yelp_logo.png" alt="Yelp" width={50} height={20} />
           </a>
@@ -72,9 +98,11 @@ function OldRecommendations({ onAddPlace = () => {} }) {
       </div>
     );
   };
+    
 
   return (
-    <div className="flex flex-col p-4">
+    <div className="flex flex-col p-4 md:mx-20 md:w-6/7 mx-auto">
+      {showToast && <div className="toast">{toastMessage}</div>}
       {Object.keys(sampleData).map((section) => {
         const sectionData = sampleData[section];
         return (
