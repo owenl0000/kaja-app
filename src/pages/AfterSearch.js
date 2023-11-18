@@ -28,7 +28,7 @@ export default function AfterSearch() {
   const handleAddPlace = (place, selectedDate) => {
     const index = addedPlacesByDate.findIndex(entry => entry.date === selectedDate);
     let newAddedPlaces;
-  
+ 
     if (index > -1) {
       // Date already exists, update the places array for this date
       newAddedPlaces = [...addedPlacesByDate];

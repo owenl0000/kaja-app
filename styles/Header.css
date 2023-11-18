@@ -1,0 +1,32 @@
+:root {
+    --speed: 0.45s;
+}
+
+@keyframes quick-spin {
+    from {transform: rotate(0)}
+    to {transform: rotate(360deg)}
+}
+
+.quick-spin:hover {
+    animation-name: quick-spin;
+    animation-duration: 0.8s;
+    animation-timing-function: ease-in-out;
+}
+
+.open {
+    opacity: 1;
+    transition: max-height var(--speed) ease-in, opacity var(--speed) ease-in;
+    max-height: 500px;
+}
+
+.closed {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height var(--speed) ease, opacity var(--speed) ease;
+}
+
+.text-select:hover {
+    transform: scale(105%);
+    transition: transform calc(var(--speed)/10) ease-in;
+}

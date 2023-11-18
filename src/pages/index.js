@@ -2,7 +2,6 @@ import Header from '../components/Header.js';
 import Slideshow from '../components/Slideshow.js';
 import Footer from "../components/Footer";
 import Link from 'next/link';
-import Sidebar from "../components/Sidebar";
 
 export default function Home() {
   return (
@@ -24,7 +23,7 @@ export default function Home() {
               </p>
               <Link
                 href="/Planner"
-                className="font-trend bg-coral text-off-white px-6 py-2 rounded-md text-center hover:bg-turquoise-dark inline-block pb-3"
+                className="font-trend bg-coral active:bg-[var(--dark-coral)] text-off-white px-6 py-2 rounded-md text-center hover:bg-turquoise-dark inline-block pb-3 text-select border"
               >
                 Start Planning
               </Link>
