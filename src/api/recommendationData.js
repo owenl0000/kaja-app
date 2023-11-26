@@ -14,8 +14,6 @@ id: fetchedData.id, // Unique ID
               yelpLink: fetchedData.url,
 
 */
-
-/*
 import React, { useState, useEffect } from 'react';
 export default function apiData() {
     const [data, setData] = useState({
@@ -53,6 +51,14 @@ export default function apiData() {
         console.log(data)
     }, []);
 }   
-*/
+
+//connection to backend
+
+//work on making it such that at each category we can map to it something.
 
 
+//had to fix this so that we could still use the same concept but it has to be reworked
+
+//use useeffect to handle api request here
+
+//const n = 12; //how much boxes to create within the sections
