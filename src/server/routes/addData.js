@@ -18,6 +18,7 @@ const query = {
 
 api.auth(apiKey); 
 
+
 router.get('/', (req, res) => {
     db.any("SELECT * FROM yelp")
         .then(dbContent => {

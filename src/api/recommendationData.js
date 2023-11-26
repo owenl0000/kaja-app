@@ -15,6 +15,7 @@ id: fetchedData.id, // Unique ID
 
 */
 
+/*
 import React, { useState, useEffect } from 'react';
 export default function apiData() {
     const [data, setData] = useState({
@@ -52,6 +53,6 @@ export default function apiData() {
         console.log(data)
     }, []);
 }   
-
+*/
 
 

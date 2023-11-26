@@ -1,12 +1,13 @@
+import 'dotenv/config'
+console.log(process.env)
 import React, { useState, useEffect } from 'react';
 import TriangleToggle from '../utils/TriangleToggle';
 import YelpStars from '@/utils/YelpStars';
 import Image from 'next/image';
 import 'font-awesome/css/font-awesome.min.css';
 
-
 //we are using this for rendering
-//move the recommendationData file into here .
+//move the recommendationData file into here
 
 function Recommendations({  onAddPlace = () => {} }) {
 
@@ -19,33 +20,33 @@ function Recommendations({  onAddPlace = () => {} }) {
     morning: [],
     afternoon: [],
     night: [],
-});
+  });
+
   useEffect(() => { //fetching the actual data 
-    fetch("http://127.0.0.1:3060/sample")
+    fetch(`http://${process.env.SERVER_HOST}:${process.env.SERVER_PORT}/info`)
         .then(response => response.json())
-        .then(body => body.businesses)
+        .then(body => body.business_data)
         .then(fetchedData => {
             let newRecommendations = { area: [], morning: [], afternoon: [], night: [] };
+            console.log(fetchedData)
             for (let block in newRecommendations) {
                 for (let i = 0; i < 12; i++) {
                     const load = fetchedData[Math.floor(Math.random() * fetchedData.length)];
                     newRecommendations[block].push({
-                        id: load.id,
-                        name: load.name,
-                        address: "testing",
-                        contact: "testing",
-                        description: "some description",
-                        image: load.image_url,
-                        stars: load.rating,
-                        reviews: load.review_count,
-                        yelpLink: load.url
+                        id: load.business_id,
+                        name: load.business_name,
+                        address: load.business_address,
+                        contact: load.business_phone,
+                        image: load.business_image,
+                        stars: load.business_rating,
+                        reviews: load.business_reviews,
+                        yelpLink: load.business_url
                     });
                 }
             }
             setData(newRecommendations);
         })
         .catch(err => console.error(err));
-    console.log(data)
   }, []);
 
 
