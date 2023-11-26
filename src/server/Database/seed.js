@@ -1,7 +1,7 @@
 
 //const db = require("./models/index");
 //const {Business, Location, Type} = db;
-const Business = require("./models/Business")
+const Business = require("./models/Business") // I want to fix these so that the seeding actually happens here and what not.
 const Location = require("./models/Location")
 const Type = require("./models/Type")
 
