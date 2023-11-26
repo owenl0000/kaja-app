@@ -1,11 +1,10 @@
 import 'dotenv/config'
-console.log(process.env)
 import React, { useState, useEffect } from 'react';
 import TriangleToggle from '../utils/TriangleToggle';
 import YelpStars from '@/utils/YelpStars';
 import Image from 'next/image';
 import 'font-awesome/css/font-awesome.min.css';
-import sampleData from '@/api/sampleData';
+
 
 //we are using this for rendering
 //move the recommendationData file into here
@@ -24,7 +23,7 @@ function Recommendations({  onAddPlace = () => {} }) {
   });
 
   useEffect(() => { //fetching the actual data 
-    fetch(`http://${process.env.SERVER_HOST}:${process.env.SERVER_PORT}/info`)
+    fetch(`http://127.0.0.1:3060/info`)
         .then(response => response.json())
         .then(body => body.business_data)
         .then(fetchedData => {
@@ -93,7 +92,7 @@ function Recommendations({  onAddPlace = () => {} }) {
 
   const isPrevDisabled = (section) => startIndex[section] === 0;
 
-  const isNextDisabled = (section) => startIndex[section] >= sampleData[section].length - 3;
+  const isNextDisabled = (section) => startIndex[section] >= data[section].length - 3;
 
   const renderPlace = (place) => {
     // Abbreviate the review count
@@ -141,8 +140,8 @@ function Recommendations({  onAddPlace = () => {} }) {
   return (
     <div className="flex flex-col p-4">
       {showToast && <div className="toast">{toastMessage}</div>}
-      {Object.keys(sampleData).map((section) => {
-        const sectionData = sampleData[section];
+      {Object.keys(data).map((section) => {
+        const sectionData = data[section];
         return (
           <div key={section} className="border rounded p-6 md:w-[80%] lg:w-[90%] xl:w-[100%] mb-5">
             <div className="flex justify-between items-center ">
