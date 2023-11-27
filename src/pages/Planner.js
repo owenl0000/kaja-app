@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import PlanCreator from '../components/PlanCreator';
 import Calendar from '../components/CalendarChange';
+import MakePlace from '@/components/MakePlace';
 
 const Planner = () => {
-  const [addedPlacesByDate, setAddedPlacesByDate] = useState([]);
+  const [addedPlacesByDate, setAddedPlacesByDate] = useState({});
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]); // State to hold the selected date
-  const [viewMode, setViewMode] = useState('day'); // State to hold the view mode ('day' or 'week')
   console.log(selectedDate);
 
   useEffect(() => {
@@ -15,6 +15,49 @@ const Planner = () => {
     setAddedPlacesByDate(savedPlaces);
   }, [selectedDate]);
 
+  useEffect(() => {
+    console.log('Places updated:', addedPlacesByDate);
+    // Trigger an update to PlanCreator if needed
+  }, [addedPlacesByDate]);
+
+  const formatDateToString = (dateObj) => {
+    // Assuming dateObj is an object like {year: 2023, month: "January", day: 18}
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+                        "July", "August", "September", "October", "November", "December"];
+    const monthIndex = monthNames.indexOf(dateObj.month) + 1;
+    return `${dateObj.year}-${String(monthIndex).padStart(2, '0')}-${String(dateObj.day).padStart(2, '0')}`;
+  };
+
+  const handleDateChange = (newDateObject) => {
+    setSelectedDate(formatDateToString(newDateObject));
+  };
+
+  const handleAddPlace = (newPlace, date) => {
+    console.log("Received place:", newPlace);
+  
+    // Fetch the latest addedPlacesByDate from localStorage
+    const currentAddedPlaces = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
+  
+    // Check if the newPlace has an ID and if it already exists for the selected date
+    const existingPlaceIndex = currentAddedPlaces[date]?.findIndex(place => place.id === newPlace.id);
+  
+    if (existingPlaceIndex >= 0) {
+      // Update the existing place
+      currentAddedPlaces[date][existingPlaceIndex] = newPlace;
+    } else {
+      // Generate a unique ID if the new place doesn't have one and add as new
+      const placeWithId = newPlace.id ? newPlace : { ...newPlace, id: `manual-${Date.now()}-${Math.random().toString(36).substr(2, 9)}` };
+      currentAddedPlaces[date] = [...(currentAddedPlaces[date] || []), placeWithId];
+    }
+  
+    // Update state and localStorage
+    setAddedPlacesByDate(currentAddedPlaces);
+    localStorage.setItem('addedPlacesByDate', JSON.stringify(currentAddedPlaces));
+  };
+  
+
+  
+
   const placesForSelectedDate = addedPlacesByDate[selectedDate] || [];
   console.log('Places for selected date:', placesForSelectedDate);
 
@@ -22,30 +65,21 @@ const Planner = () => {
     <>
       <Header page="Planner" />
       <main className="p-4"> 
-        <div className="flex mb-4 w-3/4 ml-10 ">
-          <div className="flex-1">
-            <Calendar setSelectedDate={setSelectedDate}/>
+        <div className="grid md:grid-cols-2 sm:grid-cols-1 mb-4">
+          <div className="flex-1 flex justify-center">
+            <div className={"w-3/4"}>
+            < Calendar setSelectedDate={handleDateChange}/>
+            </div>
           </div>
           <div className="flex-1 flex flex-col items-center justify-center">
             <div className="grid grid-cols-2 rounded-md overflow-hidden">
-              <button 
-                className={`px-12 py-5 transition-colors ${viewMode === 'day' ? 'bg-coral text-white' : 'bg-gray-200'}`}
-                onClick={() => setViewMode('day')}
-              >
-                Day
-              </button>
-              <button 
-                className={`px-4 py-2 transition-colors ${viewMode === 'week' ? 'bg-coral text-white' : 'bg-gray-200'}`}
-                onClick={() => setViewMode('week')}
-              >
-                Week
-              </button>
+              <MakePlace onAddPlace={handleAddPlace} selectedDate={selectedDate} />
             </div>
           </div>
         </div>
         <PlanCreator 
-          addedPlaces={placesForSelectedDate}
-          selectedDate={selectedDate} 
+          selectedDate={selectedDate}
+          addedPlacesByDate={addedPlacesByDate} 
         />
       </main>
     </>
