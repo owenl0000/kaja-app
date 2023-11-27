@@ -14,6 +14,7 @@ const path = require("path");
 //routes
 const populateRoute = require("./routes/addData");
 const sampleRoute = require("./routes/rawData");
+const businessInfo = require("./routes/businessInfo");
 
 
 app.use(cors()); // allow for comms between front and back
@@ -27,6 +28,7 @@ app.get('/', (req, res) => {
 
 app.use('/sample', sampleRoute);
 app.use('/populate', populateRoute);
+app.use('/info', businessInfo);
 
 app.listen(port, () => {
     console.log(`The server is live at: http://127.0.0.1:${port}/`);

@@ -5,6 +5,7 @@ import '../../styles/Filter.css';
 import '../../styles/Sidebar.css';
 import '../../styles/TimePicker.css';
 import '../../styles/Header.css';
+import '../../styles/Planner.css'
 
 function MyApp({ Component, pageProps }) {
   return <Component {...pageProps} />;
