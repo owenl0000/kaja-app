@@ -22,11 +22,13 @@ const Planner = () => {
     <>
       <Header page="Planner" />
       <main className="p-4"> 
-        <div className="flex mb-4 w-3/4 ml-10 ">
-          <div className="flex-1">
-            <Calendar setSelectedDate={setSelectedDate}/>
+        <div className="grid lg:grid-cols-2 sm:grid-cols-1 mb-4 w-full">
+          <div className=" flex justify-center">
+            <div className={"lg:w-1/2 sm:w-full"}>
+              <Calendar setSelectedDate={setSelectedDate}/>
+            </div>
           </div>
-          <div className="flex-1 flex flex-col items-center justify-center">
+          <div className=" flex flex-col items-center justify-center">
             <div className="grid grid-cols-2 rounded-md overflow-hidden">
               <button 
                 className={`px-12 py-5 transition-colors ${viewMode === 'day' ? 'bg-coral text-white' : 'bg-gray-200'}`}
