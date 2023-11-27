@@ -42,7 +42,7 @@ const MakePlace = ({ onAddPlace, selectedDate }) => {
   };
 
   return (
-    <div>
+    <div className={"w-full"}>
       <button 
         className="bg-coral text-white text-center p-5 my-5 w-full rounded-md overflow-hidden"
         onClick={() => setShowForm(true)}

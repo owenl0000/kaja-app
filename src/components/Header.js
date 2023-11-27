@@ -65,11 +65,11 @@ function Header({ page }) {
           </Link>
 
           {/* For small screens */}
-          <div className={`lg:hidden flex flex-col items-end gap-y-1 w-full text-center ${isMenuOpen ? 'open' : 'closed'}`}>
-              <Link href="/" className="lg:hidden w-1/6 p-2 sm:bg-[var(--coral)] sm:border sm:rounded-md text-select select-none shadow-sm shadow-black">
+          <div className={`lg:hidden flex flex-col items-end gap-y-1 w-full text-center ${isMenuOpen ? 'open' : 'closed'} z-20`}>
+              <Link href="/" className="lg:hidden w-1/6 p-2 sm:bg-[var(--coral)] sm:border sm:rounded-md text-select select-none text-white shadow-sm shadow-black">
                 Home
               </Link>
-              <Link href="/Itineries" className="lg:hidden w-5/24 p-2 sm:bg-[var(--coral)] sm:border sm:rounded-md text-select select-none shadow-sm shadow-black flex justify-end items-center">
+              <Link href="/Itineries" className="lg:hidden w-5/24 p-2 sm:bg-[var(--coral)] sm:border sm:rounded-md text-select select-none text-white shadow-sm shadow-black flex justify-end items-center">
                 <FontAwesomeIcon icon={faMapMarkedAlt} className="mr-2 lg:hidden" /> Itineraries
               </Link>
               <Link href="/Planner" className="w-1/6 bg-coral text-off-white border p-2 cursor-pointer rounded-md flex items-center justify-center shadow-sm shadow-black lg:hidden active:bg-[var(--dark-coral)] text-select">

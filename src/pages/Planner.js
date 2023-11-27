@@ -67,12 +67,12 @@ const Planner = () => {
         <main className="p-4">
           <div className="grid md:grid-cols-2 sm:grid-cols-1 mb-4">
             <div className="flex-1 flex justify-center">
-              <div className={"w-3/4"}>
+              <div className={"sm:w-3/4 lg:w-1/2"}>
                 < Calendar setSelectedDate={handleDateChange}/>
               </div>
             </div>
             <div className="flex-1 flex flex-col items-center justify-center">
-              <div className="grid grid-cols-2 rounded-md overflow-hidden">
+              <div className="flex rounded-md overflow-hidden sm:w-3/4 lg:w-1/2">
                 <MakePlace onAddPlace={handleAddPlace} selectedDate={selectedDate} />
               </div>
             </div>
