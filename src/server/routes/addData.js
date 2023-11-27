@@ -18,25 +18,16 @@ const query = {
 
 api.auth(apiKey); 
 
+/*
+percent encoding
 
-router.get('/', (req, res) => {
-    db.any("SELECT * FROM \"Location\"")
-        .then(query => console.log(req.params))
-        .then(dbContent => res.send(dbContent))
-        .catch(err => console.error(err));
-})
-
-/* 
-return(api.v3_business_search(query)
-                        .then(({data}) => {
-                            db.none("INSERT into yelp(key, data) VALUES($<key>, $<data>)", {//write to the yelp DB
-                                key: nextKey,
-                                data: data.slice(beg, end)
-                            }).catch(err => console.error(err))
-                        })
-                        .then(status => {res.send(`<h1><center>The status is ${status}</h1></center>`)})
-                        .catch(err => console.error(err)))})
+␣	!	"	#	$	%	&	'	(	)	*	+	,	/	:	;	=	?	@	[	]
+%20	%21	%22	%23	%24	%25	%26	%27	%28	%29	%2A	%2B	%2C	%2F	%3A	%3B	%3D	%3F	%40	%5B	%5D
 
 */
+router.get('/', (req, res) => {
+    res.send(encodeURIComponent(Object.values(req.query)[0]))//this will get us the query parameters of the query
+})
+
 
 module.exports = router;
