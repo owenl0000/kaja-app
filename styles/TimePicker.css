@@ -63,7 +63,6 @@
   }
   
 /* Updated styles for budget and notes input */
-.budget-input,
 .notes-input {
   border: 1px solid #ccc; /* Added border */
   background: transparent;

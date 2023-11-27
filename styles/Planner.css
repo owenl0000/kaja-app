@@ -1,0 +1,39 @@
+.budget-input-wrapper {
+    display: flex;
+    align-items: center; /* Ensures vertical center alignment */
+    justify-content: flex-start; /* Aligns children to the start */
+    border: 1px solid #ccc;
+    background: transparent;
+    border-radius: 0.7rem;
+    padding: 0.5rem;
+    position: relative;
+    transition: background .4s linear, border-color .4s linear;
+}
+
+.currency-symbol {
+    /* Center the symbol vertically */
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+    margin-right: 5px;
+    color: #555;
+    font-size: 1.125rem; /* Adjust size to match input */
+    line-height: 1; /* Reset line height */
+}
+
+.budget-input {
+    flex-grow: 1;
+    border: none;
+    background: transparent;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: black;
+    outline: none;
+    padding: 0.815rem 1.232rem; /* Original padding */
+    border-radius: 0.7rem;
+    line-height: 1; /* Reset line height */
+}
+
+.budget-input-wrapper:hover {
+    border-color: #FF6B6B; /* Hover effect */
+}

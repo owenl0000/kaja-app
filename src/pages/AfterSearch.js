@@ -26,17 +26,11 @@ export default function AfterSearch() {
   }, [addedPlacesByDate]);
 
   const handleAddPlace = (place, selectedDate) => {
-    const index = addedPlacesByDate.findIndex(entry => entry.date === selectedDate);
-    let newAddedPlaces;
- 
-    if (index > -1) {
-      // Date already exists, update the places array for this date
-      newAddedPlaces = [...addedPlacesByDate];
-      newAddedPlaces[index].places.push(place);
-    } else {
-      // Date does not exist, add new entry
-      newAddedPlaces = [...addedPlacesByDate, { date: selectedDate, places: [place] }];
+    const newAddedPlaces = { ...addedPlacesByDate };
+    if (!newAddedPlaces[selectedDate]) {
+      newAddedPlaces[selectedDate] = [];
     }
+    newAddedPlaces[selectedDate].push(place);
   
     setAddedPlacesByDate(newAddedPlaces);
     localStorage.setItem('addedPlacesByDate', JSON.stringify(newAddedPlaces));
