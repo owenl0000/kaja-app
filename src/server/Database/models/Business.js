@@ -47,7 +47,8 @@ module.exports = Business.init({
         //model options
         sequelize, //we need to move this out so that a sequelize db connection isn't hanging here and all are just made in
         freezeTableName: true // create the table with the same name as the model...
-    })
+    }
+);
 
 
 

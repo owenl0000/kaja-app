@@ -7,27 +7,24 @@ const Business = require("./models/Business") // I want to fix these so that the
 const Location = require('./models/Location')
 const Type = require('./models/Type');
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize(connectionString);
+const sequelize = new Sequelize(connectionString); //we probably don't need this here
 const models = {business: Business, location: Location, type: Type}
 const apiKey = `Bearer ${process.env.YELP_API_KEY}`;//setting the API key
 
 const query = {
     location: 'New%20York%20City',
-    term: 'food%20entertainment', 
+    term: 'food%2C%20entertainment', 
     sort_by: 'distance', 
-    limit: '50', // 50 is the max
+    limit: '50' // 50 is the max
 };
 
 api.auth(apiKey); //authenticate with Bearer apikey
 
-
 //here we want to recieve the imports of the models so that we can sync and seed them.
 
-
-
 const BUSINESS = [{
-        business_id: "", 
-        business_name:"", 
+        business_id: "pIjZw5yZQQg7XX4kUiqtgw", 
+        business_name:"Alamo Drafthouse Cinema Lower Manhattan", 
         business_image:"",
         business_url:"",
         business_reviews: 0, 
@@ -38,15 +35,19 @@ const BUSINESS = [{
 }];
 
 const LOCATION = [{
-    location: "New York City"
+    location: decodeURIComponent(query.location)
 }];
 
 const TYPE = [{
     business_id: "TESTING AGAIN", 
-    type: ["TESTING AGAIN!!!"]
+    type: query.term.split("%2C%20") //will hold the 
 }];
 
+
+
 (async () => {
+    Location.hasMany(Business, {foreignKey: 'location_id'});//one to many relation with business and location
+    Business.belongsTo(Location);  
     for(let model in models){
         try{
             await models[model].sequelize.sync({force: true}) //we don't really want to do this destructive behavior
@@ -55,10 +56,11 @@ const TYPE = [{
             console.error(err);
         }
     }
-    
+    //we have to make the relations here 
     try{
         await TYPE.map((t) => {Type.create(t)}) 
         await LOCATION.map((b) => {Location.create(b)}) //for some reason something isn't working on the business model...
+        await BUSINESS.map((b) => {Business.create(b)})
     }catch(err){
         console.error(err)
     }
@@ -72,7 +74,6 @@ const TYPE = [{
       image_url: 'https://s3-media1.fl.yelpcdn.com/bphoto/ybJEMrBEbCwcMt0Jcb2M7w/o.jpg',
       url: 'https://www.yelp.com/biz/alamo-drafthouse-cinema-lower-manhattan-new-york?adjust_creative=o2R38fORawk4CuPMZJOCUg&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=o2R38fORawk4CuPMZJOCUg',
       review_count: 101,
-      categories: [Array],
       rating: 4,
       location: [Object],  --> location.display_address
       display_phone: '',

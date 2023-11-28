@@ -15,4 +15,5 @@ module.exports = Location.init({
         //model options
         sequelize,
         freezeTableName: true
-    })
+    }
+);

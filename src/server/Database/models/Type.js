@@ -8,7 +8,6 @@ class Type extends Model {};
 
 module.exports = Type.init({
         //attributes for the table
-        //this will need to have the business id
         type: {
             type: DataTypes.ARRAY(DataTypes.STRING),
             allowNull: false
@@ -18,10 +17,6 @@ module.exports = Type.init({
         //model options
         sequelize,
         freezeTableName: true
-    })
-
-// (async () => {
-//     await sequelize.sync({force: true});
-//     await TYPE.map((t) => {Type.create(t)})
-// })();
+    }
+);
 
