@@ -86,25 +86,25 @@ const TYPE = [{
 
 
 
-api.v3_business_search(query)
-                        .then(({data}) => data.businesses)
-                        .then(processed => {
-                            return processed.map(p => { //fix me
-                                BUSINESS[0].business_id = p.id;
-                                BUSINESS[0].business_image = p.image_url
-                                BUSINESS[0].business_name = p.name;
-                                BUSINESS[0].business_url = p.url;
-                                BUSINESS[0].business_reviews = p.review_count;
-                                BUSINESS[0].business_rating = p.rating;
-                                BUSINESS[0].business_price = p.price; //price can be null
-                                BUSINESS[0].business_address = p.location.display_address;
-                                BUSINESS[0].business_phone = p.display_phone
+// api.v3_business_search(query)
+//                         .then(({data}) => data.businesses)
+//                         .then(processed => {
+//                             return processed.map(p => { //fix me
+//                                 BUSINESS[0].business_id = p.id;
+//                                 BUSINESS[0].business_image = p.image_url
+//                                 BUSINESS[0].business_name = p.name;
+//                                 BUSINESS[0].business_url = p.url;
+//                                 BUSINESS[0].business_reviews = p.review_count;
+//                                 BUSINESS[0].business_rating = p.rating;
+//                                 BUSINESS[0].business_price = p.price; //price can be null
+//                                 BUSINESS[0].business_address = p.location.display_address;
+//                                 BUSINESS[0].business_phone = p.display_phone
 
-                                return BUSINESS;
-                            })
-                        })
-                        .then(ready => Business.create(ready[0][0]))   //fix me 
-                        .catch(err => console.error(err));
+//                                 return BUSINESS;
+//                             })
+//                         })
+//                         .then(ready => Business.create(ready[0][0]))   //fix me 
+//                         .catch(err => console.error(err));
 
 
 
