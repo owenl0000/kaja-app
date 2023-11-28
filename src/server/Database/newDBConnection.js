@@ -13,7 +13,7 @@ const apiKey = `Bearer ${process.env.YELP_API_KEY}`;//setting the API key
 
 const query = {
     location: 'New%20York%20City',
-    term: 'food, entertainment', 
+    term: 'food%20entertainment', 
     sort_by: 'distance', 
     limit: '50', // 50 is the max
 };
@@ -24,38 +24,48 @@ api.auth(apiKey); //authenticate with Bearer apikey
 //here we want to recieve the imports of the models so that we can sync and seed them.
 
 
-//what we also want to do here is essentially get the data or we can do that fetch somewhere else but it could also work here
-// const BUSINESS = [{
-//         location_id:"0",
-//         business_id: "", 
-//         business_name:"", 
-//         business_url:"",
-//         business_reviews: 0, 
-//         business_rating: 0.0, 
-//         business_price: "", 
-//         business_address: ""
-// }];
+
+const BUSINESS = [{
+        business_id: "", 
+        business_name:"", 
+        business_image:"",
+        business_url:"",
+        business_reviews: 0, 
+        business_rating: 0.0, 
+        business_price: "", 
+        business_address: [],
+        business_phone: ""
+}];
 
 const LOCATION = [{
     location: "New York City"
 }];
 
 const TYPE = [{
-    business_id: "", 
-    type: []
+    business_id: "TESTING AGAIN", 
+    type: ["TESTING AGAIN!!!"]
 }];
 
-
-(async () => { 
+(async () => {
     for(let model in models){
         try{
-            await models[model].sequelize.sync({force: true}) //we don't really want to do this destructive behavio
+            await models[model].sequelize.sync({force: true}) //we don't really want to do this destructive behavior
         }
         catch(err){
             console.error(err);
         }
     }
+    
+    try{
+        await TYPE.map((t) => {Type.create(t)}) 
+        await LOCATION.map((b) => {Location.create(b)}) //for some reason something isn't working on the business model...
+    }catch(err){
+        console.error(err)
+    }
 })();
+
+
+
 /*
       id: 'pIjZw5yZQQg7XX4kUiqtgw',
       name: 'Alamo Drafthouse Cinema Lower Manhattan',
@@ -72,17 +82,39 @@ const TYPE = [{
 // seed the tables with data 
 
 //only uncomment when working so that we don't use a lot of api calls...
-// api.v3_business_search(query)
-//                         .then(({data}) => data.businesses)
-//                         .then(processed => {
-//                             processed.map(p => {
-
-//                             })
-//                         })
-//                         .catch(err => console.error(err))
 
 
 
+
+api.v3_business_search(query)
+                        .then(({data}) => data.businesses)
+                        .then(processed => {
+                            return processed.map(p => { //fix me
+                                BUSINESS[0].business_id = p.id;
+                                BUSINESS[0].business_image = p.image_url
+                                BUSINESS[0].business_name = p.name;
+                                BUSINESS[0].business_url = p.url;
+                                BUSINESS[0].business_reviews = p.review_count;
+                                BUSINESS[0].business_rating = p.rating;
+                                BUSINESS[0].business_price = p.price; //price can be null
+                                BUSINESS[0].business_address = p.location.display_address;
+                                BUSINESS[0].business_phone = p.display_phone
+
+                                return BUSINESS;
+                            })
+                        })
+                        .then(ready => Business.create(ready[0][0]))   //fix me 
+                        .catch(err => console.error(err));
+
+
+
+
+
+
+
+
+
+ 
 
 module.exports = db; //export db so that it can be used in other endpoints
 

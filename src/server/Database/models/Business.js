@@ -34,7 +34,6 @@ module.exports = Business.init({
         },
         business_price: {
             type: DataTypes.STRING,
-            allowNull: false
         },
         business_address: {
             type: DataTypes.ARRAY(DataTypes.STRING), // an array of strings....
