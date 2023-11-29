@@ -1,34 +1,6 @@
 import React, {useEffect, useState} from "react";
 
 export default function Calendar({ setSelectedDate }){
-  console.log(typeof setSelectedDate); // Should log 'function'
-
-
-  /*
-  function Calendar({ setSelectedDate }) {
-  // ... existing code
-
-  const handleDateChange = (newDate) => {
-    setDate(newDate);
-    setSelectedDate(newDate);  // Update the selected date in parent component
-  };
-
-  // ... existing code
-
-  // Update the onClick inside the daysArray.map
-  <div onClick={() => {
-    handleDateChange({
-      month: date.month,
-      day: day,
-      year: date.year
-    });
-  }} className={"hover:bg-gray-500 cursor-pointer select-none"} key={day.id}>
-    {day}
-  </div>
-
-  // ... existing code
-  }
-   */
 
   const [bottomOpen, setBottomOpen] = useState(false);
   const [monthOpen, setMonthOpen] = useState(false);
@@ -108,59 +80,6 @@ export default function Calendar({ setSelectedDate }){
     dayArray.push(i);
   }
 
-  {/*
-  2d array, 12 x 31
-  object with month as key and value as array of days
-
-  let daysLess = 0
-  if(february) daysLess = 3;
-  months.february.length = months.february.length - daysLess;
-
-  January, March, May, July, August, October, and December - 31 days
-  April, June, September, and November - 30 days
-  February - 28 days
-
-  [31]
-  [28]
-  [31]
-  {
-    january: [...31],
-    february: [...28],
-    march: [...undefined]
-  }
-
-  2d array for each month (array of arrays)
-  unshift() an amount of zeros "0" each loop
-  amountOfZeroes = month.length - 28;
-  january starts with 1
-
-  or have a useState for array, and constantly unshift 0s to start
-  if (amountOfZeroes = 7) shift(7);
-
-  onclick{item !== 0 ? /anonymous function to change state object/ : ()=>{} }
-
-  array of numbers to shift amount by
-
-  {
-  Jan: 31,
-  Feb: 28,
-  Mar: 31,
-  Apr: 30
-  }
-
-  let zeroNums = [];
-  for(const month of monthsArray){
-    zeroNums.push(month.daysAmount - 28);
-  }
-
-  array of month objects
-  key is name of month
-  value is number of days
-  access month in map by using object.keys
-  push into zeroNums array using the value of each object
-
-  */}
-
   const calculateUnshift = () => {
 
     let unshiftAmount = monthObject[date.month] - 28;
@@ -173,6 +92,8 @@ export default function Calendar({ setSelectedDate }){
     if(unshiftArray.length >= 7){
       unshiftArray.length = unshiftArray.length % 7;
     }
+
+    if(monthsOfYear)
 
     setUnshiftArray([...innerArray, ...unshiftArray]);
     console.log(unshiftArray);
@@ -251,3 +172,58 @@ export default function Calendar({ setSelectedDate }){
       </div>
   );
 }
+
+{/*
+  calendar development
+
+  2d array, 12 x 31
+  object with month as key and value as array of days
+
+  let daysLess = 0
+  if(february) daysLess = 3;
+  months.february.length = months.february.length - daysLess;
+
+  January, March, May, July, August, October, and December - 31 days
+  April, June, September, and November - 30 days
+  February - 28 days
+
+  [31]
+  [28]
+  [31]
+  {
+    january: [...31],
+    february: [...28],
+    march: [...undefined]
+  }
+
+  2d array for each month (array of arrays)
+  unshift() an amount of zeros "0" each loop
+  amountOfZeroes = month.length - 28;
+  january starts with 1
+
+  or have a useState for array, and constantly unshift 0s to start
+  if (amountOfZeroes = 7) shift(7);
+
+  onclick{item !== 0 ? /anonymous function to change state object/ : ()=>{} }
+
+  array of numbers to shift amount by
+
+  {
+  Jan: 31,
+  Feb: 28,
+  Mar: 31,
+  Apr: 30
+  }
+
+  let zeroNums = [];
+  for(const month of monthsArray){
+    zeroNums.push(month.daysAmount - 28);
+  }
+
+  array of month objects
+  key is name of month
+  value is number of days
+  access month in map by using object.keys
+  push into zeroNums array using the value of each object
+
+  */}
