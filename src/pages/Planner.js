@@ -10,6 +10,13 @@ const Planner = () => {
   console.log(selectedDate);
 
   useEffect(() => {
+    const savedDate = localStorage.getItem('selectedDate');
+    if (savedDate) {
+      setSelectedDate(savedDate);
+    }
+  }, []);
+  
+  useEffect(() => {
     const savedPlaces = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
     console.log('Fetched data from localStorage:', savedPlaces);
     setAddedPlacesByDate(savedPlaces);
@@ -19,6 +26,7 @@ const Planner = () => {
     console.log('Places updated:', addedPlacesByDate);
     // Trigger an update to PlanCreator if needed
   }, [addedPlacesByDate]);
+
 
   const formatDateToString = (dateObj) => {
     // Assuming dateObj is an object like {year: 2023, month: "January", day: 18}
@@ -68,7 +76,7 @@ const Planner = () => {
           <div className="grid md:grid-cols-2 sm:grid-cols-1 mb-4">
             <div className="flex-1 flex justify-center">
               <div className={"sm:w-3/4 lg:w-1/2"}>
-                < Calendar setSelectedDate={handleDateChange}/>
+                < Calendar selectedDate={selectedDate} setSelectedDate={handleDateChange}/>
               </div>
             </div>
             <div className="flex-1 flex flex-col items-center justify-center">

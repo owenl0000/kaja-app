@@ -45,7 +45,9 @@ export default function AfterSearch() {
   };
 
   const handleDateChange = (newDateObject) => {
-    setSelectedDate(formatDateToString(newDateObject));
+    const formattedDate = formatDateToString(newDateObject);
+    setSelectedDate(formattedDate);
+    localStorage.setItem('selectedDate', formattedDate);
   };
 
   return (

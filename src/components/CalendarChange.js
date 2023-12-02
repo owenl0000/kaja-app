@@ -17,6 +17,7 @@ export default function Calendar({ selectedDate, setSelectedDate }){
     December: 31
   };
 
+  
   const [bottomOpen, setBottomOpen] = useState(false);
   const [monthOpen, setMonthOpen] = useState(false);
   const [yearOpen, setYearOpen] = useState(false);
