@@ -85,7 +85,7 @@ export default function TimeSelector(){
 
   return (
       <div className={"flex justify-center w-full bg-coral rounded-md p-2 select-none"}>
-        <div className={"grid grid-cols-3 text-center gap-y-1 text-white w-1/3"}> {/*need to make responsive*/}
+        <div className={" grid grid-cols-3 sm:gap-x-2 text-center gap-y-1 text-white lg:w-1/3 sm:w-full"}> {/*need to make responsive*/}
 
           <div onClick={addHours} className={containerStyles}><img src={arrow} className={`${imageStyles} rotate-[270deg]`} alt={"arrow"}/></div>
           <div onClick={addMinutes} className={containerStyles}><img src={arrow} className={`${imageStyles} rotate-[270deg]`} alt={"arrow"}/></div>

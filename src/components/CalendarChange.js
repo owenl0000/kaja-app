@@ -2,19 +2,6 @@ import React, {useEffect, useState} from "react";
 
 export default function Calendar({ setSelectedDate }){
 
-  const [bottomOpen, setBottomOpen] = useState(false);
-  const [monthOpen, setMonthOpen] = useState(false);
-  const [yearOpen, setYearOpen] = useState(false);
-
-  const[stateArray, setStateArray] = useState([]);
-  const[unshiftArray, setUnshiftArray] = useState([]);
-
-  const [date, setDate] = useState({
-    month: "January",
-    day: 1,
-    year: 2023
-  })
-
   const monthObject = {
     January: 31,
     February: 28,
@@ -29,6 +16,27 @@ export default function Calendar({ setSelectedDate }){
     November: 30,
     December: 31
   };
+
+  const [bottomOpen, setBottomOpen] = useState(false);
+  const [monthOpen, setMonthOpen] = useState(false);
+  const [yearOpen, setYearOpen] = useState(false);
+
+  const[stateArray, setStateArray] = useState([]);
+  const[unshiftArray, setUnshiftArray] = useState([]);
+
+  const currentDate = new Date;
+
+  // const [date, setDate] = useState({
+  //   month: "January", //setSelectedDate.month
+  //   day: 1,           //setSelectedDate.day
+  //   year: 2023        //setSelectedDate.year
+  // })
+
+  const [date, setDate] = useState({
+    month: Object.keys(monthObject)[currentDate.getMonth()], //setSelectedDate.month
+    day: currentDate.getDate(),           //setSelectedDate.day
+    year: currentDate.getFullYear(),        //setSelectedDate.year
+  })
 
   const handleDateChange = newDate => {
     setDate(newDate);
@@ -105,11 +113,11 @@ export default function Calendar({ setSelectedDate }){
   }, [date.month]);
 
   return (
-      <div className={"bg-coral text-white text-center p-5 my-5 w-full rounded-md overflow-hidden"}>
+      <div className={"bg-coral text-white text-center p-5 lg:px-5 sm:px-2 my-5 w-full rounded-md overflow-hidden"}>
         <div onClick={dropBottom} className={"cursor-pointer select-none"}>
           {date.month} {date.day}, {date.year}
         </div>
-        <div className={`${bottomOpen ? "bottom-open" : "bottom-closed"}`}>
+        <div className={`${bottomOpen ? "bottom-open" : "bottom-closed"} sm:text-xs lg:text-base`}>
           <div className={"flex flex-col rounded-md max-height no-scrollbar overflow-scroll"}>
             <div className={"grid grid-cols-2 gap-x-2 bg-dark-coral p-2"}>
               <div>
@@ -123,7 +131,7 @@ export default function Calendar({ setSelectedDate }){
                           year: date.year
                         });
                         dropMonth()
-                      }} className={`${month === date.month ? "text-gray-400" : ""} text-sm p-2 border-white border-b-2 last:border-none cursor-pointer select-none`} key={month}>
+                      }} className={`${month === date.month ? "text-gray-400" : ""} sm:text-[0.5rem] lg:text-base lg:p-2 sm:p-0 sm:py-1 lg:py-0 border-white lg:border-b-2 sm:border-none last:border-none cursor-pointer select-none`} key={month}>
                         {month}
                       </div>
                   ))}
@@ -140,21 +148,21 @@ export default function Calendar({ setSelectedDate }){
                           year: year
                         });
                         dropYear()
-                      }} className={`${year === date.year ? "text-gray-400" : ""} text-sm p-2 border-white border-b-2 last:border-none cursor-pointer select-none`} key={year}>
+                      }} className={`${year === date.year ? "text-gray-400" : ""} sm:text-[0.5rem] lg:text-base lg:p-2 sm:p-0 sm:py-1 lg:py-0 border-white lg:border-b-2 sm:border-none  last:border-none cursor-pointer select-none`} key={year}>
                         {year}
                       </div>
                   ))}
                 </div>
               </div>
             </div>
-            <div className={"grid grid-cols-7 bg-gray-400 p-2 pb-0 select-none"}>
+            <div className={"grid grid-cols-7 sm:pb-2 lg:pb-0 gap-x-1 bg-gray-400 p-2 pb-0 select-none"}>
               {daysOfWeek.map(weekday => (
                   <div key={weekday.id}>
                     {weekday}
                   </div>
               ))}
             </div>
-            <div className={"grid grid-cols-7 bg-gray-400  pt-0 p-2"}>
+            <div className={"grid grid-cols-7 sm:gap-y-2 gap-x-1 lg:gap-y-0 bg-gray-400 pt-0 p-2"}>
               {stateArray.map( day => (
                   <div onClick={() => {
                     handleDateChange({
@@ -162,6 +170,7 @@ export default function Calendar({ setSelectedDate }){
                       day: day,
                       year: date.year
                     });
+                    dropBottom();
                   }} className={`${day === '0' ? "invisible" : ""} rounded-sm hover:bg-gray-500 cursor-pointer select-none`} key={day.id}>
                     {day}
                   </div>
