@@ -2,14 +2,24 @@ const http = require("http");
 const pgp = require("pg-promise")();//needs to be like this as we are initializing without options
 const connectionString = `${process.env.DB_DIALECT}://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_SERVER_HOST}:${process.env.DB_SERVER_PORT}/${process.env.DB_NAME}`;
 const api = require('api')('@yelp-developers/v1.0#9nl412lo4fa3f9');
-const db = pgp(connectionString);//we need some sort of connection as the parameter 
-const Business = require("./models/Business") // I want to fix these so that the seeding actually happens here and what not.
-const Location = require('./models/Location')
-const Type = require('./models/Type');
+const db = pgp(connectionString); //we need some sort of connection as the parameter 
+
+
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize(connectionString); //we probably don't need this here
+//const sequelize = new Sequelize(connectionString); //we probably don't need this here
+
+//import the models
+const Business = require("./models/Business"); 
+const Location = require('./models/Location');
+const Type = require('./models/Type');
+
 const models = {business: Business, location: Location, type: Type}
 const apiKey = `Bearer ${process.env.YELP_API_KEY}`;//setting the API key
+
+
+
+// const path = require('path');
+// require("dotenv").config({ path: path.join(__dirname, "../../../../.env")}); //get the configs from the .env file
 
 const query = {
     location: 'New%20York%20City',
@@ -21,7 +31,6 @@ const query = {
 api.auth(apiKey); //authenticate with Bearer apikey
 
 //here we want to recieve the imports of the models so that we can sync and seed them.
-
 const BUSINESS = [{
         business_id: "pIjZw5yZQQg7XX4kUiqtgw", 
         business_name:"Alamo Drafthouse Cinema Lower Manhattan", 
@@ -60,7 +69,7 @@ const TYPE = [{
     try{
         await TYPE.map((t) => {Type.create(t)}) 
         await LOCATION.map((b) => {Location.create(b)}) //for some reason something isn't working on the business model...
-        await BUSINESS.map((b) => {Business.create(b)})
+        await BUSINESS.map((b) => {Business.bulkCreate(b)})
     }catch(err){
         console.error(err)
     }
@@ -87,25 +96,24 @@ const TYPE = [{
 
 
 
-// api.v3_business_search(query)
-//                         .then(({data}) => data.businesses)
-//                         .then(processed => {
-//                             return processed.map(p => { //fix me
-//                                 BUSINESS[0].business_id = p.id;
-//                                 BUSINESS[0].business_image = p.image_url
-//                                 BUSINESS[0].business_name = p.name;
-//                                 BUSINESS[0].business_url = p.url;
-//                                 BUSINESS[0].business_reviews = p.review_count;
-//                                 BUSINESS[0].business_rating = p.rating;
-//                                 BUSINESS[0].business_price = p.price; //price can be null
-//                                 BUSINESS[0].business_address = p.location.display_address;
-//                                 BUSINESS[0].business_phone = p.display_phone
-
-//                                 return BUSINESS;
-//                             })
-//                         })
-//                         .then(ready => Business.create(ready[0][0]))   //fix me 
-//                         .catch(err => console.error(err));
+api.v3_business_search(query)
+                        .then(({data}) => data.businesses)
+                        .then(processed => {
+                            return processed.map(p => { //fix me
+                                BUSINESS[0].business_id = p.id;
+                                BUSINESS[0].business_image = p.image_url
+                                BUSINESS[0].business_name = p.name;
+                                BUSINESS[0].business_url = p.url;
+                                BUSINESS[0].business_reviews = p.review_count;
+                                BUSINESS[0].business_rating = p.rating;
+                                BUSINESS[0].business_price = p.price; //price can be null
+                                BUSINESS[0].business_address = p.location.display_address;
+                                BUSINESS[0].business_phone = p.display_phone
+                                return BUSINESS;
+                            })
+                        })
+                        .then(ready => Business.create(ready[0][0]))   //fix me 
+                        .catch(err => console.error(err));
 
 
 
