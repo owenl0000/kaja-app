@@ -30,14 +30,8 @@ percent encoding
 
 router.get('/', (req, res) => {
     //res.send(encodeURIComponent(Object.values(req.query)[0]) === "undefined")
-    if(encodeURIComponent(Object.values(req.query)[0]) === "undefined"){
-        query.location = 'New%20York%20City'; 
-    }
+    if(encodeURIComponent(Object.values(req.query)[0]) === "undefined"){ query.location = 'New%20York%20City'; }
     else{query.location = encodeURIComponent(Object.values(req.query)[0])}
-
-    
-
-
 
     res.send(query)//this will get us the query parameters of the query
 
