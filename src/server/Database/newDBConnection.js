@@ -125,5 +125,5 @@ api.v3_business_search(query)
 
  
 
-module.exports = db; //export db so that it can be used in other endpoints
+module.exports = {db, models}; //export db so that it can be used in other endpoints
 
