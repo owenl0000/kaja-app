@@ -10,7 +10,7 @@ export default function Home() {
       
       <main className="bg-off-white">
           {/* Welcome Section */}
-          <div className="relative h-[750px] lg:h-[750px] md:h-[600px] sm:h-[500px]">
+          <div className="relative h-screen">
             <Slideshow />
 
             <section className="absolute top-0 left-0 right-0 h-full flex flex-col justify-center items-center text-center p-5">
