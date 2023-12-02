@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 
-export default function Calendar({ setSelectedDate }){
+export default function Calendar({ selectedDate, setSelectedDate }){
 
   const monthObject = {
     January: 31,

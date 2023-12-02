@@ -10,8 +10,8 @@ import Recommendations from '@/components/Recommendations.js';
 export default function AfterSearch() {
 
   const [addedPlacesByDate, setAddedPlacesByDate] = useState([]);
-
-
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  console.log(selectedDate);
   // Read places from localStorage on mount
   useEffect(() => {
     const savedPlaces = localStorage.getItem('addedPlacesByDate');
@@ -36,16 +36,28 @@ export default function AfterSearch() {
     localStorage.setItem('addedPlacesByDate', JSON.stringify(newAddedPlaces));
   };
   
+  const formatDateToString = (dateObj) => {
+    // Assuming dateObj is an object like {year: 2023, month: "January", day: 18}
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"];
+    const monthIndex = monthNames.indexOf(dateObj.month) + 1;
+    return `${dateObj.year}-${String(monthIndex).padStart(2, '0')}-${String(dateObj.day).padStart(2, '0')}`;
+  };
+
+  const handleDateChange = (newDateObject) => {
+    setSelectedDate(formatDateToString(newDateObject));
+  };
+
   return (
       <>
 
           <Header page="AfterSearch"/>
           <div className="flex min-h-screen h-full">
               <div className="w-1/4">
-                  <Sidebar />
+                  <Sidebar selectedDate={selectedDate} onDateChange={handleDateChange}/>
               </div>
               <div className="w-3/4">
-                <Recommendations onAddPlace={(place) => handleAddPlace(place, new Date().toISOString().split('T')[0])} />   
+                <Recommendations onAddPlace={(place) => handleAddPlace(place, selectedDate)} />   
               </div>
           </div>
 
