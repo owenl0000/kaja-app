@@ -11,7 +11,7 @@ const SearchBar = () => {
     setUrl(`placeName=${ placeName || '' }&location=${ location || '' }`);
   }
 
-  
+  //what we can do here is to actually fetch 
 
   const handleSearch = () => {
     console.log(`Searching for ${placeName} in ${location}`);

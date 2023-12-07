@@ -20,17 +20,22 @@ const query = {
 
 api.auth(apiKey); 
 //we need to make this a list of 50 objects.....
-const BUSINESS = [{
-    business_id: "testingID", 
-    business_name:"THIS IS A PLACE", 
-    business_image:"",
-    business_url:"",
-    business_reviews: 0, 
-    business_rating: 0.0, 
-    business_price: "", 
-    business_address: ["something", "something"],
-    business_phone: ""
-}];
+
+
+
+const BUSINESS = Array.from({length: 50}, () => (
+    {
+        business_id: "garbageId", 
+        business_name:"THIS IS A PLACE", 
+        business_image:"",
+        business_url:"",
+        business_reviews: 0, 
+        business_rating: 0.0, 
+        business_price: "", 
+        business_address: ["something", "something"],
+        business_phone: ""
+    }
+))
 
 const LOCATION = [{
     location: decodeURIComponent(query.location)
@@ -57,21 +62,24 @@ percent encoding
 
 
 
-router.get('/', (req, res) => {
-    //res.send(encodeURIComponent(Object.values(req.query)[0]) === "undefined")
 
+router.get('/', (req, res) => {
     if(encodeURIComponent(Object.values(req.query)[0]) === "undefined"){ query.location = 'New%20York%20City'; }
     else{query.location = encodeURIComponent(Object.values(req.query)[0])}
+
+
+
+
+
     (async () => {
         try{
             await TYPE.map((t) => {models.type.create(t)}) 
-            await LOCATION.map((b) => {models.location.create(b)}) //for some reason something isn't working on the business model...
-            await BUSINESS.map((b) => {models.business.create(b)})
+            await LOCATION.map((l) => {models.location.create(l)}) 
+            await models.business.bulkCreate(BUSINESS);
         }catch(err){
             console.error(err)
         }
     })();
-
     res.send(query)//this will get us the query parameters of the query
 })
 

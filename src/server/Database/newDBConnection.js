@@ -17,10 +17,6 @@ const models = {business: Business, location: Location, type: Type}
 const apiKey = `Bearer ${process.env.YELP_API_KEY}`;//setting the API key
 
 
-
-// const path = require('path');
-// require("dotenv").config({ path: path.join(__dirname, "../../../../.env")}); //get the configs from the .env file
-
 const query = {
     location: 'New%20York%20City',
     term: 'food%2C%20entertainment', 
@@ -31,17 +27,19 @@ const query = {
 api.auth(apiKey); //authenticate with Bearer apikey
 
 //here we want to recieve the imports of the models so that we can sync and seed them.
-const BUSINESS = [{
-        business_id: "pIjZw5yZQQg7XX4kUiqtgw", 
-        business_name:"Alamo Drafthouse Cinema Lower Manhattan", 
-        business_image:"",
-        business_url:"",
+const BUSINESS = Array.from({length: 50}, () => (
+    {
+        business_id: "INITIALIZING", 
+        business_name:"INITIALIZING", 
+        business_image:"INITIALIZING",
+        business_url:"INITIALIZING",
         business_reviews: 0, 
         business_rating: 0.0, 
-        business_price: "", 
-        business_address: [],
-        business_phone: ""
-}];
+        business_price: "INITIALIZING", 
+        business_address: ["INITIALIZING", "INITIALIZING"],
+        business_phone: "INITIALIZING"
+    }
+))
 
 const LOCATION = [{
     location: decodeURIComponent(query.location)
@@ -67,9 +65,9 @@ const TYPE = [{
     }
     //we have to make the relations here 
     try{
-        await TYPE.map((t) => {Type.create(t)}) 
-        await LOCATION.map((b) => {Location.create(b)}) //for some reason something isn't working on the business model...
-        await BUSINESS.map((b) => {Business.bulkCreate(b)})
+        await TYPE.map((t) => {Type.create(t)});
+        await LOCATION.map((b) => {Location.create(b)}); //for some reason something isn't working on the business model...
+        await Business.bulkCreate(BUSINESS);
     }catch(err){
         console.error(err)
     }
@@ -96,24 +94,24 @@ const TYPE = [{
 
 
 
-api.v3_business_search(query)
-                        .then(({data}) => data.businesses)
-                        .then(processed => {
-                            return processed.map(p => { //fix me
-                                BUSINESS[0].business_id = p.id;
-                                BUSINESS[0].business_image = p.image_url
-                                BUSINESS[0].business_name = p.name;
-                                BUSINESS[0].business_url = p.url;
-                                BUSINESS[0].business_reviews = p.review_count;
-                                BUSINESS[0].business_rating = p.rating;
-                                BUSINESS[0].business_price = p.price; //price can be null
-                                BUSINESS[0].business_address = p.location.display_address;
-                                BUSINESS[0].business_phone = p.display_phone
-                                return BUSINESS;
-                            })
-                        })
-                        .then(ready => Business.create(ready[0][0]))   //fix me 
-                        .catch(err => console.error(err));
+// api.v3_business_search(query)
+//                         .then(({data}) => data.businesses)
+//                         .then(processed => {
+//                             return processed.map(p => { //fix me
+//                                 BUSINESS[0].business_id = p.id;
+//                                 BUSINESS[0].business_image = p.image_url
+//                                 BUSINESS[0].business_name = p.name;
+//                                 BUSINESS[0].business_url = p.url;
+//                                 BUSINESS[0].business_reviews = p.review_count;
+//                                 BUSINESS[0].business_rating = p.rating;
+//                                 BUSINESS[0].business_price = p.price; //price can be null
+//                                 BUSINESS[0].business_address = p.location.display_address;
+//                                 BUSINESS[0].business_phone = p.display_phone
+//                                 return BUSINESS;
+//                             })
+//                         })
+//                         .then(ready => Business.create(ready[0][0]))   //fix me 
+//                         .catch(err => console.error(err));
 
 
 
