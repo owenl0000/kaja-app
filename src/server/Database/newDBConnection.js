@@ -19,7 +19,7 @@ const apiKey = `Bearer ${process.env.YELP_API_KEY}`;//setting the API key
 
 const query = {
     location: 'New%20York%20City',
-    term: 'food%2C%20entertainment', 
+    term: 'food%2C%20entertainment%2C%20hangout%2C%20fun', 
     sort_by: 'distance', 
     limit: '50' // 50 is the max
 };
@@ -29,15 +29,13 @@ api.auth(apiKey); //authenticate with Bearer apikey
 //here we want to recieve the imports of the models so that we can sync and seed them.
 const BUSINESS = Array.from({length: 50}, () => (
     {
-        business_id: "INITIALIZING", 
-        business_name:"INITIALIZING", 
-        business_image:"INITIALIZING",
-        business_url:"INITIALIZING",
+        business_id: "", 
+        business_name:"",
+        business_url:"",
         business_reviews: 0, 
         business_rating: 0.0, 
-        business_price: "INITIALIZING", 
-        business_address: ["INITIALIZING", "INITIALIZING"],
-        business_phone: "INITIALIZING"
+        business_price: "", 
+        business_address: ["", ""],
     }
 ))
 
@@ -49,6 +47,30 @@ const TYPE = [{
     business_id: "TESTING AGAIN", 
     type: query.term.split("%2C%20") //will hold the 
 }];
+
+
+//check if phone and image are null....
+api.v3_business_search(query)
+                        .then(({data}) => data.businesses)
+                        .then(processed => {
+                            for(i = 0; i < BUSINESS.length; i++){
+                                BUSINESS[i].business_id = processed[i].id;
+                                if(processed[i].image_url.length){
+                                    BUSINESS[i].business_image = processed[i].image_url
+                                }
+                                BUSINESS[i].business_name = processed[i].name;
+                                BUSINESS[i].business_url = processed[i].url;
+                                BUSINESS[i].business_reviews = processed[i].review_count;
+                                BUSINESS[i].business_rating = processed[i].rating;
+                                BUSINESS[i].business_price = processed[i].price; //price can be null
+                                BUSINESS[i].business_address = processed[i].location.display_address;
+                                if(processed[i].display_phone.length){
+                                    BUSINESS[i].business_phone = processed[i].display_phone
+                                }
+                                BUSINESS[i].business_phone = processed[i].display_phone
+                            }
+                        })
+                        .catch(err => console.error(err));
 
 
 
@@ -84,34 +106,9 @@ const TYPE = [{
       rating: 4,
       location: [Object],  --> location.display_address
       display_phone: '',
-
 */
 
-// seed the tables with data 
 
-//only uncomment when working so that we don't use a lot of api calls...
-
-
-
-
-// api.v3_business_search(query)
-//                         .then(({data}) => data.businesses)
-//                         .then(processed => {
-//                             return processed.map(p => { //fix me
-//                                 BUSINESS[0].business_id = p.id;
-//                                 BUSINESS[0].business_image = p.image_url
-//                                 BUSINESS[0].business_name = p.name;
-//                                 BUSINESS[0].business_url = p.url;
-//                                 BUSINESS[0].business_reviews = p.review_count;
-//                                 BUSINESS[0].business_rating = p.rating;
-//                                 BUSINESS[0].business_price = p.price; //price can be null
-//                                 BUSINESS[0].business_address = p.location.display_address;
-//                                 BUSINESS[0].business_phone = p.display_phone
-//                                 return BUSINESS;
-//                             })
-//                         })
-//                         .then(ready => Business.create(ready[0][0]))   //fix me 
-//                         .catch(err => console.error(err));
 
 
 
