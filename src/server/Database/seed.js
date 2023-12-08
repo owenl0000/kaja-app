@@ -51,7 +51,7 @@ api.v3_business_search(query)
                         .then(processed => {
                             for(i = 0; i < BUSINESS.length; i++){
                                 BUSINESS[i].business_id = processed[i].id;
-                                BUSINESS[i].location = "something";
+                                BUSINESS[i].location = decodeURIComponent(query.location);
                                 if(processed[i].image_url.length){BUSINESS[i].business_image = processed[i].image_url}
                                 BUSINESS[i].business_name = processed[i].name;
                                 BUSINESS[i].business_url = processed[i].url;
