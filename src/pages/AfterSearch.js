@@ -13,6 +13,14 @@ export default function AfterSearch() {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   console.log(selectedDate);
   // Read places from localStorage on mount
+
+  useEffect(() => {
+    const savedDate = localStorage.getItem('selectedDate');
+    if (savedDate) {
+      setSelectedDate(savedDate);
+    }
+  }, []);
+  
   useEffect(() => {
     const savedPlaces = localStorage.getItem('addedPlacesByDate');
     if (savedPlaces) {

@@ -5,12 +5,13 @@ import TriangleToggle from '../utils/TriangleToggle';
 import YelpStars from '@/utils/YelpStars';
 import Image from 'next/image';
 import 'font-awesome/css/font-awesome.min.css';
-const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info` //url used for fetching
+import { useRouter } from 'next/router';
+//const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info` //url used for fetching
 //we are using this for rendering
 
 function Recommendations({  onAddPlace = () => {} }) {
-
-  const [addedPlaceIndex, setAddedPlaceIndex] = useState(null);
+  const router = useRouter();
+  const { placeName, location } = router.query;
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [addedIconIndex, setAddedIconIndex] = useState(null);
@@ -20,6 +21,9 @@ function Recommendations({  onAddPlace = () => {} }) {
     afternoon: [],
     night: [],
   });
+
+  const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info?placeName=${encodeURIComponent(placeName) || ''}&location=${encodeURIComponent(location) || ''}`; //url used for fetching
+  console.log(fetchUrl);
   useEffect(() => { //fetching the actual data 
     fetch(fetchUrl)
         .then(response => response.json())
@@ -98,37 +102,35 @@ function Recommendations({  onAddPlace = () => {} }) {
       return num;
   };
     return (
-      <div key={place.id} className={`w-[250px] 2xl:w-[350px] 2xl:h-[350px] px-3 mb-4 mx-2 border rounded p-1 shadow-lg relative bg-white`}>
-        <div className="relative h-48 2xl:h-[228px] bg-gray-200 mt-2">
-          <div className="w-full h-full flex justify-center items-center">
-            <img src={place.image} style={{height: "195px", width: "225px"}}></img> 
-          </div>
-        </div>
-        <div className="pt-2 px-2 pb-1">
-          <div className="flex justify-between items-center mb-2">
-            <h3>{place.name}</h3>
-            <button 
-                className="rounded-full w-6 h-6 flex items-center justify-center bg-transparent" 
-                onClick={() => {console.log("Button clicked, place:", place); 
-                handleAddPlace(place); }}
-            >
-                <i className={`fa ${addedIconIndex === place.id ? 'fa-check text-green-500' : 'fa-plus text-red-500'}`}></i>
-            </button>
-          </div>
-          <div className="flex flex-col xl:flex-row xl:items-center mt-1">
-            <div className="stars flex-shrink-0">
-              <YelpStars rating={place.stars} size="small" multiplier="3x"/>
+      <div key={place.id} className={`w-[250px] 2xl:w-[350px] 2xl:h-auto px-3 mb-4 mx-2 border rounded-lg p-1 shadow-lg relative bg-white overflow-hidden`}>
+          <div className="relative h-48 2xl:h-[228px]  mt-4 mb-1 mx-3">
+            <div className="w-full h-full flex justify-center items-center rounded-lg">
+              <img src={place.image} className='h-full w-full object-cover rounded-lg' alt={place.name}></img>
             </div>
-            <span className="mt-1 md:mt-0 xl:ml-2 text-gray-500">{abbreviateNumber(place.reviews)} reviews</span>
           </div>
-        </div>
-        <div className="xl:mb-0 ml-2 mb-0">
-          {/* Yelp icon acting as a link */}
-
-          <a href={place.yelpLink} target="_blank" rel="noopener noreferrer">
-            <Image src="/images/yelp_logo.png" alt="Yelp" width={50} height={20} />
-          </a>
-        </div>
+          <div className="pt-2 px-2 pb-1">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-sm md:text-base font-semibold truncate" style={{maxWidth: '80%'}}>{place.name}</h3>
+              <button 
+                  className="rounded-full w-6 h-6 flex items-center justify-center bg-transparent" 
+                  onClick={() => {console.log("Button clicked, place:", place); 
+                  handleAddPlace(place); }}
+              >
+                  <i className={`fa ${addedIconIndex === place.id ? 'fa-check text-green-500' : 'fa-plus text-red-500'}`}></i>
+              </button>
+            </div>
+            <div className="flex flex-col xl:flex-row xl:items-center mt-1">
+              <div className="stars flex-shrink-0">
+                <YelpStars rating={place.stars} size="small" multiplier="3x"/>
+              </div>
+              <span className="mt-1 md:mt-0 xl:ml-2 text-gray-500 truncate" style={{maxWidth: '80%'}}>{abbreviateNumber(place.reviews)} reviews</span>
+            </div>
+          </div>
+          <div className="ml-2 mb-4">
+            <a href={place.yelpLink} target="_blank" rel="noopener noreferrer">
+              <Image src="/images/yelp_logo.png" alt="Yelp" width={50} height={20} />
+            </a>
+          </div>
       </div>
     );
   };
