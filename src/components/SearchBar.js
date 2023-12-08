@@ -11,9 +11,7 @@ const SearchBar = () => {
     setUrl(`placeName=${ placeName || '' }&location=${ location || '' }`);
   }
 
-  useEffect(() => {
-    console.log(url);
-  }, [url]);
+  //what we can do here is to actually fetch 
 
   const handleSearch = () => {
     console.log(`Searching for ${placeName} in ${location}`);

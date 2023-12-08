@@ -13,6 +13,10 @@ module.exports = Business.init({
             type: DataTypes.STRING,
             allowNull: false
         },
+        location:{
+            type: DataTypes.STRING,
+            allowNull: false
+        },
         business_name:{
             type: DataTypes.STRING,
             allowNull: false

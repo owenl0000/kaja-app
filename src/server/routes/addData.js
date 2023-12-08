@@ -1,9 +1,10 @@
 require("dotenv").config({ path: '../../.env'}) //configure the api environment
 const express = require("express");
 const router = express.Router();
-const db = require("../Database/newDBConnection");
+//const db = require("../Database/newDBConnection");
 const api = require('api')('@yelp-developers/v1.0#9nl412lo4fa3f9');
 const apiKey = `Bearer ${process.env.YELP_API_KEY}`;
+const {db, models} = require("../Database/seed");
 
 //adding to the database
 
@@ -18,6 +19,30 @@ const query = {
 //want to try to add enough data to like one single entry/datapoint
 
 api.auth(apiKey); 
+//we need to make this a list of 50 objects.....
+
+
+
+const BUSINESS = Array.from({length: 50}, () => (
+    {
+        business_id: "garbageId", 
+        location: "",
+        business_name:"THIS IS A PLACE", 
+        business_image:"",
+        business_url:"",
+        business_reviews: 0, 
+        business_rating: 0.0, 
+        business_price: "", 
+        business_address: ["something", "something"],
+        business_phone: ""
+    }
+))
+
+const TYPE = [{
+    business_id: "TESTING ADDING MORE", 
+    type: decodeURIComponent(query.term).split(" ")  
+}];
+
 
 /*
 percent encoding
@@ -27,15 +52,21 @@ percent encoding
 
 */
 
-
 router.get('/', (req, res) => {
-    //res.send(encodeURIComponent(Object.values(req.query)[0]) === "undefined")
     if(encodeURIComponent(Object.values(req.query)[0]) === "undefined"){ query.location = 'New%20York%20City'; }
     else{query.location = encodeURIComponent(Object.values(req.query)[0])}
 
+
+
+    (async () => {
+        try{
+            await TYPE.map((t) => {models.type.create(t)}) 
+            await models.business.bulkCreate(BUSINESS);
+        }catch(err){
+            console.error(err)
+        }
+    })();
     res.send(query)//this will get us the query parameters of the query
-
-
 })
 
 
