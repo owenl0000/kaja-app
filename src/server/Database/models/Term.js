@@ -5,12 +5,16 @@ const sequelize = new Sequelize(`${process.env.DB_DIALECT}://${process.env.DB_US
 //we have to import the sequelize which will have a new instance used with the db...
 
 
-class Type extends Model {};
+class Term extends Model {};
 
-module.exports = Type.init({
+module.exports = Term.init({
         //attributes for the table
-        type: {
-            type: DataTypes.ARRAY(DataTypes.STRING),
+        location: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        term: {
+            type: DataTypes.STRING,
             allowNull: false
         }
     }, 

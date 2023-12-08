@@ -4,44 +4,42 @@ const connectionString = `${process.env.DB_DIALECT}://${process.env.DB_USER}:${p
 const api = require('api')('@yelp-developers/v1.0#9nl412lo4fa3f9');
 const db = pgp(connectionString); //we need some sort of connection as the parameter 
 
-
-const Sequelize = require('sequelize');
-//const sequelize = new Sequelize(connectionString); //we probably don't need this here
-
 //import the models
 const Business = require("./models/Business"); 
-const Type = require('./models/Type');
+const Term = require('./models/Term');
+const models = {business: Business, term: Term}
 
-const models = {business: Business, type: Type}
 const apiKey = `Bearer ${process.env.YELP_API_KEY}`;//setting the API key
-
+api.auth(apiKey); //authenticate with Bearer apikey
 
 const query = {
     location: 'New%20York%20City',
-    term: 'food%2C%20entertainment%2C%20hangout%2C%20fun', 
+    term: 'food%2C%20entertainment%2C%20hangout%2C%20tourist%2C%20hotspots', 
     sort_by: 'distance', 
-    limit: '50' // 50 is the max
+    //open_now: 'true',
+    limit: '50', // 50 is the max
+    //radius: '5000'
 };
 
-api.auth(apiKey); //authenticate with Bearer apikey
+
 
 //here we want to recieve the imports of the models so that we can sync and seed them.
 const BUSINESS = Array.from({length: 50}, () => (
     {
-        business_id: "",  
-        location: "",
-        business_name:"",
-        business_url:"",
+        business_id: "LOADING...",  
+        location: "LOADING...",
+        business_name:"LOADING...",
+        business_url:"LOADING...",
         business_reviews: 0, 
         business_rating: 0.0, 
-        business_price: "", 
-        business_address: [""],
+        business_price: "LOADING...", 
+        business_address: ["LOADING..."],
     }
 ))
 
-const TYPE = [{
-    business_id: decodeURIComponent(query.term), 
-    type: query.term.split("%2C%20") //will hold the 
+const TERM = [{
+    location: decodeURIComponent(query.location), 
+    term: decodeURIComponent(query.term)
 }];
 
 
@@ -65,8 +63,6 @@ api.v3_business_search(query)
                         })
                         .then(() => {
                             (async () => {
-                                Type.hasMany(Business, {foreignKey: 'location_id'});//one to many relation with business and location
-                                Business.belongsTo(Type);  
                                 for(let model in models){
                                     try{
                                         await models[model].sequelize.sync({force: true}) //we don't really want to do this destructive behavior
@@ -77,7 +73,7 @@ api.v3_business_search(query)
                                 }
                                 //we have to make the relations here 
                                 try{
-                                    await TYPE.map((t) => {Type.create(t)});
+                                    await TERM.map((t) => {Term.create(t)});
                                     await Business.bulkCreate(BUSINESS);
                                 }catch(err){
                                     console.error(err)
