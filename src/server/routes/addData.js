@@ -1,5 +1,4 @@
 require("dotenv").config({ path: '../../.env'}) //configure the api environment
-const { query } = require("express");
 const express = require("express");
 const router = express.Router();
 //const db = require("../Database/newDBConnection");
@@ -41,10 +40,8 @@ router.get('/', (req, res) => {
     TERM.term = decodeURIComponent(query.term);
 
     db.any(`SELECT EXISTS (SELECT 1 FROM \"Term\" WHERE location='${decodeURIComponent(query.location)}' AND term='${decodeURIComponent(query.term)}')`)
-        .then(raw => raw[0].exists ?  true :  false)
         .then(found => {
-            console.log(query)
-            if(found){return "FOUND"}
+            if(found[0].exists){return "FOUND"}
             return api.v3_business_search(query)
                 .then(({data}) => data.businesses)
                 .then(data => {
@@ -67,7 +64,7 @@ router.get('/', (req, res) => {
                     (async () => {
                         try{
                             await models.term.create(TERM);
-                            const TermId = await Term.findOne({where : {location: TERM.location, term: TERM.term}});// get the id to relate it to it's business
+                            const TermId = await models.term.findOne({where : {location: TERM.location, term: TERM.term}});// get the id to relate it to it's business
                             BUSINESS.forEach(loc => loc.TermId = TermId.dataValues.id) // set the id for each business
                             await models.business.bulkCreate(BUSINESS);
                         }catch(err){
@@ -81,10 +78,6 @@ router.get('/', (req, res) => {
         .catch(err => console.error(err));
     
 })
-
-
-
-
 
 
 

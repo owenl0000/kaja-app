@@ -15,7 +15,7 @@ const port = process.env.SERVER_PORT || "3060";//set the port
 
 
 const populateRoute = require("./routes/addData");
-const sampleRoute = require("./routes/rawData");
+const sampleRoute = require("./routes/allData");
 const businessInfo = require("./routes/businessInfo");
 
 
