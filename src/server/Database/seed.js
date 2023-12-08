@@ -16,9 +16,8 @@ const query = {
     location: 'New%20York%20City',
     term: 'food%2C%20entertainment%2C%20hangout%2C%20tourist%2C%20hotspots', 
     sort_by: 'distance', 
-    //open_now: 'true',
     limit: '50', // 50 is the max
-    //radius: '5000'
+    radius: '5000'
 };
 
 
@@ -71,7 +70,6 @@ api.v3_business_search(query)
                                         console.error(err);
                                     }
                                 }
-                                //we have to make the relations here 
                                 try{
                                     await TERM.map((t) => {Term.create(t)});
                                     await Business.bulkCreate(BUSINESS);

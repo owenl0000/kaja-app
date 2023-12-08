@@ -7,7 +7,7 @@ const id = "someIDToFind";
 
 
 router.get('/', (req, res) => {
-    db.any("SELECT * FROM \"Business\" WHERE location='New York City'")
+    db.any("SELECT * FROM \"Business\"")
         .then(raw => res.json({business_data: raw}))
         .catch(err => console.error(err));
 })
