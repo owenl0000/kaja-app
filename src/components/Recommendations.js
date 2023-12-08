@@ -1,13 +1,12 @@
-import 'dotenv/config'
+const path = require('path');
+require("dotenv").config({ path: path.join(__dirname, "../../.env")}); //get the configs from the .env file
 import React, { useState, useEffect } from 'react';
 import TriangleToggle from '../utils/TriangleToggle';
 import YelpStars from '@/utils/YelpStars';
 import Image from 'next/image';
 import 'font-awesome/css/font-awesome.min.css';
-
-
+const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info` //url used for fetching
 //we are using this for rendering
-//move the recommendationData file into here
 
 function Recommendations({  onAddPlace = () => {} }) {
 
@@ -21,9 +20,8 @@ function Recommendations({  onAddPlace = () => {} }) {
     afternoon: [],
     night: [],
   });
-
   useEffect(() => { //fetching the actual data 
-    fetch(`http://127.0.0.1:3060/info`)
+    fetch(fetchUrl)
         .then(response => response.json())
         .then(body => body.business_data)
         .then(fetchedData => {

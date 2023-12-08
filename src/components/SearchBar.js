@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+const path = require('path');
+require("dotenv").config({ path: path.join(__dirname, "../../.env")}); //get the configs from the .env file
 
 const SearchBar = () => {
   const [placeName, setPlaceName] = useState('');
