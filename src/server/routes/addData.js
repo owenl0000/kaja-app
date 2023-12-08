@@ -74,15 +74,9 @@ router.get('/', (req, res) => {
                 })
                 .catch(err => console.error(err));
         })
-        .then(() => {
-            const out = models.term.findOne({where : {location: TERM.location, term: TERM.term}})
-            out.then(out => console.log(out))
-                // .then(out => console.log(out))
-                // .then(getId => getId.dataValues.id)
-                // .then(id => res.send({termId: id}))
-        })
+        .then(() => res.send(BUSINESS))
         .catch(err => console.error(err));
-    
+        
 })
 
 

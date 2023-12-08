@@ -26,7 +26,6 @@ function Recommendations({  onAddPlace = () => {} }) {
         .then(body => body.business_data)
         .then(fetchedData => {
             let newRecommendations = { area: [], morning: [], afternoon: [], night: [] };
-            console.log(fetchedData)
             for (let block in newRecommendations) {
                 for (let i = 0; i < 12; i++) {
                     const load = fetchedData[Math.floor(Math.random() * fetchedData.length)];
