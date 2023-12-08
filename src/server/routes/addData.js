@@ -74,15 +74,15 @@ router.get('/', (req, res) => {
                 })
                 .catch(err => console.error(err));
         })
-        .then(() => {
-            const out = models.term.findOne({where : {location: TERM.location, term: TERM.term}})
-            out.then(out => console.log(out))
-                // .then(out => console.log(out))
-                // .then(getId => getId.dataValues.id)
-                // .then(id => res.send({termId: id}))
-        })
         .catch(err => console.error(err));
-    
+    (async () => {
+            try{
+                const TermId = await models.term.findOne({where : {location: TERM.location, term: TERM.term}});// get the id to relate it to it's business
+                res.send(await TermId.dataValues.id) // set the id for each business
+            }catch(err){
+                console.error(err)
+            }
+    })();
 })
 
 
