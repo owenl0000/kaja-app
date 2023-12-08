@@ -36,10 +36,10 @@ const BUSINESS = Array.from({length: 50}, () => (
     }
 ))
 
-const TERM = [{
+const TERM = {
     location: decodeURIComponent(query.location), 
     term: decodeURIComponent(query.term)
-}];
+};
 
 
 //check if phone and image are null....
@@ -62,7 +62,10 @@ api.v3_business_search(query)
                         })
                         .then(() => {
                             (async () => {
-                                for(let model in models){
+                                Term.hasMany(Business);
+                                Business.belongsTo(Term);
+
+                                for(let model in models){  
                                     try{
                                         await models[model].sequelize.sync({force: true}) //we don't really want to do this destructive behavior
                                     }
@@ -71,7 +74,9 @@ api.v3_business_search(query)
                                     }
                                 }
                                 try{
-                                    await TERM.map((t) => {Term.create(t)});
+                                    await Term.create(TERM);
+                                    const TermId = await Term.findOne({where : {location: TERM.location, term: TERM.term}});// get the id to relate it to it's business
+                                    BUSINESS.forEach(loc => loc.TermId = TermId.dataValues.id) // set the id for each business
                                     await Business.bulkCreate(BUSINESS);
                                 }catch(err){
                                     console.error(err)

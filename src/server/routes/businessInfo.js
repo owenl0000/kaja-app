@@ -7,8 +7,8 @@ const id = "someIDToFind";
 
 
 router.get('/', (req, res) => {
-    db.any("SELECT * FROM \"Business\"")
-        .then(raw => res.json({business_data: raw}))
+    db.any(`SELECT * FROM \"Business\" WHERE TermId='"${decodeURIComponent(Object.values(req.query)[0])}"'`)
+        .then(raw => res.send({business_data: raw}))
         .catch(err => console.error(err));
 })
 
