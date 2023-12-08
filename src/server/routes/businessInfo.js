@@ -6,7 +6,7 @@ const {db} = require('../Database/seed')
 
 
 router.get('/', (req, res) => {
-    db.any(`SELECT * FROM \"Business\" WHERE TermId='"${decodeURIComponent(Object.values(req.query)[0])}"'`)
+    db.any(`SELECT * FROM \"Business\" WHERE "TermId"='${Object.values(req.query)[0] === undefined ? 1 : Object.values(req.query)[0]}'`)
         .then(raw => res.send({business_data: raw}))
         .catch(err => console.error(err));
 })
