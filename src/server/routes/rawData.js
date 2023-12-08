@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../Database/newDBConnection");
+const db = require("../Database/seed");
 
 router.get('/', (req, res) => {//get data from PostgreSQL
     db.any(`SELECT * FROM \"Location\" `)//query database for all the data
