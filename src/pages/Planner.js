@@ -37,8 +37,11 @@ const Planner = () => {
   };
 
   const handleDateChange = (newDateObject) => {
-    setSelectedDate(formatDateToString(newDateObject));
+    const formattedDate = formatDateToString(newDateObject);
+    setSelectedDate(formattedDate);
+    localStorage.setItem('selectedDate', formattedDate);
   };
+  
 
   const handleAddPlace = (newPlace, date) => {
     console.log("Received place:", newPlace);

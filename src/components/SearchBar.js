@@ -8,7 +8,11 @@ const SearchBar = () => {
   const [activity, setActivity] = useState('');
   const [url, setUrl] = useState('placeName=&location=');
   const router = useRouter();
-
+//url = placeName=&location=
+//to recommendations
+  console.log(url);
+  //fetch(`http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/populate?${url}`)
+  
   const updateUrl = () => {
     setUrl(`placeName=${ placeName || '' }&activity=${ activity || '' }`);
   }
