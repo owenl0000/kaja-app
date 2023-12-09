@@ -11,7 +11,7 @@ const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NE
 
 function Recommendations({  onAddPlace = () => {} }) {
   const router = useRouter();
-  const { placeName, location } = router.query;
+  const { placeName, location } = router.query; //if empty or undefined set it to some place or required search 
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [addedIconIndex, setAddedIconIndex] = useState(null);
@@ -21,31 +21,35 @@ function Recommendations({  onAddPlace = () => {} }) {
     afternoon: [],
     night: [],
   });
-  useEffect(() => { //fetching the actual data 
+  
+  useEffect(() => { // fetching the actual data
     fetch(`http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info?placeName=${encodeURIComponent(placeName)}&location=${encodeURIComponent(location)}`)
         .then(res => res.json())
         .then(body => body.business_data)
         .then(fetchedData => {
             let newRecommendations = { area: [], morning: [], afternoon: [], night: [] };
+            let dataIndex = 0; // Index to track position in fetchedData
+
             for (let block in newRecommendations) {
-                for (let i = 0; i < 12; i++) {
-                    const load = fetchedData[Math.floor(Math.random() * fetchedData.length)];
+                for (let i = 0; i < 12 && dataIndex < fetchedData.length; i++, dataIndex++) {
+                    const dataItem = fetchedData[dataIndex];
                     newRecommendations[block].push({
-                        id: load.business_id,
-                        name: load.business_name,
-                        address: load.business_address,
-                        contact: load.business_phone,
-                        image: load.business_image,
-                        stars: load.business_rating,
-                        reviews: load.business_reviews,
-                        yelpLink: load.business_url
+                        id: dataItem.business_id,
+                        name: dataItem.business_name,
+                        address: dataItem.business_address,
+                        contact: dataItem.business_phone,
+                        image: dataItem.business_image,
+                        stars: dataItem.business_rating,
+                        reviews: dataItem.business_reviews,
+                        yelpLink: dataItem.business_url
                     });
                 }
             }
             setData(newRecommendations);
         })
         .catch(err => console.error(err));
-  }, []);
+}, []);
+
 
   
 
@@ -67,12 +71,12 @@ function Recommendations({  onAddPlace = () => {} }) {
 
   const getUpdatedSectionName = (sectionId) => {
     const mapping = {
-      'area': 'Recommendations Around Your Area',
-      'morning': 'Morning Recommendations',
-      'afternoon': 'Afternoon Delights',
-      'night': 'Nightlife Recommendations',
+      '': '',
+      '': '',
+      '': '',
+      '': '',
     };
-    return mapping[sectionId] || sectionId; // Fallback to sectionId if not found in mapping
+    return mapping[sectionId]; // Fallback to sectionId if not found in mapping
   };
     
   const [startIndex, setStartIndex] = useState({

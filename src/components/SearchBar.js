@@ -17,12 +17,14 @@ const SearchBar = () => {
     setUrl(`placeName=${ placeName || '' }&location=${ location || '' }`);
     
   }
-  
-  //what we can do here is to actually fetch 
-  useEffect(()=> {
-    const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/populate?placeName=${encodeURIComponent(placeName)}&location=${encodeURIComponent(location)}`; //url used for fetching
+  const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/populate?placeName=${encodeURIComponent(placeName)}&location=${encodeURIComponent(location)}`; //url used for fetching
     fetch(fetchUrl);
-  },[url])
+  //what we can do here is to actually fetch 
+  // useEffect(()=> {
+  //   const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/populate?placeName=${encodeURIComponent(placeName)}&location=${encodeURIComponent(location)}`; //url used for fetching
+  //   fetch(fetchUrl);
+  // },[url])
+  // new
   
   const handleSearch = () => {
     console.log(`Searching for ${placeName} in ${location}`);
