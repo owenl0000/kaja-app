@@ -6,12 +6,12 @@ import YelpStars from '@/utils/YelpStars';
 import Image from 'next/image';
 import 'font-awesome/css/font-awesome.min.css';
 import { useRouter } from 'next/router';
-const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info` //url used for fetching
+//const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info` //url used for fetching
 //we are using this for rendering
 
 function Recommendations({  onAddPlace = () => {} }) {
   const router = useRouter();
-  const { placeName, location } = router.query; //if empty or undefined set it to some place or required search 
+  const { location, activity } = router.query; //if empty or undefined set it to some place or required search 
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [addedIconIndex, setAddedIconIndex] = useState(null);
@@ -21,37 +21,58 @@ function Recommendations({  onAddPlace = () => {} }) {
     afternoon: [],
     night: [],
   });
+
+  console.log("Query Params ", {location, activity});
+  useEffect(() => {
+    if (location) {
+      // Construct a unique identifier for the current query
+      const queryKey = `${location}_${activity || 'all'}`;
+      const storedData = localStorage.getItem('yelpRecommendations');
+      let storedDataParsed = storedData ? JSON.parse(storedData) : {};
   
-  useEffect(() => { // fetching the actual data
-    fetch(`http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info?placeName=${encodeURIComponent(placeName)}&location=${encodeURIComponent(location)}`)
-        .then(res => res.json())
-        .then(body => body.business_data)
-        .then(fetchedData => {
+      // Fetch new data if the current query is different from the cached one
+      if (!storedDataParsed[queryKey]) {
+        console.log('Fetching new data');
+        fetch(`http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info?location=${encodeURIComponent(location)}${activity ? `&activity=${encodeURIComponent(activity)}` : ''}`)
+          .then(res => res.json())
+          .then(body => {
+            const fetchedData = body.business_data || [];
             let newRecommendations = { area: [], morning: [], afternoon: [], night: [] };
-            let dataIndex = 0; // Index to track position in fetchedData
-
-            for (let block in newRecommendations) {
-                for (let i = 0; i < 12 && dataIndex < fetchedData.length; i++, dataIndex++) {
-                    const dataItem = fetchedData[dataIndex];
-                    newRecommendations[block].push({
-                        id: dataItem.business_id,
-                        name: dataItem.business_name,
-                        address: dataItem.business_address,
-                        contact: dataItem.business_phone,
-                        image: dataItem.business_image,
-                        stars: dataItem.business_rating,
-                        reviews: dataItem.business_reviews,
-                        yelpLink: dataItem.business_url
-                    });
-                }
-            }
-            setData(newRecommendations);
-        })
-        .catch(err => console.error(err));
-}, []);
-
-
+            let dataIndex = 0;
   
+            for (let block in newRecommendations) {
+              for (let i = 0; i < 12 && dataIndex < fetchedData.length; i++, dataIndex++) {
+                const dataItem = fetchedData[dataIndex];
+                newRecommendations[block].push({
+                  id: dataItem.business_id,
+                  name: dataItem.business_name,
+                  address: dataItem.business_address,
+                  contact: dataItem.business_phone,
+                  image: dataItem.business_image,
+                  stars: dataItem.business_rating,
+                  reviews: dataItem.business_reviews,
+                  yelpLink: dataItem.business_url
+                });
+              }
+            }
+  
+            // Update state with fetched data
+            setData(newRecommendations);
+  
+            // Clear previous data and update local storage with new data
+            storedDataParsed = {}; // Clear previous data
+            storedDataParsed[queryKey] = newRecommendations;
+            localStorage.setItem('yelpRecommendations', JSON.stringify(storedDataParsed));
+          })
+          .catch(err => console.error(err));
+      } else {
+        console.log('Using cached data');
+        setData(storedDataParsed[queryKey]);
+      }
+    }
+  }, [location, activity]);
+  
+
 
 
   useEffect(() => {
@@ -69,15 +90,7 @@ function Recommendations({  onAddPlace = () => {} }) {
     setTimeout(() => setShowToast(false), 3000); // Hide toast after 3 seconds
   };
 
-  const getUpdatedSectionName = (sectionId) => {
-    const mapping = {
-      '': '',
-      '': '',
-      '': '',
-      '': '',
-    };
-    return mapping[sectionId]; // Fallback to sectionId if not found in mapping
-  };
+
     
   const [startIndex, setStartIndex] = useState({
     area: 0,
@@ -147,7 +160,6 @@ function Recommendations({  onAddPlace = () => {} }) {
         return (
           <div key={section} className="border rounded p-6 md:w-[80%] lg:w-[90%] xl:w-[100%] mb-5">
             <div className="flex justify-between items-center ">
-              <h2 className="text-2xl">{getUpdatedSectionName(section)}</h2>
             </div>
               <div className="flex flex-col items-center mt-4">
                 <div className="flex items-center justify-center w-full">

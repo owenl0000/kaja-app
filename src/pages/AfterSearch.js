@@ -8,7 +8,6 @@ import Recommendations from '@/components/Recommendations.js';
 
 
 export default function AfterSearch() {
-
   const [addedPlacesByDate, setAddedPlacesByDate] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   console.log(selectedDate);
