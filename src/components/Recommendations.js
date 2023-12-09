@@ -6,7 +6,7 @@ import YelpStars from '@/utils/YelpStars';
 import Image from 'next/image';
 import 'font-awesome/css/font-awesome.min.css';
 import { useRouter } from 'next/router';
-//const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info` //url used for fetching
+const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info` //url used for fetching
 //we are using this for rendering
 
 function Recommendations({  onAddPlace = () => {} }) {
@@ -21,8 +21,6 @@ function Recommendations({  onAddPlace = () => {} }) {
     afternoon: [],
     night: [],
   });
-
-
   useEffect(() => { //fetching the actual data 
     fetch(`http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info?placeName=${encodeURIComponent(placeName)}&location=${encodeURIComponent(location)}`)
         .then(res => res.json())
