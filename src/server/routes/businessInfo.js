@@ -6,7 +6,12 @@ const {db} = require('../Database/seed')
 
 
 router.get('/', (req, res) => {
-    db.any(`SELECT * FROM \"Business\" WHERE location='${decodeURIComponent(Object.values(req.query)[0])}'`)
+    const query = {
+        location: decodeURIComponent(Object.values(req.query)[0]) || "New York City",
+        term: decodeURIComponent(Object.values(req.query)[0]) || "food, entertainment, hangout, tourist, hotspots"
+    }
+    console.log(query)
+    db.any(`SELECT * FROM \"Business\" WHERE location='${query.location}' AND term='${query.term}'`)
         .then(raw => res.send({business_data: raw}))
         .catch(err => console.error(err));
 })
