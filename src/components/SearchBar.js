@@ -5,7 +5,7 @@ require("dotenv").config({ path: path.join(__dirname, "../../.env")}); //get the
 
 const SearchBar = () => {
   const [placeName, setPlaceName] = useState('');
-  const [activity, setActivity] = useState('');
+  const [location, setLocation] = useState('');
   const [url, setUrl] = useState('placeName=&location=');
   const router = useRouter();
 //url = placeName=&location=
@@ -14,24 +14,22 @@ const SearchBar = () => {
   //fetch(`http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/populate?${url}`)
   
   const updateUrl = () => {
-    setUrl(`placeName=${ placeName || '' }&activity=${ activity || '' }`);
+    setUrl(`placeName=${ placeName || '' }&location=${ location || '' }`);
   }
 
   //what we can do here is to actually fetch 
 
-  const handleSearch = e => {
-    console.log(`Searching for ${activity} in ${placeName}`);
+  const handleSearch = () => {
+    console.log(`Searching for ${placeName} in ${location}`);
     updateUrl();
     router.push({
       pathname: '/AfterSearch',
-      query: { placeName, location: activity },
+      query: { placeName, location },
     });
-    e.preventDefault();
   };
 
   return (
-    <form className="flex sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-1/2 rounded z-10"
-          onSubmit={handleSearch}>
+    <div className="flex w-full sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-1/2 rounded z-10">
 
       {/*
       get url screen from React as a string
@@ -40,31 +38,25 @@ const SearchBar = () => {
 
       <input
           type="text"
-          placeholder="Where to?"
+          placeholder="Place Name"
           value={placeName}
           onChange={(e) => setPlaceName(e.target.value)}
           className="w-[100px] sm:w-[150px] sm:p-2 sm:flex-grow sm:flex-shrink sm:border-r border border-r-0 text-black rounded-l"
-          required={true}
       />
-
-      {/*set custom message setCustomValidity*/}
 
       <input
           type="text"
-          placeholder="What will you do?"
-          value={activity}
-          onChange={(e) => setActivity(e.target.value)}
+          placeholder="Location"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
           className="w-[100px] sm:w-[150px] sm:p-2 sm:flex-grow sm:flex-shrink sm:border-r border border-r-0 text-black"
-          required={true}
       />
 
-      <button
-              className="bg-coral active:bg-[var(--dark-coral)] border border-l-0 text-off-white p-2 rounded-r flex-shrink-0"
-              type={"submit"}>
+      <button onClick={handleSearch} className="bg-coral active:bg-[var(--dark-coral)] border border-l-0 text-off-white p-2 rounded-r flex-shrink-0">
         Search
       </button>
 
-    </form>
+    </div>
   );
 };
 
