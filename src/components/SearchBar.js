@@ -8,13 +8,6 @@ const SearchBar = () => {
   const [activity, setActivity] = useState('');
   const router = useRouter();
 
-
-  //fetch(http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/populate?${url})
-
-  const updateUrl = () => {
-    setUrl(`location=${ location || '' }&activity=${ activity || '' }`);
-  }
-
   useEffect(() => {
     // Check if the router is ready and has query parameters
     if (router.isReady) {
@@ -23,35 +16,38 @@ const SearchBar = () => {
       setActivity(activityParam || '');
     }
   }, [router.isReady, router.query]);
-  //what we can do here is to actually fetch 
+
   useEffect(() => {
-    if (location && activity) {
-      const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/populate?location=${encodeURIComponent(location)}&activity=${encodeURIComponent(activity)}`;
-      fetch(fetchUrl)
-        .then(res => res.json()) // Handle response here if needed
-        .catch(err => console.error(err)); // Handle error here if needed
+    const lastSearch = localStorage.getItem('lastSearch');
+    if (lastSearch) {
+      const { location: lastLocation, activity: lastActivity } = JSON.parse(lastSearch);
+      setLocation(lastLocation || '');
+      setActivity(lastActivity || '');
     }
-  }, [location, activity]);
+  }, []);
 
   const handleSearch = e => {
     e.preventDefault();
     console.log(`Searching for, ${activity} in ${location}`);
 
-      // Directly use router.push to navigate to the new page with query parameters
+    localStorage.setItem('lastSearch', JSON.stringify({ location, activity }));
+
+    // Fetch data when Search is clicked
+    const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/populate?location=${encodeURIComponent(location)}&activity=${encodeURIComponent(activity)}`;
+    fetch(fetchUrl)
+      .then(res => res.json()) // Handle response here if needed
+      .catch(err => console.error(err)); // Handle error here if needed
+
+    // Use router.push to navigate to the new page with query parameters
     router.push({
       pathname: '/AfterSearch',
       query: { location: location, activity: activity },
     });
   };
 
-return (
+  return (
     <form className="flex w-full sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-1/2 rounded z-10"
           onSubmit={handleSearch}>
-
-      {/*
-      get url screen from React as a string
-      ex. placeName=&location=hello
-      */}
 
       <input
           type="text"
