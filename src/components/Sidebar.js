@@ -10,7 +10,10 @@ export default function Sidebar({ selectedDate, onDateChange }){
         <div className={"p-5 pt-2 pb-0 mb-5 text-center text-2xl"}>Filters</div>
         <PriceSelector number={5} symbol={'$'} />
         <TimeSelector />
+        
         <Calendar selectedDate={selectedDate} setSelectedDate={onDateChange}/>
       </div>
   );
 }
+
+//separate calendar
