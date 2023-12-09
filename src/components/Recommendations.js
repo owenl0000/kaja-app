@@ -21,12 +21,9 @@ function Recommendations({  onAddPlace = () => {} }) {
     afternoon: [],
     night: [],
   });
-
-  //const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info?placeName=${encodeURIComponent(placeName) || ''}&location=${encodeURIComponent(location) || ''}`; //url used for fetching
-  console.log(fetchUrl);
   useEffect(() => { //fetching the actual data 
-    fetch(fetchUrl)
-        .then(response => response.json())
+    fetch(`http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info?placeName=${encodeURIComponent(placeName)}&location=${encodeURIComponent(location)}`)
+        .then(res => res.json())
         .then(body => body.business_data)
         .then(fetchedData => {
             let newRecommendations = { area: [], morning: [], afternoon: [], night: [] };
@@ -49,6 +46,8 @@ function Recommendations({  onAddPlace = () => {} }) {
         })
         .catch(err => console.error(err));
   }, []);
+
+  
 
 
   useEffect(() => {
