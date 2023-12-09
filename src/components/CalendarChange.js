@@ -39,6 +39,12 @@ export default function Calendar({ selectedDate, setSelectedDate }){
     year: currentDate.getFullYear(),        //setSelectedDate.year
   })
 
+  useEffect(() => {
+    const [year, month, day] = selectedDate.split('-');
+    const monthName = monthsOfYear[parseInt(month, 10) - 1];
+    setDate({ month: monthName, day: parseInt(day, 10), year: parseInt(year, 10) });
+  }, [selectedDate]);
+
   const handleDateChange = newDate => {
     setDate(newDate);
     if (setSelectedDate) {  // Check if setSelectedDate is provided
