@@ -22,6 +22,7 @@ function Recommendations({  onAddPlace = () => {} }) {
     night: [],
   });
   useEffect(() => { //fetching the actual data 
+    console.log(placeName, location)
     fetch(`http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info?placeName=${encodeURIComponent(placeName)}&location=${encodeURIComponent(location)}`)
         .then(res => res.json())
         .then(body => body.business_data)

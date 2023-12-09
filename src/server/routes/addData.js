@@ -15,10 +15,23 @@ const TERM = {
 
 
 router.get('/', (req, res) => {
-    const BUSINESS = Array.from({length: 50}, () => (//nest within so that we can update it
+    
+    const query = {
+        location: Object.values(req.query)[0] === '' ? 'New%20York%20City' : encodeURIComponent(Object.values(req.query)[0]),
+        term: Object.values(req.query)[1] === '' ? 'food%2C%20entertainment%2C%20hangout%2C%20tourist%2C%20hotspots' : encodeURIComponent(Object.values(req.query)[1]), 
+        sort_by: 'distance', 
+        limit: '50', // 50 is the max
+        radius: '5000'
+    }
+    console.log(query)
+    TERM.location = decodeURIComponent(query.location);
+    TERM.term = decodeURIComponent(query.term);
+
+    const BUSINESS = Array.from({length: 50}, () => (
         {
             business_id: "LOADING...",  
-            location: "LOADING...",
+            location: decodeURIComponent(query.location),
+            term: decodeURIComponent(query.term),
             business_name:"LOADING...",
             business_url:"LOADING...",
             business_reviews: 0, 
@@ -28,16 +41,7 @@ router.get('/', (req, res) => {
         }
     ))
 
-    const query = {
-        location: Object.values(req.query)[0] === undefined ? 'New%20York%20City' : encodeURIComponent(Object.values(req.query)[0]),
-        term: Object.values(req.query)[1] === undefined ? 'food%2C%20entertainment%2C%20hangout%2C%20tourist%2C%20hotspots' : encodeURIComponent(Object.values(req.query)[1]), 
-        sort_by: 'distance', 
-        limit: '50', // 50 is the max
-        radius: '5000'
-    }
 
-    TERM.location = decodeURIComponent(query.location);
-    TERM.term = decodeURIComponent(query.term);
 
     db.any(`SELECT EXISTS (SELECT 1 FROM \"Term\" WHERE location='${decodeURIComponent(query.location)}' AND term='${decodeURIComponent(query.term)}')`)
         .then(found => {
@@ -47,7 +51,6 @@ router.get('/', (req, res) => {
                 .then(data => {
                     for(i = 0; i < data.length; i++){
                         BUSINESS[i].business_id = data[i].id;
-                        BUSINESS[i].location = decodeURIComponent(query.location);
                         if(data[i].image_url.length){BUSINESS[i].business_image = data[i].image_url}
                         BUSINESS[i].business_name = data[i].name;
                         BUSINESS[i].business_url = data[i].url;

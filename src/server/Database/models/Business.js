@@ -17,6 +17,10 @@ module.exports = Business.init({
             type: DataTypes.STRING,
             allowNull: false
         },
+        term:{
+            type: DataTypes.STRING,
+            allowNull: false
+        },
         business_name:{
             type: DataTypes.STRING,
             allowNull: false
