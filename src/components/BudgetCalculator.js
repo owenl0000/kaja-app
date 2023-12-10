@@ -2,17 +2,30 @@
 import React, { useState, useEffect } from 'react';
 import exchangeRates from '../api/exchangeRates.json';
 
-function BudgetCalculator({ addedPlacesByDate, selectedDate, budget }) {
+function BudgetCalculator({ selectedDate, handleBudgetChange}) {
     const [currency, setCurrency] = useState('USD'); // State to hold the selected currency
+    const [storedBudgetData, setStoredBudgetData] = useState({});
     // Function to calculate total budget
 
-    
+    useEffect(() => {
+        // Retrieve budget data for the selected date from localStorage
+        const budgetData = JSON.parse(localStorage.getItem('budgetData'));
+        if (budgetData) {
+            setStoredBudgetData(budgetData);
+        }
+    }, [handleBudgetChange]);
+
     const calculateTotalBudget = () => {
-        // Iterate over the budget object and sum up all the values
-        return Object.values(budget).reduce((total, currentBudget) => {
-            return total + parseFloat(currentBudget || 0);
+        // Retrieve budget data for the selected date from localStorage
+        const budgetForDate = storedBudgetData[selectedDate] || {};
+
+        // Sum up the budget for places on the selected date
+        return Object.values(budgetForDate).reduce((total, amount) => {
+            return total + parseFloat(amount || 0);
         }, 0);
     };
+
+      
 
 
     // Function to abbreviate the number if it's too large

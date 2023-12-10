@@ -19,7 +19,7 @@ const SearchBar = () => {
   }, [router.isReady, router.query]);
 
   useEffect(() => {
-    const lastSearch = localStorage.getItem('lastSearch');
+    const lastSearch = sessionStorage.getItem('lastSearch');
     if (lastSearch) {
       const { location: lastLocation, activity: lastActivity } = JSON.parse(lastSearch);
       setLocation(lastLocation || '');
@@ -31,7 +31,7 @@ const SearchBar = () => {
     e.preventDefault();
     console.log(`Searching for, ${activity} in ${location}`);
 
-    localStorage.setItem('lastSearch', JSON.stringify({ location, activity }));
+    sessionStorage.setItem('lastSearch', JSON.stringify({ location, activity }));
 
     // Fetch data when Search is clicked
     router.push({
@@ -43,7 +43,7 @@ const SearchBar = () => {
   };
 
   return (
-    <form className="flex w-full sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-1/2 rounded z-10"
+    <form className="flex w-full sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-1/2 rounded z-5"
           onSubmit={handleSearch}>
 
       <input

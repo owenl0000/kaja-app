@@ -13,6 +13,7 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
   const [userNotes, setUserNotes] = useState({});
   const [timeFrame, setTimeFrame] = useState({});
   const [budget, setBudget] = useState({});
+  const [budgetData, setBudgetData] = useState({});
 
   const generateUniqueId = () => {
     return `id-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -68,6 +69,7 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
   
     // Remove the corresponding budget and notes entries
     const updatedBudget = { ...budget };
+    const updatedBudgetData = { ...budgetData}
     const updatedUserNotes = { ...userNotes };
     const updatedTimeFrame = { ...timeFrame }
     delete updatedBudget[uniqueIdToRemove];
@@ -77,10 +79,12 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
     // Update the state and localStorage for budget and notes
     setTimeFrame(updatedTimeFrame);
     setBudget(updatedBudget);
+    
     setUserNotes(updatedUserNotes);
     localStorage.setItem('budget', JSON.stringify(updatedBudget));
     localStorage.setItem('userNotes', JSON.stringify(updatedUserNotes));
     localStorage.setItem('timeFrame', JSON.stringify(updatedTimeFrame));
+    localStorage.setItem('budgetData',JSON.stringify(updatedBudgetData));
   
     // Update the state for places and close the modal
     setPlacesForSelectedDate(updatedPlaces);
@@ -88,11 +92,25 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
     setIndexToRemove(null);
   };
   
-  const handleBudgetChange = (id, amount) => {
-    const newBudget = { ...budget, [id]: amount };
+  const handleBudgetChange = (uniqueId, amount) => {
+    // Update the budget state for this uniqueId
+    const newBudget = { ...budget, [uniqueId]: amount };
     setBudget(newBudget);
-    localStorage.setItem('budget', JSON.stringify(newBudget)); 
+    localStorage.setItem('budget', JSON.stringify(newBudget));
+    
+  
+    // Update the budget data for local storage
+    const storedBudgetData = JSON.parse(localStorage.getItem('budgetData')) || {};
+    const budgetForSelectedDate = storedBudgetData[selectedDate] || {};
+    const updatedBudgetForSelectedDate = { ...budgetForSelectedDate, [uniqueId]: amount };
+  
+    // Save the updated budget data to local storage
+    const newBudgetData = { ...storedBudgetData, [selectedDate]: updatedBudgetForSelectedDate };
+    setBudgetData(newBudgetData);
+    localStorage.setItem('budgetData', JSON.stringify(newBudgetData));
   };
+  
+
 
   const handleNoteChange = (id, note) => {
     const newUserNotes = { ...userNotes, [id]: note };
@@ -206,9 +224,8 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
               </div>
               <div className="flex-1 ml-4 mt-10 mr-4">
                 <BudgetCalculator 
-                  addedPlacesByDate={addedPlacesByDate} 
                   selectedDate={selectedDate} 
-                  budget={budget}
+                  handleBudgetChange={handleBudgetChange}
                 />
               </div>
             </div>
