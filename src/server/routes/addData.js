@@ -23,7 +23,7 @@ router.get('/', (req, res) => {
         limit: '50', // 50 is the max
         radius: '5000'
     }
-    console.log(query)
+
     TERM.location = decodeURIComponent(query.location);
     TERM.term = decodeURIComponent(query.term);
 
@@ -40,8 +40,6 @@ router.get('/', (req, res) => {
             business_address: ["LOADING..."],
         }
     ))
-
-
 
     db.any(`SELECT EXISTS (SELECT 1 FROM \"Term\" WHERE location='${decodeURIComponent(query.location)}' AND term='${decodeURIComponent(query.term)}')`)
         .then(found => {
