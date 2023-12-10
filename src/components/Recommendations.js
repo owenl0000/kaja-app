@@ -68,16 +68,6 @@ function Recommendations({  onAddPlace = () => {} }) {
     setAddedIconIndex(place.id);
     setTimeout(() => setShowToast(false), 3000); // Hide toast after 3 seconds
   };
-
-  const getUpdatedSectionName = (sectionId) => {
-    const mapping = {
-      '': '',
-      '': '',
-      '': '',
-      '': '',
-    };
-    return mapping[sectionId]; // Fallback to sectionId if not found in mapping
-  };
     
   const [startIndex, setStartIndex] = useState({
     area: 0,
@@ -147,7 +137,7 @@ function Recommendations({  onAddPlace = () => {} }) {
         return (
           <div key={section} className="border rounded p-6 md:w-[80%] lg:w-[90%] xl:w-[100%] mb-5">
             <div className="flex justify-between items-center ">
-              <h2 className="text-2xl">{getUpdatedSectionName(section)}</h2>
+
             </div>
               <div className="flex flex-col items-center mt-4">
                 <div className="flex items-center justify-center w-full">

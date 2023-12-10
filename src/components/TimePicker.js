@@ -45,11 +45,11 @@ const TimePicker = ({ timeFrame, onChange, uniqueKey }) => {
   };
 
   return (
-    <div className="time-picker">
+    <div className="time-picker p-2 lg:px-6 grid lg:grid-cols-3 sm:grid-cols-1">
       <div className="time-section">
         <input 
           type="text" 
-          className="time-input" 
+          className="time-input"
           value={time.startHour} 
           onChange={(e) => updateTime({ ...time, startHour: validateHour(e.target.value) })} 
         />
@@ -69,7 +69,9 @@ const TimePicker = ({ timeFrame, onChange, uniqueKey }) => {
           <option value="PM">PM</option>
         </select>
       </div>
-      <span className="time-to">to</span>
+
+      <div className="time-to sm:text-center">to</div>
+
       <div className="time-section">
         <input 
           type="text" 
@@ -85,7 +87,7 @@ const TimePicker = ({ timeFrame, onChange, uniqueKey }) => {
           onChange={(e) => updateTime({ ...time, endMinute: validateMinute(e.target.value) })} 
         />
         <select 
-          className="time-select" 
+          className="time-select"
           value={time.endPeriod}
           onChange={(e) => updateTime({ ...time, endPeriod: e.target.value })}
         >

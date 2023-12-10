@@ -4,8 +4,8 @@ const path = require('path');
 require("dotenv").config({ path: path.join(__dirname, "../../.env")}); //get the configs from the .env file
 
 const SearchBar = () => {
-  const [placeName, setPlaceName] = useState('');
   const [location, setLocation] = useState('');
+  const [activity, setActivity] = useState('');
   const [url, setUrl] = useState('placeName=&location=');
   const router = useRouter();
 //url = placeName=&location=
@@ -14,29 +14,33 @@ const SearchBar = () => {
   //fetch(`http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/populate?${url}`)
   
   const updateUrl = () => {
-    setUrl(`placeName=${ placeName || '' }&location=${ location || '' }`);
+    setUrl(`placeName=${ location || '' }&location=${ activity || '' }`);
     
   }
-  const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/populate?placeName=${encodeURIComponent(placeName)}&location=${encodeURIComponent(location)}`; //url used for fetching
-    fetch(fetchUrl);
+
   //what we can do here is to actually fetch 
-  // useEffect(()=> {
-  //   const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/populate?placeName=${encodeURIComponent(placeName)}&location=${encodeURIComponent(location)}`; //url used for fetching
-  //   fetch(fetchUrl);
-  // },[url])
+  useEffect(()=> {
+    const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/populate?placeName=${encodeURIComponent(location)}&location=${encodeURIComponent(activity)}`; //url used for fetching
+    fetch(fetchUrl);
+  },[url])
   // new
-  
-  const handleSearch = () => {
-    console.log(`Searching for ${placeName} in ${location}`);
+
+  const handleSearch = e => {
+    console.log(`Searching for ${activity} in ${location}`);
     updateUrl();
     router.push({
       pathname: '/AfterSearch',
-      query: { placeName, location },
+      query: { placeName: location, location: activity },
     });
+    
+    e.preventDefault();
+
   };
-  
+
+
   return (
-    <div className="flex w-full sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-1/2 rounded z-10">
+    <form className="flex w-full sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-1/2 rounded z-10"
+          onSubmit={handleSearch}>
 
       {/*
       get url screen from React as a string
@@ -45,25 +49,26 @@ const SearchBar = () => {
 
       <input
           type="text"
-          placeholder="Place Name"
-          value={placeName}
-          onChange={(e) => setPlaceName(e.target.value)}
+          placeholder="Where to?"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
           className="w-[100px] sm:w-[150px] sm:p-2 sm:flex-grow sm:flex-shrink sm:border-r border border-r-0 text-black rounded-l"
+          required={true}
       />
 
       <input
           type="text"
-          placeholder="Location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
+          placeholder="What will you do?"
+          value={activity}
+          onChange={(e) => setActivity(e.target.value)}
           className="w-[100px] sm:w-[150px] sm:p-2 sm:flex-grow sm:flex-shrink sm:border-r border border-r-0 text-black"
       />
 
-      <button onClick={handleSearch} className="bg-coral active:bg-[var(--dark-coral)] border border-l-0 text-off-white p-2 rounded-r flex-shrink-0">
+      <button type={"submit"} className="bg-coral active:bg-[var(--dark-coral)] border border-l-0 text-off-white p-2 rounded-r flex-shrink-0">
         Search
       </button>
 
-    </div>
+    </form>
   );
 };
 
