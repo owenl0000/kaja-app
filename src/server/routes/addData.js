@@ -63,21 +63,13 @@ router.get('/', (req, res) => {
                     }
                     BUSINESS.splice(data.length);//remove any unused portion of the array
                 })
-                .then(() => {
-                    (async () => {
-                        try{
-                            await models.term.create(TERM);
-                            const TermId = await models.term.findOne({where : {location: TERM.location, term: TERM.term}});// get the id to relate it to it's business
-                            BUSINESS.forEach(loc => loc.TermId = TermId.dataValues.id) // set the id for each business
-                            await models.business.bulkCreate(BUSINESS);
-                        }catch(err){
-                            console.error(err)
-                        }
-                    })();
-                })
+                .then(() => models.term.create(TERM))
+                .then(() => models.term.findOne({where : {location: TERM.location, term: TERM.term}}))
+                .then((TermId) => BUSINESS.forEach(loc => loc.TermId = TermId.dataValues.id)) // set the id for each business)
+                .then(() => models.business.bulkCreate(BUSINESS))
                 .catch(err => console.error(err));
         })
-        .then(() => res.send(BUSINESS))
+        .then(() => res.send({business_data: BUSINESS}))
         .catch(err => console.error(err));
         
 })

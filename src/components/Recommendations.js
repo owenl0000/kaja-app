@@ -33,10 +33,12 @@ function Recommendations({  onAddPlace = () => {} }) {
       // Fetch new data if the current query is different from the cached one
       if (!storedDataParsed[queryKey]) {
         console.log('Fetching new data');
-        fetch(`http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info?location=${encodeURIComponent(location)}${activity ? `&activity=${encodeURIComponent(activity)}` : ''}`)
-          .then(res => res.json())
-          .then(body => {
-            const fetchedData = body.business_data || [];
+        fetch(`http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/populate?location=${encodeURIComponent(location)}&activity=${encodeURIComponent(activity)}`)
+          .then(() => fetch(`http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info?location=${encodeURIComponent(location)}${`&activity=${encodeURIComponent(activity)}`}`))
+          .then(out => out.json())
+          .then(body => body.business_data)
+          .then((body) => {
+            const fetchedData = body;
             let newRecommendations = { area: [], morning: [], afternoon: [], night: [] };
             let dataIndex = 0;
   
@@ -62,9 +64,9 @@ function Recommendations({  onAddPlace = () => {} }) {
             // Clear previous data and update local storage with new data
             storedDataParsed = {}; // Clear previous data
             storedDataParsed[queryKey] = newRecommendations;
-            localStorage.setItem('yelpRecommendations', JSON.stringify(storedDataParsed));
+            localStorage.setItem('yelpRecommendations', JSON.stringify(storedDataParsed));            
           })
-          .catch(err => console.error(err));
+          .catch(err => console.error(err))    
       } else {
         console.log('Using cached data');
         setData(storedDataParsed[queryKey]);

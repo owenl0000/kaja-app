@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { data } from 'autoprefixer';
 const path = require('path');
 require("dotenv").config({ path: path.join(__dirname, "../../.env")}); //get the configs from the .env file
 
@@ -33,16 +34,12 @@ const SearchBar = () => {
     localStorage.setItem('lastSearch', JSON.stringify({ location, activity }));
 
     // Fetch data when Search is clicked
-    const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/populate?location=${encodeURIComponent(location)}&activity=${encodeURIComponent(activity)}`;
-    fetch(fetchUrl)
-      .then(res => res.json()) // Handle response here if needed
-      .catch(err => console.error(err)); // Handle error here if needed
+    router.push({
+        pathname: '/AfterSearch',
+        query: { location , activity },
+    });
 
     // Use router.push to navigate to the new page with query parameters
-    router.push({
-      pathname: '/AfterSearch',
-      query: { location: location, activity: activity },
-    });
   };
 
   return (
