@@ -13,7 +13,6 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
   const [userNotes, setUserNotes] = useState({});
   const [timeFrame, setTimeFrame] = useState({});
   const [budget, setBudget] = useState({});
-  const [budgetData, setBudgetData] = useState({});
 
   const generateUniqueId = () => {
     return `id-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -54,43 +53,51 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
 
   const removePlace = () => {
     if (indexToRemove === null) return;
-  
-    // Retrieve the unique ID of the place to be removed
+
     const placeToRemove = placesForSelectedDate[indexToRemove];
     const uniqueIdToRemove = placeToRemove.uniqueId;
-  
+
     // Filter out the removed place from placesForSelectedDate
     const updatedPlaces = placesForSelectedDate.filter((_, idx) => idx !== indexToRemove);
-  
+
     // Update the localStorage for places
     const allPlacesByDate = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
     allPlacesByDate[selectedDate] = updatedPlaces;
     localStorage.setItem('addedPlacesByDate', JSON.stringify(allPlacesByDate));
-  
-    // Remove the corresponding budget and notes entries
+
+    // Remove the corresponding budget entry
     const updatedBudget = { ...budget };
-    const updatedBudgetData = { ...budgetData}
-    const updatedUserNotes = { ...userNotes };
-    const updatedTimeFrame = { ...timeFrame }
     delete updatedBudget[uniqueIdToRemove];
+
+    // Remove the budget entry for the removed place from budgetData
+    const storedBudgetData = JSON.parse(localStorage.getItem('budgetData')) || {};
+    if (storedBudgetData[selectedDate]) {
+        delete storedBudgetData[selectedDate][uniqueIdToRemove];
+        if (Object.keys(storedBudgetData[selectedDate]).length === 0) {
+            delete storedBudgetData[selectedDate];
+        }
+    }
+
+    // Update the state and localStorage for budget and notes
+    setBudget(updatedBudget);
+    localStorage.setItem('budget', JSON.stringify(updatedBudget));
+    localStorage.setItem('budgetData', JSON.stringify(storedBudgetData));
+
+    // Update remaining state items
+    const updatedUserNotes = { ...userNotes };
+    const updatedTimeFrame = { ...timeFrame };
     delete updatedUserNotes[uniqueIdToRemove];
     delete updatedTimeFrame[uniqueIdToRemove];
-  
-    // Update the state and localStorage for budget and notes
-    setTimeFrame(updatedTimeFrame);
-    setBudget(updatedBudget);
-    
     setUserNotes(updatedUserNotes);
-    localStorage.setItem('budget', JSON.stringify(updatedBudget));
     localStorage.setItem('userNotes', JSON.stringify(updatedUserNotes));
     localStorage.setItem('timeFrame', JSON.stringify(updatedTimeFrame));
-    localStorage.setItem('budgetData',JSON.stringify(updatedBudgetData));
-  
+
     // Update the state for places and close the modal
     setPlacesForSelectedDate(updatedPlaces);
     setShowConfirmModal(false);
     setIndexToRemove(null);
-  };
+};
+
   
   const handleBudgetChange = (uniqueId, amount) => {
     // Update the budget state for this uniqueId
@@ -106,7 +113,6 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
   
     // Save the updated budget data to local storage
     const newBudgetData = { ...storedBudgetData, [selectedDate]: updatedBudgetForSelectedDate };
-    setBudgetData(newBudgetData);
     localStorage.setItem('budgetData', JSON.stringify(newBudgetData));
   };
   
