@@ -7,10 +7,7 @@ const apiKey = `Bearer ${process.env.YELP_API_KEY}`;
 api.auth(apiKey); 
 const {db, models} = require("../Database/seed");
 
-const TERM = {
-    location: "LOADING...", 
-    term: "LOADING..."
-};
+
 
 
 
@@ -24,8 +21,10 @@ router.get('/', (req, res) => {
         radius: '5000'
     }
 
-    TERM.location = decodeURIComponent(query.location);
-    TERM.term = decodeURIComponent(query.term);
+    const TERM = {
+        location: decodeURIComponent(query.location), 
+        term: decodeURIComponent(query.term)
+    };
 
     const BUSINESS = Array.from({length: 50}, () => (
         {
