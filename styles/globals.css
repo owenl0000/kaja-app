@@ -127,3 +127,17 @@
   text-shadow: 3px 3px 4px black;
 }
 
+@font-face {
+  font-family: 'HedvigLetters';
+  src: url('/font/HedvigLettersSerif_14pt-Regular.ttf') format('truetype');
+  font-weight: 100;
+  font-style: thin;
+}
+
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/font/Montserrat-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: regular;
+}

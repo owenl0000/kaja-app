@@ -177,7 +177,7 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
   };
   
   return (
-    <div className="flex flex-col items-start bg-gray-100 ">
+    <div className="flex flex-col items-start bg-gray-100 font-mont">
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="placesDroppable">
           {(provided) => (

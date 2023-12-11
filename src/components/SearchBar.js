@@ -43,7 +43,7 @@ const SearchBar = () => {
   };
 
   return (
-      <form className="flex w-full sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-1/2 rounded z-5"
+      <form className="flex w-full sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-1/2 rounded z-5 font-mont"
             onSubmit={handleSearch}>
 
         <input
@@ -63,7 +63,7 @@ const SearchBar = () => {
             className="w-[100px] sm:w-[150px] sm:p-2 sm:flex-grow sm:flex-shrink sm:border-r border border-r-0 text-black"
         />
 
-        <button type={"submit"} className="bg-coral active:bg-[var(--dark-coral)] border border-l-0 text-off-white p-2 rounded-r flex-shrink-0">
+        <button type={"submit"} className="bg-coral active:bg-[var(--dark-coral)] border font-latto border-l-0 text-off-white p-2 rounded-r flex-shrink-0">
           Search
         </button>
 

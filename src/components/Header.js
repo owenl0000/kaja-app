@@ -45,7 +45,7 @@ function Header({ page }) {
 
         <Link href={"/"} className={""}>
           <div className={"flex items-center lg:items-start gap-x-4"}>
-            <h6 className={"text-4xl mb-1 lg:text-4xl sm:text-3xl"}>Kaja</h6>
+            <h6 className={"text-4xl lg:text-4xl sm:text-3xl font-latto font-bold"}>Kaja</h6>
             <div><img className={"h-12 quick-spin"} src={imgClass} alt={"kaja-logo"}/></div>
           </div>
         </Link>
@@ -68,13 +68,13 @@ function Header({ page }) {
         <nav className={`flex flex-col justify-end lg:flex-row ${isSpecialPage ? 'gap-2' : 'gap-6'} items-start w-full ${navClass} lg:mr-16`}>
 
           {/* For large screens */}
-          <Link href="/" className="font-trend mb-1 pt-2 lg:inline sm:hidden text-select"
+          <Link href="/" className="font-mont  mb-1 pt-2 lg:inline sm:hidden text-select"
                          onClick={() => {
                            setAboutOpen(false);
                            setContactOpen(false);
                          }}>Home</Link>
 
-          <div className={`font-trend mb-1 lg:inline pt-2 sm:hidden flex-col overflow-hidden ${isSpecialPage ? 'hidden w-0' : 'flex'}`}>
+          <div className={`font-mont mb-1 lg:inline pt-2 sm:hidden flex-col overflow-hidden ${isSpecialPage ? 'hidden w-0' : 'flex'}`}>
 
             <div onClick={aboutClick} className={`text-select text-center`}>About</div>
 
@@ -88,7 +88,7 @@ function Header({ page }) {
 
           {/*<a href="#Iteneries" onClick={handleSmoothScroll} className="font-trend mb-1 lg:inline sm:hidden text-select">Itineraries</a>*/}
 
-          <div className={`font-trend mb-1 lg:inline pt-2 sm:hidden flex-col overflow-hidden ${isSpecialPage ? 'hidden w-0' : 'flex'}`}>
+          <div className={`font-mont mb-1 lg:inline pt-2 sm:hidden flex-col overflow-hidden ${isSpecialPage ? 'hidden w-0' : 'flex'}`}>
 
             <div onClick={contactClick} className={"text-select text-center"}>Contact</div>
 
@@ -102,7 +102,7 @@ function Header({ page }) {
 
           </div>
 
-          <Link href="/Planner" className="font-trend bg-coral border px-1 p-2 cursor-pointer rounded-md items-center lg:inline sm:hidden text-off-white active:bg-[var(--dark-coral)] text-select">
+          <Link href="/Planner" className="font-mont bg-coral px-1 p-2 cursor-pointer rounded-md items-center lg:inline sm:hidden text-off-white active:bg-[var(--dark-coral)] text-select">
              Planner
           </Link>
 
