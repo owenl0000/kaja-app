@@ -1,7 +1,6 @@
 const path = require('path');
 require("dotenv").config({ path: path.join(__dirname, "../../../../.env")}); //configure the api environment
 const express = require("express");
-const http = require("http");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const app = express();
