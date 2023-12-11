@@ -26,6 +26,22 @@
     transition: max-height var(--speed) ease, opacity var(--speed) ease;
 }
 
+.nav-open {
+    width: 250px;
+    opacity: 1;
+    transition: max-height var(--speed) ease-in, opacity calc(var(--speed)*3) ease-in, width var(--speed)  ease-in;
+    max-height: 500px;
+}
+
+.nav-closed {
+    width: 0;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height var(--speed) ease, opacity calc(var(--speed)/1.5) ease, width var(--speed) ease;
+}
+
+
 .text-select:hover {
     transform: scale(105%);
     transition: transform calc(var(--speed)/10) ease-in;
