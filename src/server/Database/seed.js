@@ -13,11 +13,11 @@ const apiKey = `Bearer ${process.env.YELP_API_KEY}`;//setting the API key
 api.auth(apiKey); //authenticate with Bearer apikey
 
 const query = {
-    location: 'New%20York%20City',
-    term: 'food%2C%20entertainment%2C%20hangout%2C%20tourist%2C%20hotspots', 
+    location: 'new%20york%20city',
+    term: 'food%2C%20entertainment%2C%20hangout%2C%20tourist', 
     sort_by: 'distance', 
     limit: '50', // 50 is the max
-    radius: '5000'
+    radius: '10000'
 };
 
 

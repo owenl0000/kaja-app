@@ -11,11 +11,11 @@ const {db, models} = require("../Database/seed");
 router.get('/', (req, res) => {
     
     const query = {
-        location: Object.values(req.query)[0] === '' ? 'New%20York%20City' : encodeURIComponent(Object.values(req.query)[0]),
+        location: Object.values(req.query)[0] === '' ? 'new%20york%20city' : encodeURIComponent(Object.values(req.query)[0]),
         term: Object.values(req.query)[1] === '' ? 'food%2C%20entertainment%2C%20hangout%2C%20tourist%2C%20hotspots' : encodeURIComponent(Object.values(req.query)[1]), 
         sort_by: 'distance', 
         limit: '50', // 50 is the max
-        radius: '5000'
+        radius: '10000'
     }
 
     const TERM = {
