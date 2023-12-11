@@ -10,7 +10,7 @@ const Planner = () => {
   console.log(selectedDate);
 
   useEffect(() => {
-    const savedDate = localStorage.getItem('selectedDate');
+    const savedDate = sessionStorage.getItem('selectedDate');
     if (savedDate) {
       setSelectedDate(savedDate);
     }
@@ -39,7 +39,7 @@ const Planner = () => {
   const handleDateChange = (newDateObject) => {
     const formattedDate = formatDateToString(newDateObject);
     setSelectedDate(formattedDate);
-    localStorage.setItem('selectedDate', formattedDate);
+    sessionStorage.setItem('selectedDate', formattedDate);
   };
   
 

@@ -48,6 +48,7 @@ function PlaceCard({
                 <div className="text-lg font-semibold min-w-[100px]">{place.name}</div>
                 <div className="text-sm min-w-[200px]">{place.address || 'N/A'}</div>
                 <div className="text-sm min-w-[200px]">{place.contact || 'N/A'}</div>
+                <div className="text-sm min-w-[200px]"> Price: {place.price || 'N/A'}</div>
                 <div className="my-1">
                     <a href={place.yelpLink} target="_blank" rel="noopener noreferrer" className="inline-block">
                         <Image src="/images/yelp_logo.png" alt="Yelp" width={40} height={10}/>

@@ -9,18 +9,51 @@ import { useRouter } from 'next/router';
 //const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info` //url used for fetching
 //we are using this for rendering
 
-function Recommendations({  onAddPlace = () => {} }) {
+function Recommendations({  onAddPlace = () => {} , sortOrder}) {
   const router = useRouter();
   const { location, activity } = router.query; //if empty or undefined set it to some place or required search 
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [addedIconIndex, setAddedIconIndex] = useState(null);
-  const [data, setData] = useState({ // gets the api data
-    area: [],
-    morning: [],
-    afternoon: [],
-    night: [],
-  });
+  const [data, setData] = useState({ area0: [], area1: [], area2: [], area3: [] });
+
+  const sortAndDistributeData = (originalData, order) => {
+    // Flatten the data from all areas into a single array
+    const allData = Object.values(originalData).flat();
+  
+    // Sort the flattened data if necessary
+    if (order !== "normal") {
+      allData.sort((a, b) => {
+        return order === "ascending" ? a.reviews - b.reviews : b.reviews - a.reviews;
+      });
+    }
+  
+    // Distribute sorted data back into the four areas
+    const distributedData = { area0: [], area1: [], area2: [], area3: [] };
+    allData.forEach((item, index) => {
+      const sectionIndex = Math.floor(index / 3) % 4; // Determines the area (0, 1, 2, 3)
+      const pageIndex = Math.floor(index / 12); // Determines the page within the area
+      const sectionKey = `area${sectionIndex}`;
+      if (pageIndex < 4) { // Ensures only the first four pages of each area are filled
+        distributedData[sectionKey].push(item);
+      }
+    });
+  
+    return distributedData;
+  };
+
+  useEffect(() => {
+    // Sort and distribute data when sortOrder changes
+    if (data.area0.length > 0 || data.area1.length > 0 || data.area2.length > 0 || data.area3.length > 0) {
+      const sortedAndDistributedData = sortAndDistributeData(data, sortOrder);
+      setData(sortedAndDistributedData);
+
+      // Update local storage with sorted data
+      const queryKey = `${location}_${activity || 'all'}`;
+      const updatedStoredData = { ...localStorage.getItem('yelpRecommendations') ? JSON.parse(localStorage.getItem('yelpRecommendations')) : {}, [queryKey]: sortedAndDistributedData };
+      localStorage.setItem('yelpRecommendations', JSON.stringify(updatedStoredData));
+    }
+  }, [sortOrder]);
 
   console.log("Query Params ", {location, activity});
   useEffect(() => {
@@ -34,39 +67,40 @@ function Recommendations({  onAddPlace = () => {} }) {
       if (!storedDataParsed[queryKey]) {
         console.log('Fetching new data');
         fetch(`http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/populate?location=${encodeURIComponent(location)}&activity=${encodeURIComponent(activity)}`)
-            .then(() => fetch(`http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info?location=${encodeURIComponent(location)}${`&activity=${encodeURIComponent(activity)}`}`))
-            .then(out => out.json())
-            .then(body => body.business_data)
-            .then((body) => {
-              const fetchedData = body;
-              let newRecommendations = { area: [], morning: [], afternoon: [], night: [] };
-              let dataIndex = 0;
-
-              for (let block in newRecommendations) {
-                for (let i = 0; i < 12 && dataIndex < fetchedData.length; i++, dataIndex++) {
-                  const dataItem = fetchedData[dataIndex];
-                  newRecommendations[block].push({
-                    id: dataItem.business_id,
-                    name: dataItem.business_name,
-                    address: dataItem.business_address,
-                    contact: dataItem.business_phone,
-                    image: dataItem.business_image,
-                    stars: dataItem.business_rating,
-                    reviews: dataItem.business_reviews,
-                    yelpLink: dataItem.business_url
-                  });
-                }
+          .then(() => fetch(`http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info?location=${encodeURIComponent(location)}${`&activity=${encodeURIComponent(activity)}`}`))
+          .then(out => out.json())
+          .then(body => body.business_data)
+          .then((body) => {
+            const fetchedData = body;
+            setData(fetchedData);
+            let newRecommendations = { area0: [], area1: [], area2: [], area3: [] };
+            let dataIndex = 0;
+            for (let block in newRecommendations) {
+              for (let i = 0; i < 12 && dataIndex < fetchedData.length; i++, dataIndex++) {
+                const dataItem = fetchedData[dataIndex];
+                newRecommendations[block].push({
+                  id: dataItem.business_id,
+                  name: dataItem.business_name,
+                  address: dataItem.business_address,
+                  contact: dataItem.business_phone,
+                  image: dataItem.business_image,
+                  stars: dataItem.business_rating,
+                  reviews: dataItem.business_reviews,
+                  price: dataItem.business_price,
+                  yelpLink: dataItem.business_url
+                });
               }
-
-              // Update state with fetched data
-              setData(newRecommendations);
-
-              // Clear previous data and update local storage with new data
-              storedDataParsed = {}; // Clear previous data
-              storedDataParsed[queryKey] = newRecommendations;
-              localStorage.setItem('yelpRecommendations', JSON.stringify(storedDataParsed));
-            })
-            .catch(err => console.error(err))
+            }
+  
+            // Update state with fetched data
+            setData(newRecommendations);
+  
+            // Clear previous data and update local storage with new data
+            storedDataParsed = {}; // Clear previous data
+            storedDataParsed[queryKey] = newRecommendations;
+            localStorage.setItem('yelpRecommendations', JSON.stringify(storedDataParsed));            
+          })
+          .catch(err => console.error(err))    
       } else {
         console.log('Using cached data');
         setData(storedDataParsed[queryKey]);
@@ -95,10 +129,10 @@ function Recommendations({  onAddPlace = () => {} }) {
 
 
   const [startIndex, setStartIndex] = useState({
-    area: 0,
-    morning: 0,
-    afternoon: 0,
-    night: 0,
+    area0: 0,
+    area1: 0,
+    area2: 0,
+    area3: 0,
   });
 
   const nextPage = (section) => {
