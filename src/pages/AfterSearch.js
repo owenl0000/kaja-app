@@ -10,11 +10,12 @@ import Recommendations from '@/components/Recommendations.js';
 export default function AfterSearch() {
   const [addedPlacesByDate, setAddedPlacesByDate] = useState({});
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [reviewSortOrder, setReviewSortOrder] = useState("normal");
   console.log(selectedDate);
   // Read places from localStorage on mount
 
   useEffect(() => {
-    const savedDate = localStorage.getItem('selectedDate');
+    const savedDate = sessionStorage.getItem('selectedDate');
     if (savedDate) {
       setSelectedDate(savedDate);
     }
@@ -31,6 +32,10 @@ export default function AfterSearch() {
   useEffect(() => {
     localStorage.setItem('addedPlacesByDate', JSON.stringify(addedPlacesByDate));
   }, [addedPlacesByDate]);
+
+  const handleSortOrderChange = (newOrder) => {
+    setReviewSortOrder(newOrder);
+  };
 
   const handleAddPlace = (place, selectedDate) => {
     const newAddedPlaces = { ...addedPlacesByDate };
@@ -54,7 +59,7 @@ export default function AfterSearch() {
   const handleDateChange = (newDateObject) => {
     const formattedDate = formatDateToString(newDateObject);
     setSelectedDate(formattedDate);
-    localStorage.setItem('selectedDate', formattedDate);
+    sessionStorage.setItem('selectedDate', formattedDate);
   };
 
   return (
@@ -63,10 +68,17 @@ export default function AfterSearch() {
           <Header page="AfterSearch"/>
           <div className="flex min-h-screen h-full">
               <div className="w-1/4">
-                  <Sidebar selectedDate={selectedDate} onDateChange={handleDateChange}/>
+                  <Sidebar 
+                    selectedDate={selectedDate} 
+                    onDateChange={handleDateChange}
+                    onSortOrderChange={handleSortOrderChange}
+                  />
               </div>
               <div className="w-3/4">
-                <Recommendations onAddPlace={(place) => handleAddPlace(place, selectedDate)} />   
+                <Recommendations 
+                  onAddPlace={(place) => handleAddPlace(place, selectedDate)} 
+                  sortOrder={reviewSortOrder}
+                />   
               </div>
           </div>
 

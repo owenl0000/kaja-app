@@ -5,9 +5,9 @@ export default function Slideshow() {
   const [progress, setProgress] = useState([0, 0, 0]);
   const [disableTransition, setDisableTransition] = useState(false);
   const images = [
-    '/images/slideshow1.jpg',
-    '/images/slideshow2.jpg',
-    '/images/slideshow3.jpg',
+    '/images/slideshow1.webp',
+    '/images/slideshow2.webp',
+    '/images/slideshow3.webp',
   ];
 
   useEffect(() => {
