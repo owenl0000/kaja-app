@@ -19,6 +19,8 @@ const handleSmoothScroll = (e) => {
 };
 
 function Header({ page }) {
+  const [isAboutOpen, setAboutOpen] = useState(false);
+  const [isContactOpen, setContactOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isSpecialPage = page === 'AfterSearch' || page === 'Planner';
   const headerClass = isSpecialPage ? 'bg-white border-b border-gray-300 text-black' : 'sm:bg-opacity-0 bg-red-400 text-off-white';
@@ -26,10 +28,20 @@ function Header({ page }) {
   const positionClass = isSpecialPage ? ' ' : 'absolute';
   const imgClass = isSpecialPage ? "/kaja-logo-black.png" : "/kaja-logo-white.png";
 
-  return (
-    <header className={`lg:grid grid-cols-3 items-center h-auto sm:h-20 ${headerClass} pt-2 pb-2 lg:px-10 md:px-4 sm:px-2 ${positionClass} w-full z-10`}>
+  const aboutClick = () => {
+    setAboutOpen(!isAboutOpen);
+    setContactOpen(false);
+  }
 
-      <div className="flex sm:grid grid-cols-3 sm:mt-2 w-full items-center lg:w-auto lg:justify-start">
+  const contactClick = () => {
+    setContactOpen(!isContactOpen);
+    setAboutOpen(false);
+  }
+
+  return (
+    <header className={`lg:grid grid-cols-3 items-start h-auto sm:h-20 ${headerClass} pt-3 pb-2 lg:px-10 md:px-4 sm:px-2 ${positionClass} w-full z-10`}>
+
+      <div className="flex sm:grid grid-cols-3 sm:mt-2 w-full items-start lg:w-auto lg:justify-start">
 
         <Link href={"/"} className={""}>
           <div className={"flex items-center lg:items-start gap-x-4"}>
@@ -53,13 +65,43 @@ function Header({ page }) {
       </div>
 
       <div className={`w-full lg:w-auto lg:flex-shrink lg:block lg:pt-2`}>
-        <nav className={`flex flex-col justify-end lg:flex-row gap-6 items-center w-full ${navClass} lg:mr-16`}>
+        <nav className={`flex flex-col justify-end lg:flex-row ${isSpecialPage ? 'gap-2' : 'gap-6'} items-start w-full ${navClass} lg:mr-16`}>
 
           {/* For large screens */}
-          <Link href="/" className="font-trend mb-1 lg:inline sm:hidden text-select">Home</Link>
-          <a href="#About" onClick={handleSmoothScroll} className="font-trend mb-1 lg:inline sm:hidden text-select">About</a>
-          <a href="#Iteneries" onClick={handleSmoothScroll} className="font-trend mb-1 lg:inline sm:hidden text-select">Itineraries</a>
-          <a href="#Contact" onClick={handleSmoothScroll} className="font-trend mb-1 lg:inline sm:hidden text-select">Contact</a>
+          <Link href="/" className="font-trend mb-1 pt-2 lg:inline sm:hidden text-select"
+                         onClick={() => {
+                           setAboutOpen(false);
+                           setContactOpen(false);
+                         }}>Home</Link>
+
+          <div className={`font-trend mb-1 lg:inline pt-2 sm:hidden flex-col overflow-hidden ${isSpecialPage ? 'hidden w-0' : 'flex'}`}>
+
+            <div onClick={aboutClick} className={`text-select text-center`}>About</div>
+
+            <div className={`${isAboutOpen ? "nav-open" : "nav-closed"} backdrop-blur-md p-4 pt-2 text-center z-50 h-[12rem] rounded-lg overflow-scroll no-scrollbar`}>
+              Kaja is a web application in development that aims to simplify planning for trips and outings.
+              With Kaja, users can get a straightforward itinerary based on their interests, budget, and time.
+              Unlike many existing travel apps that offer a wide array of options but leave the hard work of planning to the user, Kaja focuses on streamlining this process to make decision-making easier.
+            </div>
+
+          </div>
+
+          {/*<a href="#Iteneries" onClick={handleSmoothScroll} className="font-trend mb-1 lg:inline sm:hidden text-select">Itineraries</a>*/}
+
+          <div className={`font-trend mb-1 lg:inline pt-2 sm:hidden flex-col overflow-hidden ${isSpecialPage ? 'hidden w-0' : 'flex'}`}>
+
+            <div onClick={contactClick} className={"text-select text-center"}>Contact</div>
+
+            <div className={`${isContactOpen ? "nav-open" : "nav-closed"} backdrop-blur-md p-4 pt-2 text-center z-50 max-h-[12rem] rounded-lg overflow-scroll no-scrollbar`}>
+              <ul>
+                <li>Brandon Vasquez</li>
+                <li>Owen Liang</li>
+                <li>Darryl Nurse</li>
+              </ul>
+            </div>
+
+          </div>
+
           <Link href="/Planner" className="font-trend bg-coral border px-1 p-2 cursor-pointer rounded-md items-center lg:inline sm:hidden text-off-white active:bg-[var(--dark-coral)] text-select">
              Planner
           </Link>

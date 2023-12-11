@@ -1,8 +1,7 @@
 .time-picker {
-    display: flex;
     align-items: center;
     border-radius: 0.7rem;
-    padding: 0.815rem 1.232rem;
+    /*padding: 0.815rem 1.232rem;*/
     background: white;
     transition: background .4s linear;
   }
@@ -14,8 +13,10 @@
   .time-section {
     display: flex;
     align-items: center;
+    justify-content: center;
     position: relative;
   }
+
   .time-input {
     border: none;
     background: transparent;
@@ -23,7 +24,7 @@
     font-weight: 600;
     color: black;
     outline: none;
-    width: 2em;
+    width: 1.5em;
     text-align: center;
   }
   
@@ -31,7 +32,6 @@
     width: auto; /* Add this */
     -webkit-appearance: none;
     -moz-appearance: none;
-    text-indent: 1px;
     text-overflow: '';
     appearance: none;
     border: none;
@@ -52,11 +52,11 @@
     font-size: 1.125rem;
     font-weight: 600;
     color: black;
-    margin: 0 0.2rem; /* Add this */
+    /*margin: 0 0.2rem; !* Add this *!*/
   }
   
   .time-to {
-    margin: 0 1rem;
+    /*margin: 0 1rem;*/
     font-size: 1.125rem;
     font-weight: 600;
     color: black;
@@ -70,7 +70,7 @@
   font-weight: 600;
   color: black;
   outline: none;
-  padding: 0.815rem 1.232rem;
+  /*padding: 0.815rem 1.232rem;*/
   border-radius: 0.7rem;
   transition: background .4s linear, border-color .4s linear; /* Updated transition */
 }
@@ -86,7 +86,7 @@
   background-color: red;
   color: white;
   border-radius: 0.7rem;
-  padding: 0.5rem 1rem;
+  /*padding: 0.5rem 1rem;*/
   cursor: pointer;
   transition: background .4s linear, border-color .4s linear; /* Updated transition */
 }
