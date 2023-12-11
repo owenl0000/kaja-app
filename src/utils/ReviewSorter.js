@@ -1,38 +1,37 @@
 import React, { useState, useEffect } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowUp, faArrowDown, faMinus } from '@fortawesome/free-solid-svg-icons';
 
-export default function ReviewSorter({ onChange }) {
-
-    const [sortOrder, setSortOrder] = useState("normal");
-
+export default function ReviewSorter({ onSortChange }) {
+    const [sortOrder, setSortOrder] = useState("");
+    console.log(sortOrder);
     useEffect(() => {
         const storedSortOrder = sessionStorage.getItem('reviewSortOrder');
         if (storedSortOrder) {
-        setSortOrder(storedSortOrder);
+            setSortOrder(storedSortOrder);
         }
     }, []);
 
-  // Update session storage when sortOrder changes
     useEffect(() => {
-        sessionStorage.setItem('reviewSortOrder', sortOrder);
-        onChange(sortOrder); // Notify parent component of the change
-    }, [sortOrder, onChange]);
+        if (sortOrder) {
+            sessionStorage.setItem('reviewSortOrder', sortOrder);
+            onSortChange(sortOrder); // Notify parent component of the change
+        }
+    }, [sortOrder]);
 
-
-    const toggleSortOrder = () => {
-        const newOrder = sortOrder === "ascending" ? "descending" : (sortOrder === "descending" ? "normal" : "ascending");
-        setSortOrder(newOrder);
-        onChange(newOrder); // Propagate the change to the parent
+    const handleSortOrderChange = (event) => {
+        setSortOrder(event.target.value);
     };
 
-    const arrowIcon = sortOrder === "ascending" ? faArrowUp : (sortOrder === "descending" ? faArrowDown : faMinus);
-    const containerStyles = "flex items-center justify-center w-full bg-coral mb-5 text-white p-4 rounded-md cursor-pointer hover:bg-coral-dark active:scale-[0.95]";
-
     return (
-        <button onClick={toggleSortOrder} className={containerStyles}>
-        <span className="mr-4">Sort Reviews</span>
-        <FontAwesomeIcon icon={arrowIcon} size="lg" />
-        </button>
+        <select 
+            onChange={handleSortOrderChange} 
+            value={sortOrder}
+            className="flex flex-col items-center justify-center w-full p-4 mb-2 bg-coral text-white rounded cursor-pointer"
+        >
+            <option value="">Sort by</option>
+            <option value="ascending">Ascending Reviews ↑ </option>
+            <option value="descending">Descending Reviews ↓ </option>
+            <option value="ratingAscending">Ascending Rating ↑ </option>
+            <option value="ratingDescending">Descending Rating ↓</option>
+        </select>
     );
 }

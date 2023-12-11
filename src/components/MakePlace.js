@@ -10,6 +10,7 @@ const MakePlace = ({ onAddPlace, selectedDate }) => {
     image: '',
     stars: '',
     reviews: '',
+    price: '',
     yelpLink: ''
   });
 
@@ -25,6 +26,10 @@ const MakePlace = ({ onAddPlace, selectedDate }) => {
     }
   };
 
+  const handlePriceChange = (e) => {
+    setNewPlace({ ...newPlace, price: e.target.value });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     onAddPlace({ ...newPlace, id: `manual-${Date.now()}-${Math.random().toString(36).substr(2, 9)}` }, selectedDate);
@@ -37,6 +42,7 @@ const MakePlace = ({ onAddPlace, selectedDate }) => {
       image: '',
       stars: '',
       reviews: '',
+      price: '',
       yelpLink: ''
     });
   };
@@ -108,6 +114,29 @@ const MakePlace = ({ onAddPlace, selectedDate }) => {
                   onChange={handleChange}
                   placeholder="Contact"
                 />
+              </div>
+              {/* Price Range input */}
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="price"
+                >
+                  Price Range
+                </label>
+                <select
+                  id="price"
+                  name="price"
+                  value={newPlace.price}
+                  onChange={handlePriceChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                >
+                  <option value="">Select Price Range</option>
+                  <option value="$">$</option>
+                  <option value="$$">$$</option>
+                  <option value="$$$">$$$</option>
+                  <option value="$$$$">$$$$</option>
+                  <option value="$$$$$">$$$$$</option>
+                </select>
               </div>
               <div className="mb-4">
                 <label
