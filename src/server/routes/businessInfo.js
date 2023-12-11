@@ -6,7 +6,7 @@ const {db} = require('../Database/seed')
 
 router.get('/', (req, res) => {
     const query = {
-        location: decodeURIComponent(Object.values(req.query)[0]) || "New York City",
+        location: decodeURIComponent(Object.values(req.query)[0]) || "new york city",
         term: decodeURIComponent(Object.values(req.query)[1]) || "food, entertainment, hangout, tourist, hotspots"
     }
 

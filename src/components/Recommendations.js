@@ -65,9 +65,8 @@ function Recommendations({  onAddPlace = () => {} , sortOrder}) {
 
       // Fetch new data if the current query is different from the cached one
       if (!storedDataParsed[queryKey]) {
-        console.log('Fetching new data');
-        fetch(`http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/populate?location=${encodeURIComponent(location.toLowerCase())}&activity=${encodeURIComponent(activity.toLowerCase())}`)
-          .then(() => fetch(`http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info?location=${encodeURIComponent(location.toLowerCase())}${`&activity=${encodeURIComponent(activity.toLowerCase())}`}`))
+        fetch(`${process.env.NEXT_PUBLIC_SERVER_DEV || process.env.NEXT_PUBLIC_SERVER_PROD}/populate?location=${encodeURIComponent(location.toLowerCase())}&activity=${encodeURIComponent(activity.toLowerCase())}`)
+          .then(() => fetch(`${process.env.NEXT_PUBLIC_SERVER_DEV || process.env.NEXT_PUBLIC_SERVER_PROD}/info?location=${encodeURIComponent(location.toLowerCase())}${`&activity=${encodeURIComponent(activity.toLowerCase())}`}`))
           .then(out => out.json())
           .then(body => body.business_data)
           .then((body) => {
