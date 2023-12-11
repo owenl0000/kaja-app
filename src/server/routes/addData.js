@@ -1,16 +1,10 @@
 require("dotenv").config({ path: '../../.env'}) //configure the api environment
 const express = require("express");
 const router = express.Router();
-//const db = require("../Database/newDBConnection");
 const api = require('api')('@yelp-developers/v1.0#9nl412lo4fa3f9');
 const apiKey = `Bearer ${process.env.YELP_API_KEY}`;
 api.auth(apiKey); 
 const {db, models} = require("../Database/seed");
-
-const TERM = {
-    location: "LOADING...", 
-    term: "LOADING..."
-};
 
 
 
@@ -23,9 +17,11 @@ router.get('/', (req, res) => {
         limit: '50', // 50 is the max
         radius: '5000'
     }
-    console.log(query)
-    TERM.location = decodeURIComponent(query.location);
-    TERM.term = decodeURIComponent(query.term);
+
+    const TERM = {
+        location: decodeURIComponent(query.location), 
+        term: decodeURIComponent(query.term)
+    };
 
     const BUSINESS = Array.from({length: 50}, () => (
         {
@@ -40,8 +36,6 @@ router.get('/', (req, res) => {
             business_address: ["LOADING..."],
         }
     ))
-
-
 
     db.any(`SELECT EXISTS (SELECT 1 FROM \"Term\" WHERE location='${decodeURIComponent(query.location)}' AND term='${decodeURIComponent(query.term)}')`)
         .then(found => {

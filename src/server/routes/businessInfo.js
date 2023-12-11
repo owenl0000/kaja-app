@@ -1,7 +1,6 @@
 require("dotenv").config({ path: '../../.env'}) //configure the api environment
 const express = require("express");
 const router = express.Router();
-const pgp = require("pg-promise")();//needs to be like this as we are initializing without options
 const {db} = require('../Database/seed')
 
 
