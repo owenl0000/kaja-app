@@ -17,7 +17,7 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
   const [toastMessage, setToastMessage] = useState('');
   const [addedIconIndex, setAddedIconIndex] = useState(null);
   const [data, setData] = useState({ area0: [], area1: [], area2: [], area3: [] });
-  const priceOrder = { '$$$$$': 5, '$$$$': 4, '$$$': 3, '$$': 2, '$': 1, '': 0 };
+  const priceOrder = { 5: 5, 4: 4, 3: 3, 2: 2, 1: 1, '': 0 };
 
   const sortAndDistributeData = (originalData, order, priceFilter) => {
     // Flatten the data from all areas into a single array
@@ -44,23 +44,18 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
 
     if (priceFilter) {
       const pricePriority = {
-        '$$$$$': [5, 4, 3, 2, 1],
-        '$$$$': [4, 3, 2, 1, 5],
-        '$$$': [3, 2, 1, 4, 5],
-        '$$': [2, 1, 3, 4, 5],
-        '$': [1, 2, 3, 4, 5]
+        '$$$$$': [5, 4, 3, 2, 1, 0],
+        '$$$$': [4, 3, 2, 1, 5, 0],
+        '$$$': [3, 2, 1, 5, 4, 0],
+        '$$': [2, 1, 5, 4, 3, 0],
+        '$': [1, 2, 3, 4, 5, 0],
+        '': []
       };
 
       allData.sort((a, b) => {
-        let priceA = priceOrder[a.price] || -1; // Set to -1 for unavailable prices
-        let priceB = priceOrder[b.price] || -1;
-
-        // Handle unavailable prices
-        if (priceA === -1 && priceB === -1) return 0;
-        if (priceA === -1) return 1;
-        if (priceB === -1) return -1;
-
-        // Sort based on the selected price filter
+        let priceA = a.price ? priceOrder[a.price.length] : priceOrder[''];
+        let priceB = b.price ? priceOrder[b.price.length] : priceOrder[''];
+  
         return pricePriority[priceFilter].indexOf(priceA) - pricePriority[priceFilter].indexOf(priceB);
       });
     }
@@ -92,7 +87,6 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
     }
   }, [sortOrder, priceFilter]);
 
-  console.log("Query Params ", {location, activity});
   useEffect(() => {
     if (location) {
       // Construct a unique identifier for the current query

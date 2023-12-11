@@ -53,10 +53,10 @@ function HousingSelector({ selectedDate, handleHousingChange }) {
             {housingEntries.length > 1 && <option value="remove">Remove</option>}
             {/* Add more housing types */}
           </select>
-          <div className="relative flex-1">
-            <span className="absolute inset-y-0 left-0 pl-2 flex items-center text-gray-700">$</span>
+          <div className="flex">
+            <span className="bg-gray-200 rounded-l p-2 flex items-center text-gray-700">$</span>
             <input
-              className="bg-gray-200 rounded p-2 pl-6 w-full"
+              className="bg-gray-200 rounded-r p-2 w-full"
               type="text"
               pattern="\d*"
               placeholder="Price"

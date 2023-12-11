@@ -71,7 +71,7 @@ export default function AfterSearch() {
       <>
 
           <Header page="AfterSearch"/>
-          <div className="flex min-h-screen h-full">
+          <div className="flex min-h-screen h-full font-mont">
               <div className="w-1/4">
                   <Sidebar 
                     selectedDate={selectedDate} 

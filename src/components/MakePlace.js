@@ -48,9 +48,9 @@ const MakePlace = ({ onAddPlace, selectedDate }) => {
   };
 
   return (
-    <div className={"w-full"}>
+    <div className={"w-full font-mont"}>
       <button 
-        className="bg-coral text-white text-center p-5 my-5 w-full rounded-md overflow-hidden"
+        className="bg-coral text-white font-mont text-center p-5 my-5 w-full rounded-md overflow-hidden"
         onClick={() => setShowForm(true)}
       >
         Add Your Own Place

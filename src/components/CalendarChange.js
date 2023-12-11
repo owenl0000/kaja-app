@@ -120,7 +120,7 @@ export default function Calendar({ selectedDate, setSelectedDate }){
   }, [date.month]);
 
   return (
-      <div className={"bg-coral text-white text-center p-5 lg:px-5 sm:px-2 my-5 w-full rounded-md overflow-hidden"}>
+      <div className={"bg-coral text-white text-center p-5 lg:px-5 sm:px-2 my-5 w-full rounded-md overflow-hidden font-mont"}>
         <div onClick={dropBottom} className={"cursor-pointer select-none"}>
           {date.month} {date.day}, {date.year}
         </div>
