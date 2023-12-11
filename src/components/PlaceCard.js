@@ -26,6 +26,8 @@ function PlaceCard({
         }
     };
 
+    const isYelpLink = place.yelpLink && place.yelpLink.includes("yelp.com");
+
     console.log(place.address);
     const formattedAddress = Array.isArray(place.address) ? place.address.join(', ') : place.address;
 
@@ -53,9 +55,15 @@ function PlaceCard({
                 <div className="text-sm min-w-[200px]">{place.contact || 'N/A'}</div>
                 <div className="text-sm min-w-[200px]"> Price: {place.price || 'N/A'}</div>
                 <div className="my-1">
-                    <a href={place.yelpLink} target="_blank" rel="noopener noreferrer" className="inline-block">
-                        <Image src="/images/yelp_logo.png" alt="Yelp" width={40} height={10}/>
-                    </a>
+                    {isYelpLink ? (
+                        <a href={place.yelpLink} target="_blank" rel="noopener noreferrer" className="inline-block"> Link:
+                            <Image src="/images/yelp_logo.png" alt="Yelp" width={40} height={10}/>
+                        </a>
+                    ) : (
+                        <a href={place.yelpLink} target="_blank" rel="noopener noreferrer" className="inline-block"> Link: 
+                            <i className="fa fa-link ml-1"></i> {/* Generic link icon */}
+                        </a>
+                    )}
                 </div>
             </div>
 
