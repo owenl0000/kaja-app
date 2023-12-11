@@ -4,6 +4,8 @@ import 'font-awesome/css/font-awesome.min.css';
 import PlaceCard from './PlaceCard';
 import BudgetCalculator from './BudgetCalculator';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import TransportationSelector from './TransportationSelector';
+import HousingSelector from './HousingSelector';
 
 function PlanCreator({ selectedDate, addedPlacesByDate}) {
 
@@ -13,6 +15,9 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
   const [userNotes, setUserNotes] = useState({});
   const [timeFrame, setTimeFrame] = useState({});
   const [budget, setBudget] = useState({});
+  const [transportationData, setTransportationData] = useState({});
+  const [housingData, setHousingData] = useState({});
+
 
   const generateUniqueId = () => {
     return `id-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -22,10 +27,14 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
     const initialBudget = JSON.parse(localStorage.getItem('budget')) || {};
     const initialUserNotes = JSON.parse(localStorage.getItem('userNotes')) || {};
     const initialTimeFrame = JSON.parse(localStorage.getItem('timeFrame')) || {};
+    const savedTransportationData = JSON.parse(localStorage.getItem('transportationData')) || {};
+    const savedHousingData = JSON.parse(localStorage.getItem('housingData')) || {};
 
     setBudget(initialBudget);
     setUserNotes(initialUserNotes);
     setTimeFrame(initialTimeFrame);
+    setTransportationData(savedTransportationData);
+    setHousingData(savedHousingData);
   }, []);
   
   useEffect(() => {
@@ -116,6 +125,17 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
     localStorage.setItem('budgetData', JSON.stringify(newBudgetData));
   };
   
+  const handleTransportationChange = (date, entries) => {
+    const newTransportationData = { ...transportationData, [date]: entries };
+    setTransportationData(newTransportationData);
+    localStorage.setItem('transportationData', JSON.stringify(newTransportationData));
+  };
+
+  const handleHousingChange = (date, entries) => {
+      const newHousingData = { ...housingData, [date]: entries };
+      setHousingData(newHousingData);
+      localStorage.setItem('housingData', JSON.stringify(newHousingData));
+  };
 
 
   const handleNoteChange = (id, note) => {
@@ -233,7 +253,18 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
                   selectedDate={selectedDate} 
                   handleBudgetChange={handleBudgetChange}
                 />
+                <TransportationSelector 
+                  selectedDate={selectedDate} 
+                  transportationData={transportationData[selectedDate] || []}
+                  handleTransportationChange={handleTransportationChange }
+                />
+                <HousingSelector
+                  selectedDate={selectedDate}
+                  housingData={housingData[selectedDate] || []} 
+                  handleHousingChange={handleHousingChange}
+                />
               </div>
+              
             </div>
           )}
         </Droppable>
