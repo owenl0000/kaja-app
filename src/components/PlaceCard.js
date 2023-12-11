@@ -27,7 +27,7 @@ function PlaceCard({
     };
 
     const isYelpLink = place.yelpLink && place.yelpLink.includes("yelp.com");
-
+    const defaultImagePath = "/kaja-logo-black.png";
     console.log(place.address);
     const formattedAddress = Array.isArray(place.address) ? place.address.join(', ') : place.address;
 
@@ -44,7 +44,11 @@ function PlaceCard({
 
             {/* Image */}
             <div className="w-full sm:flex sm:justify-center">
-                <img src={place.image} alt={place.name} className="rounded-lg lg:w-[200px] lg:h-[200px] sm:w-[300px] sm:h-[300px] object-cover" />
+                {place.image ? (
+                    <img src={place.image} alt={place.name} className="rounded-lg lg:w-[200px] lg:h-[200px] sm:w-[300px] sm:h-[300px] object-cover" />
+                ) : (
+                    <img src={defaultImagePath} alt="Default" className="rounded-lg lg:w-[200px] lg:h-[200px] sm:w-[300px] sm:h-[300px] object-cover" />
+                )}
             </div>
 
 

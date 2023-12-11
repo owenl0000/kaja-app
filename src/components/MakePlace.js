@@ -155,34 +155,6 @@ const MakePlace = ({ onAddPlace, selectedDate }) => {
                   placeholder="Link"
                 />
               </div>
-              <div className="mb-4">
-                <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                  htmlFor="image"
-                >
-                  Image
-                </label>
-                <input
-                  className="hidden"
-                  type="file"
-                  accept="image/*"
-                  id="image"
-                  name="image"
-                  onChange={handleImageChange}
-                />
-                <label
-                  className="bg-coral hover:bg-red-300 text-white py-2 px-4 rounded cursor-pointer block text-center"
-                  htmlFor="image"
-                >
-                  Upload Image
-                </label>
-
-                {newPlace.image && (
-                  <div className="mt-2 flex justify-center">
-                    <img src={newPlace.image} alt="Uploaded" className="max-w-xs h-auto rounded" />
-                  </div>
-                )}
-              </div>
               {/* Add other fields similarly */}
               <button 
                 type="submit" 

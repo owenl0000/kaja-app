@@ -18,6 +18,7 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
   const [addedIconIndex, setAddedIconIndex] = useState(null);
   const [data, setData] = useState({ area0: [], area1: [], area2: [], area3: [] });
   const priceOrder = { 5: 5, 4: 4, 3: 3, 2: 2, 1: 1, '': 0 };
+  const [isLoading, setIsLoading] = useState(true);
 
   const sortAndDistributeData = (originalData, order, priceFilter) => {
     // Flatten the data from all areas into a single array
@@ -88,6 +89,7 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
   }, [sortOrder, priceFilter]);
 
   useEffect(() => {
+    setIsLoading(true);
     if (location) {
       // Construct a unique identifier for the current query
       const queryKey = `${location}_${activity || 'all'}`;
@@ -103,6 +105,7 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
           .then((body) => {
             const fetchedData = body;
             setData(fetchedData);
+            setIsLoading(false);
             let newRecommendations = { area0: [], area1: [], area2: [], area3: [] };
             let dataIndex = 0;
             for (let block in newRecommendations) {
@@ -131,8 +134,10 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
             localStorage.setItem('yelpRecommendations', JSON.stringify(storedDataParsed));            
           })
           .catch(err => console.error(err))    
+          setIsLoading(false);
       } else {
         console.log('Using cached data');
+        setIsLoading(false);
         setData(storedDataParsed[queryKey]);
       }
     }
@@ -156,7 +161,11 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
     setTimeout(() => setShowToast(false), 3000); // Hide toast after 3 seconds
   };
 
-
+  const renderLoading = () => (
+    <div className="flex justify-center items-center h-64">
+        <div className="loader"></div>
+    </div>
+  );
 
   const [startIndex, setStartIndex] = useState({
     area0: 0,
@@ -226,30 +235,32 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
   return (
       <div className="flex flex-col p-4">
         {showToast && <div className="toast">{toastMessage}</div>}
-        {Object.keys(data).map((section) => {
-          const sectionData = data[section];
-          return (
-              <div key={section} className="border rounded p-6 md:w-[80%] lg:w-[90%] xl:w-[100%] mb-5">
-                <div className="flex justify-between items-center ">
-                </div>
-                <div className="flex flex-col items-center mt-4">
-                  <div className="flex items-center justify-center w-full">
-                    <div onClick={() => !isPrevDisabled(section) && prevPage(section)} className={`h-8 ${isPrevDisabled(section) ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                      <TriangleToggle isOpen={false} />
-                    </div>
-                    <div className="flex flex-wrap justify-center md:justify-center">
-                      {sectionData.slice(startIndex[section], startIndex[section] + 3).map((place, placeIndex) => (
-                          renderPlace(place, placeIndex)
-                      ))}
-                    </div>
-                    <div onClick={() => !isNextDisabled(section) && nextPage(section)} className={`h-8 ${isNextDisabled(section) ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                      <TriangleToggle isOpen={true} />
+        {isLoading ? renderLoading() : (
+          Object.keys(data).map((section) => {
+            const sectionData = data[section];
+            return (
+                <div key={section} className="border rounded p-6 md:w-[80%] lg:w-[90%] xl:w-[100%] mb-5">
+                  <div className="flex justify-between items-center ">
+                  </div>
+                  <div className="flex flex-col items-center mt-4">
+                    <div className="flex items-center justify-center w-full">
+                      <div onClick={() => !isPrevDisabled(section) && prevPage(section)} className={`h-8 ${isPrevDisabled(section) ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                        <TriangleToggle isOpen={false} />
+                      </div>
+                      <div className="flex flex-wrap justify-center md:justify-center">
+                        {sectionData.slice(startIndex[section], startIndex[section] + 3).map((place, placeIndex) => (
+                            renderPlace(place, placeIndex)
+                        ))}
+                      </div>
+                      <div onClick={() => !isNextDisabled(section) && nextPage(section)} className={`h-8 ${isNextDisabled(section) ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                        <TriangleToggle isOpen={true} />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-          );
-        })}
+            );
+          })
+        )}
       </div>
   );
 }
