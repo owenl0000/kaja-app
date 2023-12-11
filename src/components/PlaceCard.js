@@ -27,7 +27,7 @@ function PlaceCard({
     };
 
     return (
-        <div className="grid sm:grid-cols-1 lg:grid-cols-5 mb-6 bg-gray-200 z-40 p-4 rounded-lg relative">
+        <div className="grid sm:grid-cols-1 lg:grid-cols-5 mb-6 bg-gray-200 p-4 rounded-lg relative">
 
             <button
                 className="absolute top-0 right-0 lg:hidden sm:flex m-4"

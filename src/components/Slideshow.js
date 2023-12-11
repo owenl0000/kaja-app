@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Footer from "@/components/Footer";
 
 export default function Slideshow() {
   const [slideIndex, setSlideIndex] = useState(0);
@@ -50,7 +51,7 @@ export default function Slideshow() {
   };
 
   return (
-    <div className="slideshow-container">
+    <div className="slideshow-container relative">
       {images.map((image, index) => (
         <div className={`mySlides ${index === slideIndex ? 'show' : ''}`} key={index}>
           <img src={image} alt={`Slide ${index + 1}`} />
@@ -74,6 +75,11 @@ export default function Slideshow() {
           </div>
         ))}
       </div>
+
+      <div className={"absolute bottom-6 w-full"}>
+        <Footer/>
+      </div>
+
     </div>
   );
 }
