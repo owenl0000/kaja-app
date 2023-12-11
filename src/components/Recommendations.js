@@ -9,22 +9,59 @@ import { useRouter } from 'next/router';
 //const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info` //url used for fetching
 //we are using this for rendering
 
-function Recommendations({  onAddPlace = () => {} , sortOrder}) {
+function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
+  console.log(priceFilter);
   const router = useRouter();
   const { location, activity } = router.query; //if empty or undefined set it to some place or required search 
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [addedIconIndex, setAddedIconIndex] = useState(null);
   const [data, setData] = useState({ area0: [], area1: [], area2: [], area3: [] });
+  const priceOrder = { '$$$$$': 5, '$$$$': 4, '$$$': 3, '$$': 2, '$': 1, '': 0 };
 
-  const sortAndDistributeData = (originalData, order) => {
+  const sortAndDistributeData = (originalData, order, priceFilter) => {
     // Flatten the data from all areas into a single array
     const allData = Object.values(originalData).flat();
   
     // Sort the flattened data if necessary
-    if (order !== "normal") {
+    switch (order) {
+      case 'ascending':
+        allData.sort((a, b) => a.reviews - b.reviews);
+        break;
+      case 'descending':
+        allData.sort((a, b) => b.reviews - a.reviews);
+        break;
+      case 'ratingAscending':
+        allData.sort((a, b) => a.stars - b.stars);
+        break;
+      case 'ratingDescending':
+        allData.sort((a, b) => b.stars - a.stars);
+        break;
+      default:
+        // No sorting
+        break;
+    }
+
+    if (priceFilter) {
+      const pricePriority = {
+        '$$$$$': [5, 4, 3, 2, 1],
+        '$$$$': [4, 3, 2, 1, 5],
+        '$$$': [3, 2, 1, 4, 5],
+        '$$': [2, 1, 3, 4, 5],
+        '$': [1, 2, 3, 4, 5]
+      };
+
       allData.sort((a, b) => {
-        return order === "ascending" ? a.reviews - b.reviews : b.reviews - a.reviews;
+        let priceA = priceOrder[a.price] || -1; // Set to -1 for unavailable prices
+        let priceB = priceOrder[b.price] || -1;
+
+        // Handle unavailable prices
+        if (priceA === -1 && priceB === -1) return 0;
+        if (priceA === -1) return 1;
+        if (priceB === -1) return -1;
+
+        // Sort based on the selected price filter
+        return pricePriority[priceFilter].indexOf(priceA) - pricePriority[priceFilter].indexOf(priceB);
       });
     }
   
@@ -45,7 +82,7 @@ function Recommendations({  onAddPlace = () => {} , sortOrder}) {
   useEffect(() => {
     // Sort and distribute data when sortOrder changes
     if (data.area0.length > 0 || data.area1.length > 0 || data.area2.length > 0 || data.area3.length > 0) {
-      const sortedAndDistributedData = sortAndDistributeData(data, sortOrder);
+      const sortedAndDistributedData = sortAndDistributeData(data, sortOrder, priceFilter);
       setData(sortedAndDistributedData);
 
       // Update local storage with sorted data
@@ -53,7 +90,7 @@ function Recommendations({  onAddPlace = () => {} , sortOrder}) {
       const updatedStoredData = { ...localStorage.getItem('yelpRecommendations') ? JSON.parse(localStorage.getItem('yelpRecommendations')) : {}, [queryKey]: sortedAndDistributedData };
       localStorage.setItem('yelpRecommendations', JSON.stringify(updatedStoredData));
     }
-  }, [sortOrder]);
+  }, [sortOrder, priceFilter]);
 
   console.log("Query Params ", {location, activity});
   useEffect(() => {
@@ -134,6 +171,10 @@ function Recommendations({  onAddPlace = () => {} , sortOrder}) {
     area3: 0,
   });
 
+  useEffect(() => {
+    setStartIndex({ area0: 0, area1: 0, area2: 0, area3: 0 });
+  }, [location, activity]);
+
   const nextPage = (section) => {
     setStartIndex((prev) => ({ ...prev, [section]: prev[section] + 3 }));
   };
@@ -153,7 +194,7 @@ function Recommendations({  onAddPlace = () => {} , sortOrder}) {
       return num;
     };
     return (
-        <div key={place.id} className={`w-[250px] 2xl:w-[350px] 2xl:h-auto px-3 mb-4 mx-2 border rounded-lg p-1 shadow-lg relative bg-white overflow-hidden`}>
+        <div key={place.id} className={`w-[250px] 2xl:w-[300px] 2xl:h-auto px-3 mb-4 mx-2 border rounded-lg p-1 shadow-lg relative bg-white overflow-hidden`}>
           <div className="relative h-48 2xl:h-[228px]  mt-4 mb-1 mx-3">
             <div className="w-full h-full flex justify-center items-center rounded-lg">
               <img src={place.image} className='h-full w-full object-cover rounded-lg' alt={place.name}></img>
@@ -177,7 +218,8 @@ function Recommendations({  onAddPlace = () => {} , sortOrder}) {
               <span className="mt-1 md:mt-0 xl:ml-2 text-gray-500 truncate" style={{maxWidth: '80%'}}>{abbreviateNumber(place.reviews)} reviews</span>
             </div>
           </div>
-          <div className="ml-2 mb-4">
+          <div className="ml-2 mb-4 flex justify-between">
+            <div className={`p-1 bg-gray-200 rounded text-xs ${place.price ? '' : 'italic'}`}>{place.price || "Price Unavailable"}</div>
             <a href={place.yelpLink} target="_blank" rel="noopener noreferrer">
               <Image src="/images/yelp_logo.png" alt="Yelp" width={50} height={20} />
             </a>

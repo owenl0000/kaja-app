@@ -10,7 +10,8 @@ import Recommendations from '@/components/Recommendations.js';
 export default function AfterSearch() {
   const [addedPlacesByDate, setAddedPlacesByDate] = useState({});
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-  const [reviewSortOrder, setReviewSortOrder] = useState("normal");
+  const [sortOrder, setSortOrder] = useState("");
+  const [priceFilter, setPriceFilter] = useState("");
   console.log(selectedDate);
   // Read places from localStorage on mount
 
@@ -34,7 +35,11 @@ export default function AfterSearch() {
   }, [addedPlacesByDate]);
 
   const handleSortOrderChange = (newOrder) => {
-    setReviewSortOrder(newOrder);
+    setSortOrder(newOrder);
+  };
+
+  const handlePriceChange = (newPrice) => {
+    setPriceFilter(newPrice);
   };
 
   const handleAddPlace = (place, selectedDate) => {
@@ -71,13 +76,15 @@ export default function AfterSearch() {
                   <Sidebar 
                     selectedDate={selectedDate} 
                     onDateChange={handleDateChange}
-                    onSortOrderChange={handleSortOrderChange}
+                    onSortChange={handleSortOrderChange}
+                    onPriceChange={handlePriceChange}
                   />
               </div>
               <div className="w-3/4">
                 <Recommendations 
                   onAddPlace={(place) => handleAddPlace(place, selectedDate)} 
-                  sortOrder={reviewSortOrder}
+                  sortOrder={sortOrder}
+                  priceFilter={priceFilter}
                 />   
               </div>
           </div>

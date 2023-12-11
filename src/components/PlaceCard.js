@@ -26,6 +26,9 @@ function PlaceCard({
         }
     };
 
+    console.log(place.address);
+    const formattedAddress = Array.isArray(place.address) ? place.address.join(', ') : place.address;
+
     return (
         <div className="grid sm:grid-cols-1 lg:grid-cols-5 mb-6 bg-gray-200 p-4 rounded-lg relative">
 
@@ -46,7 +49,7 @@ function PlaceCard({
             {/* Details */}
             <div className="flex flex-col lg:text-start sm:text-center p-2">
                 <div className="text-lg font-semibold min-w-[100px]">{place.name}</div>
-                <div className="text-sm min-w-[200px]">{place.address || 'N/A'}</div>
+                <div className="text-sm min-w-[200px]">{formattedAddress || 'N/A'}</div>
                 <div className="text-sm min-w-[200px]">{place.contact || 'N/A'}</div>
                 <div className="text-sm min-w-[200px]"> Price: {place.price || 'N/A'}</div>
                 <div className="my-1">
