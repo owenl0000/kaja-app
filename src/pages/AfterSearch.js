@@ -12,8 +12,13 @@ export default function AfterSearch() {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [sortOrder, setSortOrder] = useState("");
   const [priceFilter, setPriceFilter] = useState("");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   console.log(selectedDate);
   // Read places from localStorage on mount
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   useEffect(() => {
     const savedDate = sessionStorage.getItem('selectedDate');
@@ -69,10 +74,15 @@ export default function AfterSearch() {
 
   return (
       <>
-
-          <Header page="AfterSearch"/>
-          <div className="flex min-h-screen h-full font-mont">
-              <div className="w-1/4">
+        <Header page="AfterSearch"/>
+          <button 
+            className="lg:hidden fixed z-30 bottom-4 right-4 bg-coral text-white p-2 rounded-md"
+            onClick={toggleSidebar}
+            aria-label="Toggle Sidebar"
+          >{isSidebarOpen ? 'Hide Sidebar' : 'Show Sidebar'}
+          </button>
+          <div className="flex min-h-screen h-full font-mont lg:flex-col xl:flex-row">
+              <div className={`transform w-full xl:w-1/4 bg-white lg:static absolute h-full ease-in-out transition-all duration-300 z-20 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
                   <Sidebar 
                     selectedDate={selectedDate} 
                     onDateChange={handleDateChange}
@@ -80,7 +90,7 @@ export default function AfterSearch() {
                     onPriceChange={handlePriceChange}
                   />
               </div>
-              <div className="w-3/4">
+              <div className="w-full small:ml-20 lg:ml-0 xl:ml-0 xl:w-3/4">
                 <Recommendations 
                   onAddPlace={(place) => handleAddPlace(place, selectedDate)} 
                   sortOrder={sortOrder}
@@ -88,7 +98,6 @@ export default function AfterSearch() {
                 />   
               </div>
           </div>
-
       </>
   )
 }

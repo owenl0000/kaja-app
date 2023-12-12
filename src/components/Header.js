@@ -39,8 +39,8 @@ function Header({ page }) {
   }
 
   return (
-    <header className={`grid grid-rows-2 small:grid small:grid-cols-3 items-start w-full flex-grow h-auto sm:h-20 ${headerClass} pt-3 pb-2 lg:px-10 md:px-4 sm:px-2 ${positionClass}  z-10 `}>
-      <div className='pt-2 col-start-1'>
+    <header className={`grid grid-rows-2 small:grid small:grid-cols-3 items-start w-full h-[120px] small:h-20 ${headerClass} pt-3 pb-2 lg:px-10 md:px-4 sm:px-2 ${positionClass}  z-10 `}>
+      <div className='pt-2 col-start-1 '>
         <Link href={"/"} className={""}>
           <div className={"flex items-center lg:items-start gap-x-4"}>
             <h6 className={"text-2xl lg:text-4xl small:text-3xl font-latto font-bold"}>Kaja</h6>
@@ -49,7 +49,7 @@ function Header({ page }) {
         </Link>
       </div>
       
-      <div className="small:pt-2 pt-5 w-full row-start-2 small:row-start-auto col-span-2 small:col-span-1">
+      <div className="pt-2 w-full row-start-2 small:row-start-auto col-span-2 small:col-span-1 z-10">
         <SearchBar />
       </div>
       <div className={`w-full lg:w-auto lg:flex-shrink lg:block lg:pt-2 col-start-2 small:col-start-3`}>

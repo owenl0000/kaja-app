@@ -15,11 +15,13 @@
 
 .open {
     opacity: 1;
+    z-index: 20;
     transition: max-height var(--speed) ease-in, opacity var(--speed) ease-in;
 }
 
 .closed {
     opacity: 0;
+    z-index: -20;
     transition: max-height var(--speed) ease, opacity var(--speed) ease;
 }
 
