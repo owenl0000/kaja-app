@@ -76,9 +76,15 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
   };
 
   const isContentUnavailable = () => {
-    return Object.values(data).every(section => section.length === 0);
+    // Check if loading is still ongoing or if there is no data after loading is done
+    return !isLoading && Object.values(data).every(section => section.length === 0);
   };
-
+  
+  useEffect(() => {
+    console.log("Loading State: ", isLoading); // Add this line to debug
+    // ... rest of the useEffect code ...
+  }, [isLoading]);
+  
   useEffect(() => {
     // Sort and distribute data when sortOrder changes
     if (data.area0.length > 0 || data.area1.length > 0 || data.area2.length > 0 || data.area3.length > 0) {
@@ -93,8 +99,8 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
   }, [sortOrder, priceFilter]);
 
   useEffect(() => {
-    setIsLoading(true);
     if (location) {
+      setIsLoading(true);
       // Construct a unique identifier for the current query
       const queryKey = `${location}_${activity || 'all'}`;
       const storedData = localStorage.getItem('yelpRecommendations');
@@ -130,12 +136,12 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
   
             // Update state with fetched data
             setData(newRecommendations);
-            setIsLoading(false);
-  
             // Clear previous data and update local storage with new data
             storedDataParsed = {}; // Clear previous data
             storedDataParsed[queryKey] = newRecommendations;
-            localStorage.setItem('yelpRecommendations', JSON.stringify(storedDataParsed));            
+            setIsLoading(false); 
+            localStorage.setItem('yelpRecommendations', JSON.stringify(storedDataParsed));           
+            
           })
           .catch(err => console.error(err))    
           setIsLoading(false);
