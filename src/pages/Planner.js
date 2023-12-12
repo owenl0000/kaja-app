@@ -75,24 +75,26 @@ const Planner = () => {
   return (
       <>
         <Header page="Planner" />
-        <main className="p-4">
-          <div className="grid md:grid-cols-2 sm:grid-cols-1 mb-4">
-            <div className="flex-1 flex justify-center">
-              <div className={"sm:w-3/4 lg:w-1/2"}>
-                < Calendar selectedDate={selectedDate} setSelectedDate={handleDateChange}/>
+        <div className="flex flex-col justify-center items-center">
+          <main className="p-4 mx-auto small:ml-0">
+            <div className="grid md:grid-cols-2 sm:grid-cols-1 mb-4 ">
+              <div className="flex-1 flex justify-center">
+                <div className={"sm:w-3/4 lg:w-1/2"}>
+                  < Calendar selectedDate={selectedDate} setSelectedDate={handleDateChange}/>
+                </div>
+              </div>
+              <div className="flex-1 flex flex-col items-center justify-center">
+                <div className="flex rounded-md overflow-hidden sm:w-3/4 lg:w-1/2">
+                  <MakePlace onAddPlace={handleAddPlace} selectedDate={selectedDate} />
+                </div>
               </div>
             </div>
-            <div className="flex-1 flex flex-col items-center justify-center">
-              <div className="flex rounded-md overflow-hidden sm:w-3/4 lg:w-1/2">
-                <MakePlace onAddPlace={handleAddPlace} selectedDate={selectedDate} />
-              </div>
-            </div>
-          </div>
-          <PlanCreator
-              selectedDate={selectedDate}
-              addedPlacesByDate={addedPlacesByDate}
-          />
-        </main>
+            <PlanCreator
+                selectedDate={selectedDate}
+                addedPlacesByDate={addedPlacesByDate}
+            />
+          </main>
+        </div>
       </>
   );
 };

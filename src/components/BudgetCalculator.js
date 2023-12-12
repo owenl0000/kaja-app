@@ -63,7 +63,7 @@ function BudgetCalculator({ selectedDate, handleBudgetChange}) {
     const convertedTotal = convertCurrency(originalTotal, currency);
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow-md max-w-sm mx-auto text-center mb-5">
+        <div className="bg-white p-4 rounded-lg shadow-md mx-auto text-center mb-5">
             <h3 className="text-lg font-semibold text-gray-700">Total Budget for {selectedDate}:</h3>
             <div className="bg-gray-200 p-4 rounded-lg mt-4">
                 <p className="text-xl font-bold text-coral">

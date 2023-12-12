@@ -75,6 +75,10 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
     return distributedData;
   };
 
+  const isContentUnavailable = () => {
+    return Object.values(data).every(section => section.length === 0);
+  };
+
   useEffect(() => {
     // Sort and distribute data when sortOrder changes
     if (data.area0.length > 0 || data.area1.length > 0 || data.area2.length > 0 || data.area3.length > 0) {
@@ -235,7 +239,13 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
   return (
       <div className="flex flex-col p-4">
         {showToast && <div className="toast">{toastMessage}</div>}
-        {isLoading ? renderLoading() : (
+        {isLoading ? (
+        renderLoading()
+          ) : isContentUnavailable() ? (
+            <div className="text-center my-10">
+              <p className="text-lg text-gray-600">No results found. Try being more specific in your search.</p>
+            </div>
+          ) : (
           Object.keys(data).map((section) => {
             const sectionData = data[section];
             return (

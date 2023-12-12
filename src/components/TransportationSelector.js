@@ -28,7 +28,7 @@ function TransportationSelector({ selectedDate, handleTransportationChange }) {
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md max-w-sm mx-auto text-center mb-5">
+    <div className="bg-white p-4 rounded-lg shadow-md mx-auto text-center mb-5">
       <h3 className="text-lg font-semibold text-gray-700 mb-3">Transportation for {selectedDate}</h3>
       {transportationEntries.map((entry, index) => (
         <div key={index} className="mb-4">

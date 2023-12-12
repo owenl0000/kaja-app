@@ -16,12 +16,9 @@
 .open {
     opacity: 1;
     transition: max-height var(--speed) ease-in, opacity var(--speed) ease-in;
-    max-height: 500px;
 }
 
 .closed {
-    max-height: 0;
-    overflow: hidden;
     opacity: 0;
     transition: max-height var(--speed) ease, opacity var(--speed) ease;
 }

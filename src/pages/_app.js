@@ -5,10 +5,16 @@ import '../../styles/Filter.css';
 import '../../styles/Sidebar.css';
 import '../../styles/TimePicker.css';
 import '../../styles/Header.css';
-import '../../styles/Planner.css'
-
+import '../../styles/Planner.css';
+import Head from 'next/head'
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+  return (
+    <>
+      <Head>
+      </Head>
+      <Component {...pageProps} />
+    </>
+  )
 }
 
 export default MyApp;
