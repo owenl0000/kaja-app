@@ -52,7 +52,6 @@ function Header({ page }) {
       <div className="small:pt-2 pt-5 w-full row-start-2 small:row-start-auto col-span-2 small:col-span-1">
         <SearchBar />
       </div>
-
       <div className={`w-full lg:w-auto lg:flex-shrink lg:block lg:pt-2 col-start-2 small:col-start-3`}>
         <nav className={`flex flex-col justify-end lg:flex-row items-start ${isSpecialPage ? 'gap-2' : 'gap-6'} w-full ${navClass} lg:mr-16`}>
             <button className="justify-end lg:hidden ml-auto mt-3 " onClick={() => setIsMenuOpen(!isMenuOpen)}>

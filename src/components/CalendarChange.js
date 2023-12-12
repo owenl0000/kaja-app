@@ -16,7 +16,6 @@ export default function Calendar({ selectedDate, setSelectedDate }){
     November: 30,
     December: 31
   };
-
   
   const [bottomOpen, setBottomOpen] = useState(false);
   const [monthOpen, setMonthOpen] = useState(false);
@@ -95,29 +94,25 @@ export default function Calendar({ selectedDate, setSelectedDate }){
     dayArray.push(i);
   }
 
-  const calculateUnshift = () => {
+  const getDaysArray = (year, monthIndex, daysInMonth) => {
+    let firstDay = new Date(year, monthIndex, 1).getDay();
+    let daysArray = [];
 
-    let unshiftAmount = monthObject[date.month] - 28;
-
-    let innerArray = [];
-    for(let i = 0; i < unshiftAmount; i++) {
-      innerArray.push('0');
+    for (let i = 0; i < firstDay; i++) {
+      daysArray.push('0');
     }
-
-    if(unshiftArray.length >= 7){
-      unshiftArray.length = unshiftArray.length % 7;
+    for (let i = 1; i <= daysInMonth; i++) {
+      daysArray.push(i);
     }
-
-    if(monthsOfYear)
-
-    setUnshiftArray([...innerArray, ...unshiftArray]);
-    console.log(unshiftArray);
-  }
+    return daysArray;
+  };
 
   useEffect(() => {
-    calculateUnshift();
-    setStateArray([...unshiftArray, ...dayArray]);
-  }, [date.month]);
+    const monthIndex = monthsOfYear.indexOf(date.month);
+    let daysInMonth = date.month === "February" ? (date.year % 4 === 0 && (date.year % 100 !== 0 || date.year % 400 === 0) ? 29 : 28) : monthObject[date.month];
+    let daysArray = getDaysArray(date.year, monthIndex, daysInMonth);
+    setStateArray(daysArray);
+  }, [date]);
 
   return (
       <div className={"bg-coral text-white text-center p-5 lg:px-5 sm:px-2 my-5 w-full rounded-md overflow-hidden font-mont"}>
