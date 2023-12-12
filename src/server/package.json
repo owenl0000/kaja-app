@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon app.js",
-    "start production": "node app.js"
+    "production": "node app.js"
   },
   "author": "Brandon Vasquez",
   "license": "ISC",

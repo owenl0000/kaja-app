@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 
     db.any(`SELECT * FROM \"Business\" WHERE location='${query.location}' AND term='${query.term}'`)
         .then(raw => res.send({business_data: raw}))
-        .catch(err => console.error(err));
+        .catch(() => res.send('<center><h1>There was an error getting the business data</h1></center>'));
 })
 
 module.exports = router;
