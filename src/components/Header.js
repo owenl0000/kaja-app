@@ -74,9 +74,9 @@ function Header({ page }) {
                            setContactOpen(false);
                          }}>Home</Link>
 
-          <div className={`font-mont mb-1 lg:inline pt-2 sm:hidden flex-col overflow-hidden ${isSpecialPage ? 'hidden w-0' : 'flex'}`}>
+          <div className={`font-mont mb-1 lg:inline pt-2 sm:hidden flex-col ${isSpecialPage ? 'hidden w-0' : 'flex'}`}>
 
-            <button onClick={aboutClick} className={`text-select text-center`}>About</button>
+            <button onClick={aboutClick} className={`text-select w-full overflow-hidden`}>About</button>
 
             <div className={`${isAboutOpen ? "nav-open" : "nav-closed"} backdrop-blur-md p-4 pt-2 text-center z-50 h-[12rem] rounded-lg overflow-scroll no-scrollbar`}>
               Kaja is a web application in development that aims to simplify planning for trips and outings.
@@ -88,9 +88,9 @@ function Header({ page }) {
 
           {/*<a href="#Iteneries" onClick={handleSmoothScroll} className="font-trend mb-1 lg:inline sm:hidden text-select">Itineraries</a>*/}
 
-          <div className={`font-mont mb-1 lg:inline pt-2 sm:hidden flex-col overflow-hidden ${isSpecialPage ? 'hidden w-0' : 'flex'}`}>
+          <div className={`font-mont mb-1 lg:inline pt-2 sm:hidden flex-col ${isSpecialPage ? 'hidden w-0' : 'flex'}`}>
 
-            <div onClick={contactClick} className={"text-select text-center"}>Contact</div>
+            <div onClick={contactClick} className={"text-select text-center w-full overflow-hidden"}>Contact</div>
 
             <div className={`${isContactOpen ? "nav-open" : "nav-closed"} backdrop-blur-md p-4 pt-2 text-center z-50 max-h-[12rem] rounded-lg overflow-scroll no-scrollbar`}>
               <ul>

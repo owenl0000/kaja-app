@@ -25,7 +25,7 @@ export default function ReviewSorter({ onSortChange }) {
         <select 
             onChange={handleSortOrderChange} 
             value={sortOrder}
-            className="flex flex-col items-center justify-center w-full p-4 mb-5 bg-coral text-white rounded cursor-pointer"
+            className="flex flex-col items-center justify-center w-full p-5 mb-5 bg-coral text-white rounded cursor-pointer"
         >
             <option value="">Sort by</option>
             <option value="ascending">Ascending Reviews ↑ </option>
