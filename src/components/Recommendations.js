@@ -6,6 +6,7 @@ import YelpStars from '@/utils/YelpStars';
 import Image from 'next/image';
 import 'font-awesome/css/font-awesome.min.css';
 import { useRouter } from 'next/router';
+import { encode } from 'punycode';
 //const fetchUrl = `http://${process.env.NEXT_PUBLIC_SERVER_HOST}:${process.env.NEXT_PUBLIC_SERVER_PORT}/info` //url used for fetching
 //we are using this for rendering
 
@@ -129,7 +130,7 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
                   stars: dataItem.business_rating,
                   reviews: dataItem.business_reviews,
                   price: dataItem.business_price,
-                  yelpLink: dataItem.business_url
+                  yelpLink: encodeURI(dataItem.business_url) // encode so that the user can see it
                 });
               }
             }
