@@ -16,9 +16,13 @@ module.exports = {
         'latto' : ['HedvigLetters', 'sans-serif'],
         'mont' : ['Montserrat', 'sans-serif']
       },
+      width: {
+        '100vw': '100vw',
+      },
     },
     screens: {
       'sm':'0px',
+      'small' : '640px',
       'md': '768px',
       'lg': '1024px',
       'xl': '1280px',

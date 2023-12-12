@@ -17,7 +17,11 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
   const [budget, setBudget] = useState({});
   const [transportationData, setTransportationData] = useState({});
   const [housingData, setHousingData] = useState({});
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   const generateUniqueId = () => {
     return `id-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -177,12 +181,17 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
   };
   
   return (
-    <div className="flex flex-col items-start bg-gray-100 font-mont">
+    <div className="flex flex-col items-start bg-gray-100 w-full pr-20">
+      <button 
+        className="small:hidden fixed z-30 bottom-4 right-4 bg-coral text-white p-2 rounded-md"
+        onClick={toggleSidebar}>
+        {isSidebarOpen ? 'Hide Sidebar' : 'Show Sidebar'}
+      </button>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="placesDroppable">
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps} className="flex w-full">
-              <div className="flex flex-col w-3/4 bg-white rounded-lg shadow-lg mt-10 ml-10 mb-10 p-4 ">
+              <div className="flex flex-col small:w-3/4 bg-white rounded-lg shadow-lg mt-10 ml-10 small:mr-0 mr-10 mb-10 p-4 ">
                 {placesForSelectedDate.map((place, index) => (
                   <Draggable key={`draggable-${index}`} draggableId={`draggable-${index}`} index={index}>
                     {(provided, snapshot) => (
@@ -215,7 +224,7 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
                 ))}
                 {provided.placeholder}
                 {showConfirmModal && (
-                  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                  <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
                     <div className="bg-white p-4 rounded-lg">
                       <p>Are you sure you want to remove this place?</p>
                       <div className="flex justify-end mt-2">
@@ -248,11 +257,8 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
                   </div>
                 ))}
               </div>
-              <div className="flex-1 ml-4 mt-10 mr-4">
-                <BudgetCalculator 
-                  selectedDate={selectedDate} 
-                  handleBudgetChange={handleBudgetChange}
-                />
+              <div className={`fixed small:bottom-0 bottom-6 right-0 transform ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full'} small:translate-x-0 transition-transform duration-300 ease-in-out p-4 mt-6 small:relative small:flex-1`}>
+                <BudgetCalculator selectedDate={selectedDate} handleBudgetChange={handleBudgetChange} />
                 <TransportationSelector 
                   selectedDate={selectedDate} 
                   transportationData={transportationData[selectedDate] || []}

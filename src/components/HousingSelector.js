@@ -36,12 +36,12 @@ function HousingSelector({ selectedDate, handleHousingChange }) {
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md max-w-sm mx-auto text-center mb-5">
+    <div className="bg-white p-4 rounded-lg shadow-md mx-auto text-center mb-5">
       <h3 className="text-lg font-semibold text-gray-700 mb-3">Housing for {selectedDate}</h3>
       {housingEntries.map((entry, index) => (
-        <div key={index} className="flex items-center mb-2">
+        <div key={index} className="mb-4">
           <select
-            className="bg-gray-200 rounded p-2 mr-2 flex-1"
+            className="bg-gray-200 rounded p-2 mr-2 w-full"
             value={entry.type}
             onChange={(e) => handleEntryChange(index, 'type', e.target.value)}
           >
@@ -53,7 +53,7 @@ function HousingSelector({ selectedDate, handleHousingChange }) {
             {housingEntries.length > 1 && <option value="remove">Remove</option>}
             {/* Add more housing types */}
           </select>
-          <div className="flex">
+          <div className="flex mt-2">
             <span className="bg-gray-200 rounded-l p-2 flex items-center text-gray-700">$</span>
             <input
               className="bg-gray-200 rounded-r p-2 w-full"
