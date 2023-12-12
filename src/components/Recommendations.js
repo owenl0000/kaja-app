@@ -109,7 +109,6 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
           .then((body) => {
             const fetchedData = body;
             setData(fetchedData);
-            setIsLoading(false);
             let newRecommendations = { area0: [], area1: [], area2: [], area3: [] };
             let dataIndex = 0;
             for (let block in newRecommendations) {
@@ -131,6 +130,7 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
   
             // Update state with fetched data
             setData(newRecommendations);
+            setIsLoading(false);
   
             // Clear previous data and update local storage with new data
             storedDataParsed = {}; // Clear previous data
