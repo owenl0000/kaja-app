@@ -237,41 +237,42 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
 
 
   return (
-      <div className="flex flex-col p-4">
-        {showToast && <div className="toast">{toastMessage}</div>}
-        {isLoading ? (
-        renderLoading()
-          ) : isContentUnavailable() ? (
-            <div className="text-center my-10">
-              <p className="text-lg text-gray-600">No results found. Try being more specific in your search.</p>
-            </div>
-          ) : (
-          Object.keys(data).map((section) => {
-            const sectionData = data[section];
-            return (
-                <div key={section} className="border rounded p-6 md:w-[80%] lg:w-[90%] xl:w-[100%] mb-5">
-                  <div className="flex justify-between items-center ">
+    <div className="flex flex-col p-4">
+    {showToast && <div className="toast">{toastMessage}</div>}
+
+    {isLoading ? (
+      renderLoading()
+    ) : (
+      isContentUnavailable() ? (
+        <div className="text-center my-10">
+          <p className="text-lg text-gray-600">No results found. Try being more specific in your search.</p>
+        </div>
+      ) : (
+        Object.keys(data).map((section) => {
+          const sectionData = data[section];
+          return (
+            <div key={section} className="border rounded p-6 md:w-[80%] lg:w-[90%] xl:w-[100%] mb-5">
+              <div className="flex flex-col items-center mt-4">
+                <div className="flex items-center justify-center w-full">
+                  <div onClick={() => !isPrevDisabled(section) && prevPage(section)} className={`h-8 ${isPrevDisabled(section) ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                    <TriangleToggle isOpen={false} />
                   </div>
-                  <div className="flex flex-col items-center mt-4">
-                    <div className="flex items-center justify-center w-full">
-                      <div onClick={() => !isPrevDisabled(section) && prevPage(section)} className={`h-8 ${isPrevDisabled(section) ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                        <TriangleToggle isOpen={false} />
-                      </div>
-                      <div className="flex flex-wrap justify-center md:justify-center">
-                        {sectionData.slice(startIndex[section], startIndex[section] + 3).map((place, placeIndex) => (
-                            renderPlace(place, placeIndex)
-                        ))}
-                      </div>
-                      <div onClick={() => !isNextDisabled(section) && nextPage(section)} className={`h-8 ${isNextDisabled(section) ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                        <TriangleToggle isOpen={true} />
-                      </div>
-                    </div>
+                  <div className="flex flex-wrap justify-center md:justify-center">
+                    {sectionData.slice(startIndex[section], startIndex[section] + 3).map((place, placeIndex) => (
+                      renderPlace(place, placeIndex)
+                    ))}
+                  </div>
+                  <div onClick={() => !isNextDisabled(section) && nextPage(section)} className={`h-8 ${isNextDisabled(section) ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                    <TriangleToggle isOpen={true} />
                   </div>
                 </div>
-            );
-          })
-        )}
-      </div>
+              </div>
+            </div>
+          );
+        })
+      )
+    )}
+  </div>
   );
 }
 
