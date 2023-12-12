@@ -242,8 +242,7 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
 
     {isLoading ? (
       renderLoading()
-    ) : (
-      isContentUnavailable() ? (
+    ) : isContentUnavailable() ? (
         <div className="text-center my-10">
           <p className="text-lg text-gray-600">No results found. Try being more specific in your search.</p>
         </div>
@@ -270,9 +269,8 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
             </div>
           );
         })
-      )
-    )}
-  </div>
+      )}
+    </div>
   );
 }
 
