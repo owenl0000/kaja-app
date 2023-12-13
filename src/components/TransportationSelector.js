@@ -57,7 +57,7 @@ function TransportationSelector({ selectedDate, handleTransportationChange }) {
             <div className="flex mt-2">
               <span className="bg-gray-200 rounded-l p-2 flex items-center text-gray-700">$</span>
               <input
-                className="bg-gray-200 rounded-r p-2 w-full"
+                className="bg-gray-200 rounded-r rounded-l-none p-2 w-full"
                 type="text"
                 pattern="\d*"
                 placeholder="Price"
