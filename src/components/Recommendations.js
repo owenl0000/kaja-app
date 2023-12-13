@@ -266,7 +266,7 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
               messageDisplayed = true; // Ensure message is only displayed once
               return (
                 <div key={section} className="text-center my-10">
-                  <p className="text-lg text-gray-600">Try being more specific in your search for more options in this area.</p>
+                  <p className="text-lg text-gray-600">Try being more specific in your search for more options.</p>
                 </div>
               );
             } else {
