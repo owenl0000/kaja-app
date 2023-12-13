@@ -51,7 +51,7 @@ const SearchBar = () => {
             placeholder="Where to?"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            className=" sm:w-[40%] small:w-[150px] small:p-2 pl-2 small:flex-grow text-xs small:text-sm xl:text-base small:flex-shrink small:border-r border border-r-0 text-black rounded-l"
+            className=" sm:w-[40%] small:w-[150px] small:p-2 pl-2 small:flex-grow text-xs small:text-sm xl:text-base small:flex-shrink small:border-r border border-r-0 text-black rounded-l rounded-r-none"
             required={true}
         />
 
@@ -60,7 +60,7 @@ const SearchBar = () => {
             placeholder="What will you do?"
             value={activity}
             onChange={(e) => setActivity(e.target.value)}
-            className="sm:w-[40%] small:w-[150px] small:p-2 pl-2 small:flex-grow text-xs small:text-sm xl:text-base small:flex-shrink small:border-r border border-r-0 text-black"
+            className="sm:w-[40%] small:w-[150px] small:p-2 pl-2 small:flex-grow text-xs small:text-sm xl:text-base small:flex-shrink small:border-r border rounded-none border-r-0 text-black"
         />
 
         <button type={"submit"} className="w-[20%] small:w-auto bg-coral active:bg-[var(--dark-coral)] border font-latto border-l-0 text-off-white p-2 rounded-r text-xs small:text-base">
