@@ -28,7 +28,7 @@
 .nav-open {
     width: 250px;
     opacity: 1;
-    transition: max-height var(--speed) ease-in, opacity calc(var(--speed)*3) ease-in, width var(--speed)  ease-in;
+    transition: max-height var(--speed) ease-in, opacity calc(var(--speed)*3) ease-in, width var(--speed) ease-in;
     max-height: 500px;
 }
 
