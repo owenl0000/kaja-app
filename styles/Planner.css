@@ -36,3 +36,7 @@
 .budget-input-wrapper:hover {
     border-color: #FF6B6B; /* Hover effect */
 }
+
+.fa-trash {
+    color:#FF6B6B;
+}
