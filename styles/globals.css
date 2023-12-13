@@ -149,3 +149,7 @@
   font-weight: 400;
   font-style: regular;
 }
+
+input:focus {
+  outline: none;
+}
