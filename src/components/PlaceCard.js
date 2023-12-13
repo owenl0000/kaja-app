@@ -101,7 +101,7 @@ function PlaceCard({
                     className="absolute top-0 right-0 sm:hidden lg:flex m-4"
                     onClick={() => onRemoveButtonClick(index)}
                 >
-                    <i className="fa fa-trash fa-lg text-red-500 "></i>
+                    <i className="fa fa-trash fa-lg "></i>
                 </button>
 
                 <textarea
