@@ -20,7 +20,6 @@
   .time-input {
     border: none;
     background: transparent;
-    font-size: 1.125rem;
     font-weight: 600;
     color: black;
     outline: none;
@@ -36,7 +35,6 @@
     appearance: none;
     border: none;
     background: transparent;
-    font-size: 1.125rem;
     font-weight: 600;
     color: black;
     cursor: pointer;
@@ -49,7 +47,6 @@
   }
   
   .time-colon {
-    font-size: 1.125rem;
     font-weight: 600;
     color: black;
     /*margin: 0 0.2rem; !* Add this *!*/
@@ -57,7 +54,6 @@
   
   .time-to {
     /*margin: 0 1rem;*/
-    font-size: 1.125rem;
     font-weight: 600;
     color: black;
   }
@@ -66,7 +62,6 @@
 .notes-input {
   border: 1px solid #ccc; /* Added border */
   background: transparent;
-  font-size: 1.125rem;
   font-weight: 600;
   color: black;
   outline: none;

@@ -181,9 +181,9 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
   };
   
   return (
-    <div className="flex flex-col items-start bg-gray-100 w-full pr-20">
+    <div className="flex flex-col items-start bg-gray-100 w-full rounded ">
       <button 
-        className="small:hidden fixed z-30 bottom-4 right-4 bg-coral text-white p-2 rounded-md"
+        className="lg:hidden fixed z-30 bottom-4 right-4 bg-coral text-white p-2 rounded-md"
         onClick={toggleSidebar}>
         {isSidebarOpen ? 'Hide Sidebar' : 'Show Sidebar'}
       </button>
@@ -191,7 +191,7 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
         <Droppable droppableId="placesDroppable">
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps} className="flex w-full">
-              <div className="flex flex-col small:w-3/4 bg-white rounded-lg shadow-lg mt-10 ml-10 small:mr-0 mr-10 mb-10 p-4 ">
+              <div className="flex flex-col w-full small:w-3/4 bg-white rounded-lg shadow-lg mt-10 lg:ml-5 xl:ml-10 lg:mr-0 mb-10 p-4 mx-0 small:mx-auto">
                 {placesForSelectedDate.map((place, index) => (
                   <Draggable key={`draggable-${index}`} draggableId={`draggable-${index}`} index={index}>
                     {(provided, snapshot) => (
@@ -247,17 +247,17 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
                 {[...Array(totalPlaceholders)].map((_, index) => (
                   <div key={`placeholder-${index}`} className="flex items-start mb-6 bg-gray-200 p-4 rounded-lg">
                     <div className="w-48 h-32 bg-gray-300 rounded"></div>
-                    <div className="ml-6">
-                      <div className="bg-gray-300 w-32 h-6 mb-2 rounded"></div>
-                      <div className="bg-gray-300 w-48 h-4 mb-2 rounded"></div>
-                      <div className="bg-gray-300 w-36 h-4 mb-2 rounded"></div>
-                      <div className="bg-gray-300 w-24 h-4 mb-2 rounded"></div>
-                      <div className="bg-gray-300 w-24 h-4 rounded"></div>
+                    <div className=" small:ml-6">
+                      <div className=" bg-gray-300 small:w-32 small:h-6 mb-2 rounded"></div>
+                      <div className=" bg-gray-300 small:w-48 small:h-4 mb-2 rounded"></div>
+                      <div className=" bg-gray-300 small:w-36 small:h-4 mb-2 rounded"></div>
+                      <div className=" bg-gray-300 small:w-24 small:h-4 mb-2 rounded"></div>
+                      <div className=" bg-gray-300 small:w-24 small:h-4 rounded"></div>
                     </div>
                   </div>
                 ))}
               </div>
-              <div className={`fixed small:bottom-0 bottom-6 right-0 transform ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full'} small:translate-x-0 transition-transform duration-300 ease-in-out p-4 mt-6 small:relative small:flex-1`}>
+              <div className={`fixed lg:bottom-0 lg:w-1/4 bottom-6 right-0 transform ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full'} lg:translate-x-0 transition-transform duration-300 ease-in-out p-4 mt-6 lg:relative lg:flex-1`}>
                 <BudgetCalculator selectedDate={selectedDate} handleBudgetChange={handleBudgetChange} />
                 <TransportationSelector 
                   selectedDate={selectedDate} 

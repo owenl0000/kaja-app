@@ -80,7 +80,7 @@ export default function Slideshow() {
         </section>
       </div>
   
-      <div className="progress-container w-[150px] lg:pb-0 pb-7">
+      <div className="progress-container w-[150px] small:w-[250px] lg:pb-0 pb-7">
         {images.map((_, index) => (
           <div 
             className={`progress-bar ${disableTransition ? 'no-transition' : ''}`}

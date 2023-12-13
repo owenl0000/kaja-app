@@ -257,7 +257,7 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
         Object.keys(data).map((section) => {
           const sectionData = data[section];
           return (
-            <div key={section} className="border rounded p-6 md:w-[80%] lg:w-[90%] xl:w-[100%] mb-5">
+            <div key={section} className="border rounded p-6 md:w-[80%] lg:w-[90%] xl:w-[100%] mb-5 small:mx-auto">
               <div className="flex flex-col items-center mt-4">
                 <div className="flex items-center justify-center w-full">
                   <div onClick={() => !isPrevDisabled(section) && prevPage(section)} className={`h-8 ${isPrevDisabled(section) ? 'opacity-50 cursor-not-allowed' : ''}`}>

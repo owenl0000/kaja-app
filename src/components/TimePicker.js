@@ -45,7 +45,7 @@ const TimePicker = ({ timeFrame, onChange, uniqueKey }) => {
   };
 
   return (
-    <div className="time-picker p-2 lg:px-6 grid lg:grid-cols-3 sm:grid-cols-1">
+    <div className="time-picker p-2 lg:px-6 grid lg:grid-cols-3 sm:grid-cols-1 xl:text-xl lg:text-base">
       <div className="time-section">
         <input 
           type="text" 

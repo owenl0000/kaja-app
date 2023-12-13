@@ -79,14 +79,14 @@ function PlaceCard({
                     uniqueKey={uniqueKey}
                 />
 
-                <div className="budget-input-wrapper">
+                <div className="budget-input-wrapper ">
                     <span className="currency-symbol ml-1">$</span>
                     <input
                         type="text"
-                        placeholder="Enter Budget"
+                        placeholder="Budget"
                         value={currentBudget}
                         onChange={handleBudgetInputChange}
-                        className="budget-input"
+                        className="budget-input truncate text-xs small:text-base"
                     />
                 </div>
 

@@ -82,7 +82,7 @@ export default function AfterSearch() {
           >{isSidebarOpen ? 'Hide Sidebar' : 'Show Sidebar'}
           </button>
           <div className="flex min-h-screen h-full font-mont lg:flex-col xl:flex-row">
-              <div className={`transform w-full xl:w-1/4 bg-white lg:static absolute h-full ease-in-out transition-all duration-300 z-20 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
+              <div className={`transform w-full xl:w-1/4 bg-white lg:static fixed  ease-in-out transition-all duration-300 z-20 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
                   <Sidebar 
                     selectedDate={selectedDate} 
                     onDateChange={handleDateChange}
@@ -90,7 +90,7 @@ export default function AfterSearch() {
                     onPriceChange={handlePriceChange}
                   />
               </div>
-              <div className="w-full small:ml-20 lg:ml-0 xl:ml-0 xl:w-3/4">
+              <div className="w-full lg:ml-0 xl:ml-0 xl:w-3/4">
                 <Recommendations 
                   onAddPlace={(place) => handleAddPlace(place, selectedDate)} 
                   sortOrder={sortOrder}
