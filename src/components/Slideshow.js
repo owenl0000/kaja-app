@@ -72,7 +72,7 @@ export default function Slideshow() {
             </p>
             <Link
               href="/Planner"
-              className="font-mont bg-coral active:bg-[var(--dark-coral)] text-off-white px-6 py-2 rounded-md text-center hover:bg-turquoise-dark inline-block text-select "
+              className="pointer-events-auto font-mont bg-coral active:bg-[var(--dark-coral)] text-off-white px-6 py-2 rounded-md text-center hover:bg-turquoise-dark inline-block text-select "
             >
               Start Planning
             </Link>
