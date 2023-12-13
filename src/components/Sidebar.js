@@ -16,11 +16,9 @@ export default function Sidebar({ selectedDate, onDateChange, onSortChange, onPr
       <div className={"p-4 pb-2 small:m-4 my-2 rounded-md border lg:w-1/2 xl:w-auto"}>
         <div className={"p-5 pt-2 pb-0 mb-5 text-center text-2xl"}>Plan Your Day</div>
         <Calendar selectedDate={selectedDate} setSelectedDate={onDateChange}/>
-        <div className={"bg-coral text-white text-center p-5 lg:px-5 sm:px-2 my-5 w-full rounded-md overflow-hidden font-mont"}>
-          <Link href="/Planner" className="bg-coral p-5 cursor-pointer w-full inline text-off-white text-select">
-                Go to Planner
-          </Link>
-        </div>
+        <Link href="/Planner" className=" bg-coral p-5 cursor-pointer w-full block mb-5 text-center text-off-white rounded-md">
+          Go to Planner
+      </Link>
       </div>
     </div>
   );
