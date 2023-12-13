@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
 function HousingSelector({ selectedDate, handleHousingChange }) {
-  const [housingEntries, setHousingEntries] = useState([{ type: '', price: '' }]);
+  const [housingEntries, setHousingEntries] = useState([{ type: '', price: '', notes: '' }]);
 
   useEffect(() => {
     // Fetch the stored housing data for the selected date
     const storedHousingData = JSON.parse(localStorage.getItem('housingData')) || {};
-    const housingForDate = storedHousingData[selectedDate] || [{ type: '', price: '' }];
+    const housingForDate = storedHousingData[selectedDate] || [{ type: '', price: '', notes: '' }];
 
     // Set the fetched data to the state
     setHousingEntries(housingForDate);
@@ -32,13 +32,13 @@ function HousingSelector({ selectedDate, handleHousingChange }) {
   };
 
   const addHousingEntry = () => {
-    setHousingEntries([...housingEntries, { type: '', price: '' }]);
+    setHousingEntries([...housingEntries, { type: '', price: '', notes: '' }]);
   };
 
   return (
     <div className="bg-white px-4 pt-2 pb-1 small:p-4 rounded-lg shadow-md mx-auto text-center mb-6 small:mb-5 ">
       <h3 className="text-lg font-semibold text-gray-700 mb-1 small:mb-3">Housing for {selectedDate}</h3>
-      <div className="h-24 overflow-y-auto overflow-x-hidden w-full xl:h-auto">
+      <div className="h-32 overflow-y-auto overflow-x-hidden w-full xl:h-auto">
         {housingEntries.map((entry, index) => (
           <div key={index} className="mb-2 small:mb-4">
             <select
@@ -63,6 +63,15 @@ function HousingSelector({ selectedDate, handleHousingChange }) {
                 placeholder="Price"
                 value={entry.price}
                 onChange={(e) => handleEntryChange(index, 'price', e.target.value)}
+              />
+            </div>
+            <div className="flex">
+            <textarea
+              className="bg-gray-200 rounded p-2 w-full mt-2 resize-none"
+              type="text"
+              placeholder="Notes (optional)"
+              value={entry.notes}
+              onChange={(e) => handleEntryChange(index, 'notes', e.target.value)}
               />
             </div>
           </div>

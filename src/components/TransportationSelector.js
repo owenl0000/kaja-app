@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
 function TransportationSelector({ selectedDate, handleTransportationChange }) {
-  const [transportationEntries, setTransportationEntries] = useState([{ type: '', price: '' }]);
+  const [transportationEntries, setTransportationEntries] = useState([{ type: '', price: '', notes: '' }]);
 
   useEffect(() => {
     // Fetch the stored transportation data for the selected date
     const storedTransportationData = JSON.parse(localStorage.getItem('transportationData')) || {};
-    const transportationForDate = storedTransportationData[selectedDate] || [{ type: '', price: '' }];
+    const transportationForDate = storedTransportationData[selectedDate] || [{ type: '', price: '', notes: '' }];
 
     // Set the fetched data to the state
     setTransportationEntries(transportationForDate);
@@ -32,13 +32,13 @@ function TransportationSelector({ selectedDate, handleTransportationChange }) {
   };
 
   const addTransportationEntry = () => {
-    setTransportationEntries([...transportationEntries, { type: '', price: '' }]);
+    setTransportationEntries([...transportationEntries, { type: '', price: '', notes: '' }]);
   };
 
   return (
     <div className="bg-white px-4 pt-2 pb-1 small:p-4 rounded-lg shadow-md mx-auto text-center mb-1 small:mb-5">
       <h3 className="text-lg font-semibold text-gray-700 mb-1 small:mb-3">Transportation for {selectedDate}</h3>
-      <div className="h-24 overflow-y-auto overflow-x-hidden w-full xl:h-auto">
+      <div className="h-32 overflow-y-auto overflow-x-hidden w-full xl:h-auto">
         {transportationEntries.map((entry, index) => (
           <div key={index} className="mb-2 small:mb-4">
             <select
@@ -63,6 +63,15 @@ function TransportationSelector({ selectedDate, handleTransportationChange }) {
                 placeholder="Price"
                 value={entry.price}
                 onChange={(e) => handleEntryChange(index, 'price', e.target.value)}
+              />
+            </div>
+            <div className="flex">
+              <textarea
+              className="bg-gray-200 rounded p-2 w-full mt-2 resize-none"
+              type="text"
+              placeholder="Notes (optional)"
+              value={entry.notes}
+              onChange={(e) => handleEntryChange(index, 'notes', e.target.value)}
               />
             </div>
           </div>
