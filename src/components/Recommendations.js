@@ -178,6 +178,10 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
     </div>
   );
 
+  const shouldDisplaySection = (sectionData) => {
+    return sectionData.length >= 1;
+  };
+
   const [startIndex, setStartIndex] = useState({
     area0: 0,
     area1: 0,
@@ -242,6 +246,7 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
     );
   };
 
+  let messageDisplayed = false;
 
   return (
     <div className="flex flex-col p-4">
@@ -256,6 +261,18 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
       ) : (
         Object.keys(data).map((section) => {
           const sectionData = data[section];
+          if (!shouldDisplaySection(sectionData)) {
+            if (!messageDisplayed) {
+              messageDisplayed = true; // Ensure message is only displayed once
+              return (
+                <div key={section} className="text-center my-10">
+                  <p className="text-lg text-gray-600">Try being more specific in your search for more options in this area.</p>
+                </div>
+              );
+            } else {
+              return null; // Don't display message for subsequent sections
+            }
+          }
           return (
             <div key={section} className="border rounded p-6 md:w-[80%] lg:w-[90%] xl:w-[100%] mb-5 small:mx-auto">
               <div className="flex flex-col items-center mt-4">
