@@ -52,15 +52,15 @@ export default function Slideshow() {
   };
 
   return (
-    <div className="slideshow-container relative">
+    <div className="slideshow-container relative h-full pb-12">
       {images.map((image, index) => (
-        <div className={`mySlides ${index === slideIndex ? 'show' : ''}`} key={index}>
+        <div className={`z-0 absolute top-0 h-full w-full mySlides ${index === slideIndex ? 'show' : ''}`} key={index}>
           <img src={image} alt={`Slide ${index + 1}`} />
         </div>
       ))}
   
       {/* Section to be inserted */}
-      <div className="absolute inset-0 flex justify-center max-h-screen items-center">
+      <div className="flex z-40 relative justify-center h-screen items-center">
         {/* Centered Section */}
         <section className="flex flex-col justify-center items-center text-center p-5 ">
           <div className="flex flex-col justify-center items-center text-center max-w-md mx-auto p-5">
@@ -79,8 +79,12 @@ export default function Slideshow() {
           </div>
         </section>
       </div>
+
+      <div className={"relative z-0 lg:max-h-[100000000000000000000000000000000px] sm:max-h-0 w-full"}>
+        <Footer/>
+      </div>
   
-      <div className="progress-container w-[150px] small:w-[250px] lg:pb-0 pb-7">
+      <div className="progress-container w-[150px] small:w-[250px] lg:pb-0  pb-7">
         {images.map((_, index) => (
           <div 
             className={`progress-bar ${disableTransition ? 'no-transition' : ''}`}
@@ -99,9 +103,7 @@ export default function Slideshow() {
         ))}
       </div>
   
-      <div className={"absolute bottom-6 lg:max-h-[100000000000000000000000000000000px] sm:max-h-0 w-full"}>
-        <Footer/>
-      </div>
+
     </div>
   );
 }
