@@ -22,16 +22,18 @@ export default function ReviewSorter({ onSortChange }) {
     };
 
     return (
-        <select 
-            onChange={handleSortOrderChange} 
-            value={sortOrder}
-            className="flex flex-col justify-center h-full w-full p-5 mb-5 bg-coral text-white rounded cursor-pointer"
-        >
-            <option value="">Sort by</option>
-            <option value="ascending">Ascending Reviews ↑ </option>
-            <option value="descending">Descending Reviews ↓ </option>
-            <option value="ratingAscending">Ascending Rating ↑ </option>
-            <option value="ratingDescending">Descending Rating ↓</option>
-        </select>
+        <div className="flex w-full mb-5 bg-coral rounded-md">
+            <select 
+                onChange={handleSortOrderChange} 
+                value={sortOrder}
+                className="w-full bg-coral p-5 text-white rounded cursor-pointer"
+            >
+                <option value="">Sort by</option>
+                <option value="ascending">Ascending Reviews ↑ </option>
+                <option value="descending">Descending Reviews ↓ </option>
+                <option value="ratingAscending">Ascending Rating ↑ </option>
+                <option value="ratingDescending">Descending Rating ↓</option>
+            </select>
+        </div>
     );
 }
