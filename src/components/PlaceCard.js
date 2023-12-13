@@ -42,7 +42,7 @@ function PlaceCard({
         <div className="grid sm:grid-cols-1 lg:grid-cols-5 mb-6 bg-gray-200 p-4 rounded-lg relative">
 
             <button
-                className="absolute top-0 right-0 lg:hidden sm:flex m-4"
+                className="absolute text-select top-0 right-0 lg:hidden sm:flex m-4"
                 onClick={() => onRemoveButtonClick(index)}
             >
                 <i className="fa fa-trash fa-lg "></i>
@@ -98,7 +98,7 @@ function PlaceCard({
                 </div>
 
                 <button
-                    className="absolute top-0 right-0 sm:hidden lg:flex m-4"
+                    className="absolute text-select top-0 right-0 sm:hidden lg:flex m-4"
                     onClick={() => onRemoveButtonClick(index)}
                 >
                     <i className="fa fa-trash fa-lg "></i>
