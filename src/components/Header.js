@@ -69,7 +69,7 @@ function Header({ page }) {
             </button>
             {/* For large screens */}
             <Link href="/" className="font-mont mb-1 pt-2 lg:inline sm:hidden text-select  " onClick={() => { setAboutOpen(false); setContactOpen(false); }}>Home</Link>
-            <div className={`font-mont mb-1 hidden pt-2 lg:inline flex-col overflow-hidden ${isSpecialPage ? 'hidden w-0' : 'flex'} `}>
+            <div className={`font-mont mb-1 hidden pt-2 lg:inline flex-col ${isSpecialPage ? 'hidden w-0 overflow-hidden' : 'flex'} `}>
               <button onClick={aboutClick} className={`text-select text-center`}>About</button>
               <div className={`${isAboutOpen ? "nav-open" : "nav-closed"} mt-2 absolute backdrop-blur-md text-center transform -translate-x-[50%] z-50 h-[12rem] rounded-lg overflow-scroll no-scrollbar `}>
                 Kaja is a web application in development that aims to simplify planning for trips and outings.

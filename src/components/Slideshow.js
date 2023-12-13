@@ -52,15 +52,15 @@ export default function Slideshow() {
   };
 
   return (
-    <div className="slideshow-container relative h-full pb-12">
+    <div className="slideshow-container pb-12">
       {images.map((image, index) => (
-        <div className={`z-0 absolute top-0 h-full w-full mySlides ${index === slideIndex ? 'show' : ''}`} key={index}>
+        <div className={`absolute top-0 h-full w-full mySlides ${index === slideIndex ? 'show' : ''}`} key={index}>
           <img src={image} alt={`Slide ${index + 1}`} />
         </div>
       ))}
   
       {/* Section to be inserted */}
-      <div className="flex z-40 relative justify-center h-screen items-center">
+      <div className="flex z-40 relative justify-center h-screen items-center pointer-events-none">
         {/* Centered Section */}
         <section className="flex flex-col justify-center items-center text-center p-5 ">
           <div className="flex flex-col justify-center items-center text-center max-w-md mx-auto p-5">
