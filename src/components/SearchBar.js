@@ -43,7 +43,7 @@ const SearchBar = () => {
   };
 
   return (
-      <form className="flex small:w-full rounded z-5 font-mont"
+      <form className="flex small:w-full z-5 font-mont"
             onSubmit={handleSearch}>
 
         <input

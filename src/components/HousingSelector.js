@@ -54,7 +54,7 @@ function HousingSelector({ selectedDate, handleHousingChange }) {
               {housingEntries.length > 1 && <option value="remove">Remove</option>}
               {/* Add more housing types */}
             </select>
-            <div className="flex mt-2">
+            <div className="flex mt-2 rounded">
               <span className="bg-gray-200 rounded-l p-2 flex items-center text-gray-700">$</span>
               <input
                 className="bg-gray-200 rounded-r p-2 w-full"
