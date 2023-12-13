@@ -63,15 +63,15 @@ function BudgetCalculator({ selectedDate, handleBudgetChange}) {
     const convertedTotal = convertCurrency(originalTotal, currency);
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow-md mx-auto text-center mb-5">
+        <div className="bg-white px-4 pt-2 pb-1 small:p-4 rounded-lg shadow-md mx-auto text-center mb-1 small:mb-5 z-11">
             <h3 className="text-lg font-semibold text-gray-700">Total Budget for {selectedDate}:</h3>
-            <div className="bg-gray-200 p-4 rounded-lg mt-4">
+            <div className="bg-gray-200 small:p-4 rounded-lg mt-1 small:mt-4">
                 <p className="text-xl font-bold text-coral">
                     ${abbreviateNumber(originalTotal)} / {getCurrencySign(currency)}{abbreviateNumber(convertedTotal)}
                 </p>
             </div>
             {/* Currency Type Dropdown */}
-            <div className="mt-4">
+            <div className="small:mt-4 mt-1">
                 <select 
                     className="bg-coral text-white font-bold py-2 px-4 rounded hover:bg-coral-dark"
                     value={currency}

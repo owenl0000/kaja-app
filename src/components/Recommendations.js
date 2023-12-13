@@ -20,6 +20,7 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
   const [data, setData] = useState({ area0: [], area1: [], area2: [], area3: [] });
   const priceOrder = { 5: 5, 4: 4, 3: 3, 2: 2, 1: 1, '': 0 };
   const [isLoading, setIsLoading] = useState(true);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const sortAndDistributeData = (originalData, order, priceFilter) => {
     // Flatten the data from all areas into a single array
@@ -77,8 +78,8 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
   };
 
   const isContentUnavailable = () => {
-    // Check if loading is still ongoing or if there is no data after loading is done
-    return !isLoading && Object.values(data).every(section => section.length === 0);
+    // Check if there has been a search, loading is done, and no data is present
+    return hasSearched && !isLoading && Object.values(data).every(section => section.length === 0);
   };
   
   useEffect(() => {
@@ -100,8 +101,10 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
   }, [sortOrder, priceFilter]);
 
   useEffect(() => {
+    setHasSearched(true);
     if (location) {
       setIsLoading(true);
+      setHasSearched(false);
       // Construct a unique identifier for the current query
       const queryKey = `${location}_${activity || 'all'}`;
       const storedData = localStorage.getItem('yelpRecommendations');

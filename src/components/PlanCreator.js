@@ -257,7 +257,7 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
                   </div>
                 ))}
               </div>
-              <div className={`fixed lg:bottom-0 lg:w-1/4 bottom-6 right-0 transform ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full'} lg:translate-x-0 transition-transform duration-300 ease-in-out p-4 mt-6 lg:relative lg:flex-1`}>
+              <div className={`fixed lg:bottom-0 z-20 lg:w-1/4 bottom-6 right-0 transform ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full'} lg:translate-x-0 transition-transform duration-300 ease-in-out p-4 mt-6 lg:relative lg:flex-1`}>
                 <BudgetCalculator selectedDate={selectedDate} handleBudgetChange={handleBudgetChange} />
                 <TransportationSelector 
                   selectedDate={selectedDate} 
