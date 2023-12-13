@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
     
     const query = {
         location: Object.values(req.query)[0] === '' ? 'new%20york%20city' : encodeURIComponent(Object.values(req.query)[0]),
-        term: Object.values(req.query)[1] === '' ? 'food%2C%20entertainment%2C%20hangout%2C%20tourist' : encodeURIComponent(Object.values(req.query)[1]), 
+        term: Object.values(req.query)[1] === '' ? 'food%2C%20entertainment%2C%20tourist' : encodeURIComponent(Object.values(req.query)[1]), 
         sort_by: 'distance', 
         limit: '50', // 50 is the max
         radius: '10000'

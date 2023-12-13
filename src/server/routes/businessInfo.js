@@ -7,7 +7,7 @@ const {db} = require('../Database/seed')
 router.get('/', (req, res) => {
     const query = {
         location: decodeURIComponent(Object.values(req.query)[0]) || "new york city",
-        term: decodeURIComponent(Object.values(req.query)[1]) || "food, entertainment, hangout, tourist, hotspots"
+        term: decodeURIComponent(Object.values(req.query)[1]) || "food, entertainment, tourist"
     }
 
     db.any(`SELECT * FROM \"Business\" WHERE location='${query.location}' AND term='${query.term}'`)

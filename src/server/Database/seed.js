@@ -14,7 +14,7 @@ api.auth(apiKey); //authenticate with Bearer apikey
 
 const query = {
     location: 'new%20york%20city',
-    term: 'food%2C%20entertainment%2C%20hangout%2C%20tourist', 
+    term: 'food%2C%20entertainment%2C%20tourist', 
     sort_by: 'distance', 
     limit: '50', // 50 is the max
     radius: '10000'
