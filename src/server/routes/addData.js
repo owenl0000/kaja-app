@@ -27,6 +27,7 @@ router.get('/', (req, res) => {
         {
             business_id: "LOADING...",  
             location: decodeURIComponent(query.location),
+            coordinate: ["LOADING..."],
             term: decodeURIComponent(query.term),
             business_name:"LOADING...",
             business_url:"LOADING...",
@@ -45,6 +46,7 @@ router.get('/', (req, res) => {
                 .then(data => {
                     for(i = 0; i < data.length; i++){
                         BUSINESS[i].business_id = data[i].id;
+                        BUSINESS[i].coordinate = data[i].coordinates;
                         if(data[i].image_url.length){BUSINESS[i].business_image = data[i].image_url}
                         BUSINESS[i].business_name = data[i].name;
                         BUSINESS[i].business_url = decodeURI(data[i].url);
