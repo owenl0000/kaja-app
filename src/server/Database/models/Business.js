@@ -17,6 +17,10 @@ module.exports = Business.init({
             type: DataTypes.STRING,
             allowNull: false
         },
+        coordinate:{
+            type: DataTypes.JSON(DataTypes.STRING),
+            allowNull: false
+        },
         term:{
             type: DataTypes.STRING,
             allowNull: false

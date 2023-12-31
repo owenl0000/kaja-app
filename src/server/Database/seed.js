@@ -27,6 +27,7 @@ const BUSINESS = Array.from({length: 50}, () => (
     {
         business_id: "LOADING...",  
         location: "LOADING...",
+        coordinate: ["LOADING..."],
         term: "LOADING...",
         business_name:"LOADING...",
         business_url:"LOADING...",
@@ -50,6 +51,7 @@ api.v3_business_search(query)
                             for(i = 0; i < BUSINESS.length; i++){
                                 BUSINESS[i].business_id = processed[i].id;
                                 BUSINESS[i].location = decodeURIComponent(query.location);
+                                BUSINESS[i].coordinate = processed[i].coordinates;
                                 BUSINESS[i].term = decodeURIComponent(query.term);
                                 if(processed[i].image_url.length){BUSINESS[i].business_image = processed[i].image_url}
                                 BUSINESS[i].business_name = processed[i].name;
