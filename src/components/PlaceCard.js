@@ -28,7 +28,7 @@ function PlaceCard({
 
     const isYelpLink = place.yelpLink && place.yelpLink.includes("yelp.com");
     const defaultImagePath = "/kaja-logo-black.png";
-    console.log(place.address);
+    
     const formattedAddress = Array.isArray(place.address) 
   ? place.address.map((line, index) => (
       <React.Fragment key={index}>

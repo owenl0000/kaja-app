@@ -40,3 +40,22 @@
 .fa-trash {
     color:#FF6B6B;
 }
+
+
+.reactSelectControl {
+    font-size: 16px; /* Adjust this value as needed */
+  }
+  
+  /* Smaller screens */
+  @media (max-width: 639px) {
+    .reactSelectControl {
+      font-size: 14px; /* Smaller font size for smaller screens */
+    }
+  }
+  
+  /* Larger screens */
+  @media (min-width: 768px) {
+    .reactSelectControl {
+      font-size: 18px; /* Larger font size for larger screens */
+    }
+  }

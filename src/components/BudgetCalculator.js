@@ -66,7 +66,7 @@ function BudgetCalculator({ selectedDate, handleBudgetChange}) {
         <div className="bg-white px-4 pt-2 pb-1 small:p-4 rounded-lg shadow-md mx-auto text-center mb-1 small:mb-5 z-11">
             <h3 className="text-lg font-semibold text-gray-700">Total Budget for {selectedDate}:</h3>
             <div className="bg-gray-200 small:p-4 rounded-lg mt-1 small:mt-4">
-                <p className="text-xl font-bold text-coral">
+                <p className="text-xl font-bold">
                     ${abbreviateNumber(originalTotal)} / {getCurrencySign(currency)}{abbreviateNumber(convertedTotal)}
                 </p>
             </div>
