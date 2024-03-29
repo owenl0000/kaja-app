@@ -5,6 +5,7 @@
 | Brandon Vasquez    | brandonvasquez2146@gmail.com   | github.com/BVasquez07| City College |
 | Darryl Nurse  | darryl.nurse@yorkmail.cuny.edu   | github.com/darrylnurse | York College |
 | Owen Liang | owenliang3139@gmail.com | github.com/owenl0000 | Brooklyn College  |
+|  |  |  |   |
 
 ---
 ## What is Kaja?

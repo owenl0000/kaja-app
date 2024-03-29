@@ -17,6 +17,7 @@ const populateRoute = require("./routes/addData");
 const sampleRoute = require("./routes/allData");
 const businessInfo = require("./routes/businessInfo");
 const loginActivityRoute = require("./routes/loginActivity");
+const cachedLocations = require("./routes/cached_locs");
 
 
 app.use(cors()); // allow for comms between front and back
@@ -32,6 +33,7 @@ app.use('/sample', sampleRoute);
 app.use('/populate', populateRoute);
 app.use('/info', businessInfo);
 app.use('/api/loginActivity', loginActivityRoute);
+app.use('/locations', cachedLocations);
 
 app.listen(port, () => {
     console.log(`The server is live at: http://127.0.0.1:${port}/`);

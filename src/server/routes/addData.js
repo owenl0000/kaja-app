@@ -66,8 +66,7 @@ router.get('/', (req, res) => {
                 .catch(err => console.error(err));
         })
         .then(() => res.send({business_data: BUSINESS}))
-        .catch(() => res.send('<center><h1>There was an error adding data</h1></center>'));
-        
+        .catch(() => res.send('<center><h1>There was an error adding data</h1></center>'))
 })
 
 
