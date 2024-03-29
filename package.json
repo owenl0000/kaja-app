@@ -20,6 +20,7 @@
     "font-awesome": "^4.7.0",
     "fs": "^0.0.1-security",
     "next": "13.4.19",
+    "next-auth": "^4.24.7",
     "next-images": "^1.8.5",
     "postcss": "8.4.29",
     "rc-progress": "^3.5.1",

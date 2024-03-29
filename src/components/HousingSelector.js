@@ -70,7 +70,7 @@ function HousingSelector({ selectedDate, handleHousingChange }) {
                 type="text"
                 pattern="\d*"
                 placeholder="Price"
-                value={entry.price}
+                value={entry.price  || ''}
                 onChange={(e) => handleEntryChange(index, 'price', e.target.value)}
               />
             </div>

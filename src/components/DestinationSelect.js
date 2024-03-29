@@ -19,13 +19,13 @@ export default function DestinationSelect({ setDestination, selectedDate }) {
     const [existingAddresses, setExistingAddresses] = useState([]);
     useEffect(() => {
         const storedHousingData = JSON.parse(localStorage.getItem('housingData')) || {};
-        const housingOptions = storedHousingData[selectedDate]?.map(entry => ({
-        value: entry.address,
-        label: entry.address,
-        lat: entry.lat,
-        lng: entry.lng,
-        source: 'housing'
-        })) || [];
+        const housingOptions = storedHousingData[selectedDate]?.filter(entry => entry.address.trim() !== '').map(entry => ({
+            value: entry.address,
+            label: entry.address,
+            lat: entry.lat,
+            lng: entry.lng,
+            source: 'housing'
+          })) || [];
         const placeOptions = getPlacesOptions(selectedDate);
         setExistingAddresses([...housingOptions, ...placeOptions]);
     }, [selectedDate]);

@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import SearchBar from './SearchBar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faHome, faClipboardList } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faHome, faClipboardList, faUser, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { useSession, signIn, signOut } from "next-auth/react";
 
 
 const handleSmoothScroll = (e) => {
@@ -28,6 +29,7 @@ function Header({ page }) {
   const positionClass = isSpecialPage ? ' ' : 'absolute';
   const imgClass = isSpecialPage ? "/kaja-logo-black.png" : "/kaja-logo-white.png";
   const menuRef = useRef(null);
+  const { data: session } = useSession();
 
   const aboutClick = () => {
     setAboutOpen(!isAboutOpen);
@@ -80,6 +82,18 @@ function Header({ page }) {
             <Link href="/Planner" className="font-mont bg-coral px-1 p-2 cursor-pointer rounded-md items-center lg:inline hidden text-off-white text-select">
               Planner
             </Link>
+            {/* Login System */}
+            <div className="">
+              {session ? (
+                <button onClick={() => signOut()} className="flex items-center gap-2">
+                  <FontAwesomeIcon icon={faSignOutAlt} /> <span>Logout</span>
+                </button>
+              ) : (
+                <button onClick={() => signIn()} className="flex items-center gap-2">
+                  <FontAwesomeIcon icon={faUser} /> <span>Login</span>
+                </button>
+              )}
+            </div>
             
             {/* For small screens */}
             <div className={`lg:hidden flex flex-col justify-end font-mont gap-y-1 text-center ${isMenuOpen ? 'open' : 'closed'} `}>

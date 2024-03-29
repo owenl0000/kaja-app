@@ -97,6 +97,7 @@ export default function Map({ addresses, selectedDate, housingData, updateTrigge
                 destination: destination,
                 travelMode: travelMode,
                 provideRouteAlternatives: true,
+            
             });
 
             if (response.status === 'OK') {
@@ -124,7 +125,7 @@ export default function Map({ addresses, selectedDate, housingData, updateTrigge
             ...directions,
             routes: [directions.routes[selectedRouteIndex]],
         };
-        console.log(selectedDirections);
+        
         return (
             <DirectionsRenderer
                 directions={selectedDirections}
@@ -225,8 +226,8 @@ export default function Map({ addresses, selectedDate, housingData, updateTrigge
     
     
     return <div className="relative xl:flex xl:flex-row xl:h-[70vh] h-[90vh] rounded">
-        <div className="absolute inset-0 xl:relative xl:w-[20%] w-full bg-opacity-90 xl:bg-gray-200 rounded-none xl:rounded-bl-md xl:border-white border-r-0 xl:border-r-2 z-10 p-3 xl:p-0">
-            <div className="xl:flex-col flex-row flex xl:block">
+        <div className="xl:flex xl:flex-col absolute inset-0 xl:relative xl:w-[20%] w-full bg-opacity-90 xl:bg-gray-200 rounded-none xl:rounded-bl-md xl:border-white border-r-0 xl:border-r-2 z-10 p-3 xl:p-0">
+            <div className="xl:flex-col flex-row flex">
                 <div className="m-3">
                     <TravelModeSelector onModeChange={(mode) => setTravelMode(mode)} />
                 </div>
@@ -238,7 +239,7 @@ export default function Map({ addresses, selectedDate, housingData, updateTrigge
                         className="bg-gray-100 rounded-md border border-gray-300"
                     /> 
                 </div>
-                <div className=" mx-3 my-2 w-[250px] xl:w-auto">
+                <div className="mx-3 my-2 w-[250px] xl:w-auto">
                     <DestinationSelect 
                         setDestination={setDestination}
                         selectedDate={selectedDate}
@@ -246,7 +247,8 @@ export default function Map({ addresses, selectedDate, housingData, updateTrigge
                     /> 
                 </div>
             </div>
-            <div className="overflow-auto routes-container xl:max-h-[450px]">
+            
+            <div className="overflow-y-auto xl:max-h-[450px] h-auto">
                 {directions && directions.routes && (
                     <Distance 
                         directions={directions} 
