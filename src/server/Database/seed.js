@@ -7,8 +7,8 @@ const db = pgp(connectionString); //we need some sort of connection as the param
 //import the models
 const Business = require("./models/Business"); 
 const Term = require('./models/Term');
-const LoginActivity = require('./models/LoginActivity');
-const models = {business: Business, term: Term, loginActivity: LoginActivity};
+//const LoginActivity = require('./models/LoginActivity');
+const models = {business: Business, term: Term};
 
 const apiKey = `Bearer ${process.env.YELP_API_KEY}`;//setting the API key
 api.auth(apiKey); //authenticate with Bearer apikey

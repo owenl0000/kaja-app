@@ -1,4 +1,4 @@
-const express = require('express');
+/* const express = require('express');
 const router = express.Router();
 const { db } = require('../Database/seed');
 const LoginActivity = require('../Database/models/LoginActivity');
@@ -22,4 +22,4 @@ router.post('/log', async (req, res) => {
   }
 });
 
-module.exports = router;
+module.exports = router; */

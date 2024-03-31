@@ -1,31 +1,60 @@
 // pages/api/auth/[...nextauth].js
+import User from "@/server/Database/models/User";
 import NextAuth from "next-auth";
+//import { MongoClient } from 'mongodb';
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google"; // Import GoogleProvider
+import bcrypt from "bcrypt";
 
+/* const MONGODB_URI = process.env.MONGODB_URI;
+ */
+/* let mongoClient = null;
+
+async function getMongoClient() {
+  if (!mongoClient) {
+    mongoClient = new MongoClient(MONGODB_URI);
+    await mongoClient.connect();
+  }
+  return mongoClient;
+} */
 
 export default NextAuth({
   providers: [
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "jsmith" },
+        email: { label: "email", type: "text", placeholder: "your-email" },
         password: { label: "Password", type: "password" }
       },
-      async authorize(credentials, req) {
-        // Implement logic to verify user credentials here
-        // Example user verification logic (to be replaced with your own logic)
-        const user = credentials.username === "jsmith" ? { id: 1, name: "JSmith", email: "jsmith@example.com" } : null;
-        
-        if (user) {
-          return user;
-        } else {
+      async authorize(credentials) {
+        try {
+          const foundUser = await User.findOne({email: credentials.email}).lean().exec();
+          if(foundUser) {
+            console.log("User Exists")
+            const match = await bcrypt.compare(credentials.password, foundUser.password);
+
+            if(match) {
+              console.log("Good Pass");
+              delete foundUser.password
+              return foundUser;
+            }
+          }
+        } catch(error) {
+          console.log(error);
           return null;
         }
-      }
+      },
     }),
     // Add the Google provider
     GoogleProvider({
+      profile(profile) {
+        console.log("Profile Google: ", profile);
+
+        return {
+          ...profile,
+          id: profile.sub,
+        };
+      },
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
@@ -34,6 +63,7 @@ export default NextAuth({
   session: {
     strategy: "jwt"
   },
+  database: process.env.MONGODB_URI,
   callbacks: {
     jwt: async ({ token, user }) => {
       // Persist the OAuth access_token to the token right after signin
@@ -47,27 +77,11 @@ export default NextAuth({
       session.accessToken = token.accessToken;
       return session;
     },
-    async signIn({ user, account, profile, email, credentials, req }) {
-      const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      
-      // Call your logging endpoint
-      fetch('http://localhost:3000/api/loginActivity', { // Adjust the URL as necessary
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId: user.id, // Or another unique identifier from the user object
-          loginMethod: account.provider,
-          ipAddress,
-        }),
-      })
-      .then(response => console.log('Login activity logged.'))
-      .catch(error => console.error('Failed to log login activity:', error));
-
-      return true;
-    },
 
   },
+  pages: {
+    signIn: '/auth/signin',
+  },
+  
   // Additional NextAuth configuration...
 });

@@ -60,7 +60,7 @@ export default function Slideshow() {
       ))}
   
       {/* Section to be inserted */}
-      <div className="flex z-40 relative justify-center h-screen items-center pointer-events-none">
+      <div className="flex relative justify-center h-screen items-center pointer-events-none">
         {/* Centered Section */}
         <section className="flex flex-col justify-center items-center text-center p-5 ">
           <div className="flex flex-col justify-center items-center text-center max-w-md mx-auto p-5">

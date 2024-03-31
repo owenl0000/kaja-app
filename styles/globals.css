@@ -22,11 +22,11 @@
   border-color: var(--coral);
 }
 
-.bg-light-coral {
+.bg-lightcoral {
   background-color: var(--light-coral);
 }
 
-.bg-dark-coral {
+.bg-darkcoral {
   background-color: var(--dark-coral);
 }
 
