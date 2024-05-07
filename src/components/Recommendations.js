@@ -129,6 +129,7 @@ function Recommendations({  onAddPlace = () => {} , sortOrder, priceFilter}) {
                   image: dataItem.business_image,
                   stars: dataItem.business_rating,
                   reviews: dataItem.business_reviews,
+                  coordinates: dataItem.coordinate,
                   price: dataItem.business_price,
                   yelpLink: encodeURI(dataItem.business_url) // encode so that the user can see it
                 });

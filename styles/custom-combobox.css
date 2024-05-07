@@ -1,0 +1,5 @@
+.custom-combobox input {
+    @apply tailwind-class-for-input;
+}
+  
+

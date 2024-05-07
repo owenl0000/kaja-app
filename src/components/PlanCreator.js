@@ -6,9 +6,11 @@ import BudgetCalculator from './BudgetCalculator';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import TransportationSelector from './TransportationSelector';
 import HousingSelector from './HousingSelector';
+import MapLoader from './MapLoader';
+
 
 function PlanCreator({ selectedDate, addedPlacesByDate}) {
-
+  const [addresses, setAddresses] = useState([]);
   const [placesForSelectedDate, setPlacesForSelectedDate] = useState([]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [indexToRemove, setIndexToRemove] = useState(null);
@@ -18,7 +20,8 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
   const [transportationData, setTransportationData] = useState({});
   const [housingData, setHousingData] = useState({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+  const [activeTab, setActiveTab] = useState('planner');
+  console.log("HousingData: ", housingData);
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -60,8 +63,20 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
     }
   
     setPlacesForSelectedDate(updatedPlaces);
+
   }, [selectedDate, addedPlacesByDate]);
   
+  useEffect(() => {
+    let newAddresses = placesForSelectedDate.map(place => {
+      if (place.address && !place.latlng) {
+        return Array.isArray(place.address) ? place.address.join(', ') : place.address;
+      }
+      return null;
+    }).filter(address => address !== null);
+  
+    setAddresses(newAddresses);
+  
+  }, [placesForSelectedDate]);
   
 
   const removePlace = () => {
@@ -179,104 +194,142 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
     allPlacesByDate[selectedDate] = reorderedPlaces;
     localStorage.setItem('addedPlacesByDate', JSON.stringify(allPlacesByDate));
   };
+
+  const [updateTrigger, setUpdateTrigger] = useState(false);
+
+  const triggerMapUpdate = () => {
+    setUpdateTrigger(prev => !prev);
+  }
   
-  return (
-    <div className="flex flex-col items-start bg-gray-100 w-full rounded ">
-      <button 
-        className="lg:hidden fixed z-30 bottom-4 right-4 bg-coral text-white p-2 rounded-md"
-        onClick={toggleSidebar}>
-        {isSidebarOpen ? 'Hide Sidebar' : 'Show Sidebar'}
-      </button>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="placesDroppable">
-          {(provided) => (
-            <div ref={provided.innerRef} {...provided.droppableProps} className="flex w-full">
-              <div className="flex flex-col w-full small:w-3/4 bg-white rounded-lg shadow-lg mt-10 lg:ml-5 xl:ml-10 lg:mr-0 mb-10 p-4 mx-0 small:mx-auto">
-                {placesForSelectedDate.map((place, index) => (
-                  <Draggable key={`draggable-${index}`} draggableId={`draggable-${index}`} index={index}>
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        style={{
-                          ...provided.draggableProps.style,
-                          // Preserve the original layout space of the item being dragged
-                          marginBottom: snapshot.isDragging ? "1.5rem" : "0",
-                        }}
-                      >
-                        <PlaceCard
-                          key={place.uniqueId}
-                          uniqueKey={place.uniqueId}
-                          index={index}
-                          place={place}
-                          budget={budget}
-                          handleBudgetChange={handleBudgetChange}
-                          userNotes={userNotes}
-                          handleNoteChange={handleNoteChange}
-                          timeFrame={timeFrame[place.uniqueId] || "12:00 AM to 1:00 PM"}
-                          handleTimeFrameChange={handleTimeFrameChange}
-                          onRemoveButtonClick={onRemoveButtonClick}
-                        />
+  const renderContent = () => {
+    return (
+      <div>
+        <div className={`flex flex-col ${activeTab === 'planner' ? 'block' : 'hidden'} items-start bg-gray-200 w-full rounded rounded-tl-none`}>
+          <button 
+            className="lg:hidden fixed z-30 bottom-4 right-4 bg-coral text-white p-2 rounded-md"
+            onClick={toggleSidebar}>
+            {isSidebarOpen ? 'Hide Sidebar' : 'Show Sidebar'}
+          </button>
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="placesDroppable">
+              {(provided) => (
+                <div ref={provided.innerRef} {...provided.droppableProps} className="flex w-full">
+                  <div className="flex flex-col w-full small:w-3/4 bg-white rounded-lg shadow-lg mt-10 lg:ml-5 xl:ml-10 lg:mr-0 mb-10 p-4 mx-0 small:mx-auto">
+                    {placesForSelectedDate.map((place, index) => (
+                      <Draggable key={`draggable-${index}`} draggableId={`draggable-${index}`} index={index}>
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={{
+                              ...provided.draggableProps.style,
+                              marginBottom: snapshot.isDragging ? "1.5rem" : "0",
+                            }}
+                          >
+                            <PlaceCard
+                              key={place.uniqueId}
+                              uniqueKey={place.uniqueId}
+                              index={index}
+                              place={place}
+                              budget={budget}
+                              handleBudgetChange={handleBudgetChange}
+                              userNotes={userNotes}
+                              handleNoteChange={handleNoteChange}
+                              timeFrame={timeFrame[place.uniqueId] || "12:00 AM to 1:00 PM"}
+                              handleTimeFrameChange={handleTimeFrameChange}
+                              onRemoveButtonClick={onRemoveButtonClick}
+                            />
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                    {showConfirmModal && (
+                      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+                        <div className="bg-white p-4 rounded-lg">
+                          <p>Are you sure you want to remove this place?</p>
+                          <div className="flex justify-end mt-2">
+                            <button 
+                              className="bg-red-500 text-white px-4 py-2 rounded mr-2"
+                              onClick={removePlace}
+                            >
+                              Yes
+                            </button>
+                            <button 
+                              className="bg-gray-300 text-black px-4 py-2 rounded"
+                              onClick={() => setShowConfirmModal(false)}
+                            >
+                              No
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-                {showConfirmModal && (
-                  <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-                    <div className="bg-white p-4 rounded-lg">
-                      <p>Are you sure you want to remove this place?</p>
-                      <div className="flex justify-end mt-2">
-                        <button 
-                          className="bg-red-500 text-white px-4 py-2 rounded mr-2"
-                          onClick={removePlace}
-                        >
-                          Yes
-                        </button>
-                        <button 
-                          className="bg-gray-300 text-black px-4 py-2 rounded"
-                          onClick={() => setShowConfirmModal(false)}
-                        >
-                          No
-                        </button>
+                    {[...Array(totalPlaceholders)].map((_, index) => (
+                      <div key={`placeholder-${index}`} className="flex items-start mb-6 bg-gray-200 p-4 rounded-lg">
+                        <div className="w-48 h-32 bg-gray-300 rounded"></div>
+                        <div className=" small:ml-6">
+                          <div className=" bg-gray-300 small:w-32 small:h-6 mb-2 rounded"></div>
+                          <div className=" bg-gray-300 small:w-48 small:h-4 mb-2 rounded"></div>
+                          <div className=" bg-gray-300 small:w-36 small:h-4 mb-2 rounded"></div>
+                          <div className=" bg-gray-300 small:w-24 small:h-4 mb-2 rounded"></div>
+                          <div className=" bg-gray-300 small:w-24 small:h-4 rounded"></div>
+                        </div>
                       </div>
-                    </div>
+                    ))}
                   </div>
-                )}
-                {[...Array(totalPlaceholders)].map((_, index) => (
-                  <div key={`placeholder-${index}`} className="flex items-start mb-6 bg-gray-200 p-4 rounded-lg">
-                    <div className="w-48 h-32 bg-gray-300 rounded"></div>
-                    <div className=" small:ml-6">
-                      <div className=" bg-gray-300 small:w-32 small:h-6 mb-2 rounded"></div>
-                      <div className=" bg-gray-300 small:w-48 small:h-4 mb-2 rounded"></div>
-                      <div className=" bg-gray-300 small:w-36 small:h-4 mb-2 rounded"></div>
-                      <div className=" bg-gray-300 small:w-24 small:h-4 mb-2 rounded"></div>
-                      <div className=" bg-gray-300 small:w-24 small:h-4 rounded"></div>
-                    </div>
+                  <div className={`fixed lg:bottom-0 z-20 lg:w-1/4 bottom-6 right-0 transform ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full'} lg:translate-x-0 transition-transform duration-300 ease-in-out p-4 mt-6 lg:relative lg:flex-1`}>
+                    <BudgetCalculator selectedDate={selectedDate} handleBudgetChange={handleBudgetChange} />
+                    <TransportationSelector 
+                      selectedDate={selectedDate} 
+                      transportationData={transportationData[selectedDate] || []}
+                      handleTransportationChange={handleTransportationChange }
+                    />
+                    <HousingSelector
+                      selectedDate={selectedDate}
+                      housingData={housingData[selectedDate] || []} 
+                      handleHousingChange={handleHousingChange}
+                    />
                   </div>
-                ))}
-              </div>
-              <div className={`fixed lg:bottom-0 z-20 lg:w-1/4 bottom-6 right-0 transform ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full'} lg:translate-x-0 transition-transform duration-300 ease-in-out p-4 mt-6 lg:relative lg:flex-1`}>
-                <BudgetCalculator selectedDate={selectedDate} handleBudgetChange={handleBudgetChange} />
-                <TransportationSelector 
-                  selectedDate={selectedDate} 
-                  transportationData={transportationData[selectedDate] || []}
-                  handleTransportationChange={handleTransportationChange }
-                />
-                <HousingSelector
-                  selectedDate={selectedDate}
-                  housingData={housingData[selectedDate] || []} 
-                  handleHousingChange={handleHousingChange}
-                />
-              </div>
-              
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+                  
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+        </div>
+        <div className={`bg-gray-200 w-full rounded-md ${activeTab === 'map' ? 'block' : 'hidden'}`}>
+            <MapLoader addresses={addresses} selectedDate={selectedDate} housingData={housingData} updateTrigger={updateTrigger} />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full rounded font-mont">
+      <div className="flex">
+        <button 
+          className={`px-6 py-3 rounded rounded-b-none ${activeTab === 'planner' ? 'bg-gray-200 font-semibold' : 'bg-gray-100'}`}
+          onClick={() => setActiveTab('planner')}
+        >
+          Planner
+        </button>
+        <button 
+          className={`px-6 py-3 rounded rounded-b-none ${activeTab === 'map' ? 'bg-gray-200 rounded font-semibold' : 'bg-gray-100'}`}
+          onClick={() => {
+            setActiveTab('map')
+            triggerMapUpdate();
+          }}
+        >
+          Map
+        </button>
+      </div>
+      <div className="">
+        {renderContent()}
+      </div>
     </div>
   );      
 }
+
 
 export default PlanCreator;

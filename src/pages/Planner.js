@@ -29,7 +29,6 @@ const Planner = () => {
 
 
   const formatDateToString = (dateObj) => {
-    // Assuming dateObj is an object like {year: 2023, month: "January", day: 18}
     const monthNames = ["January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December"];
     const monthIndex = monthNames.indexOf(dateObj.month) + 1;

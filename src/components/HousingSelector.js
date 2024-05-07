@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
 function HousingSelector({ selectedDate, handleHousingChange }) {
-  const [housingEntries, setHousingEntries] = useState([{ type: '', price: '', notes: '' }]);
+  const [housingEntries, setHousingEntries] = useState([{ type: '', price: '', notes: '', address: '' }]);
 
   useEffect(() => {
     // Fetch the stored housing data for the selected date
     const storedHousingData = JSON.parse(localStorage.getItem('housingData')) || {};
-    const housingForDate = storedHousingData[selectedDate] || [{ type: '', price: '', notes: '' }];
+    const housingForDate = storedHousingData[selectedDate] || [{ type: '', price: '', notes: '', address: '' }];
 
     // Set the fetched data to the state
     setHousingEntries(housingForDate);
@@ -32,7 +32,7 @@ function HousingSelector({ selectedDate, handleHousingChange }) {
   };
 
   const addHousingEntry = () => {
-    setHousingEntries([...housingEntries, { type: '', price: '', notes: '' }]);
+    setHousingEntries([...housingEntries, { type: '', price: '', notes: '', address: '' }]);
   };
 
   return (
@@ -54,6 +54,15 @@ function HousingSelector({ selectedDate, handleHousingChange }) {
               {housingEntries.length > 1 && <option value="remove">Remove</option>}
               {/* Add more housing types */}
             </select>
+            <div className="flex rounded">
+              <input
+                className="bg-gray-200 rounded p-2 w-full mt-2"
+                type="text"
+                placeholder="Address"
+                value={entry.address}
+                onChange={(e) => handleEntryChange(index, 'address', e.target.value)}
+              />
+            </div>
             <div className="flex mt-2 rounded">
               <span className="bg-gray-200 rounded-l p-2 flex items-center text-gray-700">$</span>
               <input
@@ -61,7 +70,7 @@ function HousingSelector({ selectedDate, handleHousingChange }) {
                 type="text"
                 pattern="\d*"
                 placeholder="Price"
-                value={entry.price}
+                value={entry.price  || ''}
                 onChange={(e) => handleEntryChange(index, 'price', e.target.value)}
               />
             </div>

@@ -7,7 +7,8 @@ const db = pgp(connectionString); //we need some sort of connection as the param
 //import the models
 const Business = require("./models/Business"); 
 const Term = require('./models/Term');
-const models = {business: Business, term: Term}
+//const LoginActivity = require('./models/LoginActivity');
+const models = {business: Business, term: Term};
 
 const apiKey = `Bearer ${process.env.YELP_API_KEY}`;//setting the API key
 api.auth(apiKey); //authenticate with Bearer apikey
@@ -69,12 +70,16 @@ api.v3_business_search(query)
                                 Term.hasMany(Business);
                                 Business.belongsTo(Term);
 
-                                for(let model in models){  
-                                    try{
-                                        await models[model].sequelize.sync({force: true}) //we don't really want to do this destructive behavior
-                                    }
-                                    catch(err){
-                                        console.error(err);
+                                const modelNames = Object.keys(models); // Get all model names
+
+                                for (const modelName of modelNames) {
+                                    if (modelName === 'loginActivity') { // Assuming the key for LoginActivity in your models object is 'loginActivity'
+                                        // For LoginActivity, sync without forcing, to avoid dropping the table
+                                        await models[modelName].sequelize.sync().catch(err => console.error(err));
+                                    } else {
+                                        // For other models, you can choose to force sync if needed (e.g., during development)
+                                        // Be cautious with using force sync in production
+                                        await models[modelName].sequelize.sync({ force: true }).catch(err => console.error(err));
                                     }
                                 }
                                 try{

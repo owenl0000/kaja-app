@@ -7,12 +7,15 @@ import '../../styles/TimePicker.css';
 import '../../styles/Header.css';
 import '../../styles/Planner.css';
 import Head from 'next/head'
-function MyApp({ Component, pageProps }) {
+import { SessionProvider } from "next-auth/react";
+function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <>
       <Head>
       </Head>
-      <Component {...pageProps} />
+      <SessionProvider session={session}>
+        <Component {...pageProps} />
+      </SessionProvider>
     </>
   )
 }

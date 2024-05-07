@@ -18,16 +18,24 @@
   background-color: var(--coral);
 }
 
-.bg-light-coral {
+.border-coral {
+  border-color: var(--coral);
+}
+
+.bg-lightcoral {
   background-color: var(--light-coral);
 }
 
-.bg-dark-coral {
+.bg-darkcoral {
   background-color: var(--dark-coral);
 }
 
 .bg-bright-blue {
   background-color: var(--bright-blue);
+}
+
+.text-coral {
+  color: var(--coral);
 }
 
 .text-off-white {
@@ -152,4 +160,28 @@
 
 input:focus {
   outline: none;
+}
+
+/* Styles for the scrollbar on the routes container */
+.routes-container::-webkit-scrollbar {
+  width: 5px; /* Thin scrollbar */
+}
+
+.routes-container::-webkit-scrollbar-track {
+  background: transparent; /* Track background */
+}
+
+.routes-container::-webkit-scrollbar-thumb {
+  background: #cfcfcf; /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Rounded corners for the thumb */
+}
+
+.routes-container::-webkit-scrollbar-thumb:hover {
+  background: #7c7c7c; /* Darker color on hover */
+}
+
+/* For other browsers like Firefox */
+.routes-container {
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent; /* thumb and track color */
 }

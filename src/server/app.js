@@ -16,6 +16,7 @@ const port = process.env.SERVER_PORT || "3060";//set the port
 const populateRoute = require("./routes/addData");
 const sampleRoute = require("./routes/allData");
 const businessInfo = require("./routes/businessInfo");
+//const loginActivityRoute = require("./routes/loginActivity");
 const cachedLocations = require("./routes/cached_locs");
 
 
@@ -31,6 +32,7 @@ app.get('/', (req, res) => {
 app.use('/sample', sampleRoute);
 app.use('/populate', populateRoute);
 app.use('/info', businessInfo);
+//app.use('/api/loginActivity', loginActivityRoute);
 app.use('/locations', cachedLocations);
 
 app.listen(port, () => {
