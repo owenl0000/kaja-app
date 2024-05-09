@@ -1,7 +1,7 @@
 # Kaja : Automated / Better Trip Planning App
 ## Team Members: Owen Liang, Brandon Vasquez, Darryl Nurse
-| Name        | Email              | GitHub            | College         |
-|-------------|--------------------|-------------------|-----------------|
+| Name        | GitHub            | College         |
+|-------------|-------------------|-----------------|
 | Brandon Vasquez    | github.com/BVasquez07| City College |
 | Darryl Nurse  | github.com/darrylnurse | York College |
 | Owen Liang | github.com/owenl0000 | Brooklyn College  |
