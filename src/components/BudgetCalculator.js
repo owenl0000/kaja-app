@@ -1,6 +1,7 @@
 // components/BudgetCalculator.js
 import React, { useState, useEffect } from 'react';
-import exchangeRates from '../api/exchangeRates.json';
+
+import exchangeRates from '../pages/api/exchangeRates.json';
 
 function BudgetCalculator({ selectedDate, handleBudgetChange}) {
     const [currency, setCurrency] = useState('USD'); // State to hold the selected currency
