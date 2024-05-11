@@ -60,7 +60,7 @@ const SignInPage = () => {
         </form>
         <div className="text-center mt-6 text-sm">
           <p>
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <a href="#" onClick={() => router.push('/register')} className="font-medium text-sm text-indigo-600 hover:text-indigo-500">
               Register Here!
             </a>

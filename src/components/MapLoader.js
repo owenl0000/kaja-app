@@ -18,7 +18,7 @@ export default function MapLoader({ addresses, selectedDate, housingData, update
                 <Map addresses={addresses} selectedDate={selectedDate} housingData={housingData} updateTrigger={updateTrigger}/>
             </div>
             <div className="md:hidden text-center p-4">
-                Sorry, the map feature isn't available for mobile devices yet.
+                Sorry, the map feature isn&apos;t available for mobile devices yet.
             </div>
         </>
     );
