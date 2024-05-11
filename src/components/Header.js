@@ -3,21 +3,8 @@ import Link from 'next/link';
 import SearchBar from './SearchBar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faHome, faClipboardList, faUserCircle, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import { useSession, signIn, signOut } from "next-auth/react";
+import UserDropdown from './UserDropdown';
 
-
-const handleSmoothScroll = (e) => {
-  e.preventDefault();
-  const targetId = e.currentTarget.getAttribute("href").substring(1);
-  const targetElement = document.getElementById(targetId);
-
-  if (targetElement) {
-    window.scrollTo({
-      top: targetElement.offsetTop,
-      behavior: "smooth",
-    });
-  }
-};
 
 function Header({ page }) {
   const [isAboutOpen, setAboutOpen] = useState(false);
@@ -29,7 +16,6 @@ function Header({ page }) {
   const positionClass = isSpecialPage ? ' ' : 'absolute';
   const imgClass = isSpecialPage ? "/kaja-logo-black.png" : "/kaja-logo-white.png";
   const menuRef = useRef(null);
-  const { data: session } = useSession();
 
   const aboutClick = () => {
     setAboutOpen(!isAboutOpen);
@@ -67,33 +53,25 @@ function Header({ page }) {
         </div>
 
         <div className={`flex w-full small:col-start-3 lg:pt-2 lg:pb-2`}>
-          <nav ref={menuRef} className={`flex flex-grow flex-col w-auto justify-end items-end lg:items-center lg:flex-row ${isSpecialPage ? 'gap-2' : 'gap-6'} ${navClass}`}>
+          <nav ref={menuRef} className={`flex flex-grow flex-col w-auto justify-end items-end lg:items-center lg:flex-row ${isSpecialPage ? 'gap-3' : 'gap-3'} ${navClass}`}>
               <button className=" lg:hidden ml-auto mt-3  " onClick={() => setIsMenuOpen(!isMenuOpen)}>
                 <FontAwesomeIcon icon={faBars} />
               </button>
               {/* For large screens */}
               <Link href="/" className="font-mont mb-1 pt-2 lg:inline sm:hidden text-select  " onClick={() => { setAboutOpen(false); setContactOpen(false); }}>Home</Link>
-              <div className={`font-mont mb-1 hidden pt-2 lg:inline flex-col ${isSpecialPage ? 'hidden w-0 overflow-hidden' : 'flex'} `}>
+              {/* <div className={`font-mont mb-1 hidden pt-2 lg:inline flex-col border border-red-500 ${isSpecialPage ? 'hidden w-0 overflow-hidden' : 'flex'} `}>
                 <button onClick={aboutClick} className={`text-select text-center`}>About</button>
                 <div className={`${isAboutOpen ? "nav-open" : "nav-closed"} mt-2 absolute backdrop-blur-md text-center transform -translate-x-[50%] z-50 h-[12rem] rounded-lg overflow-scroll no-scrollbar `}>
                   Kaja is a web application in development that aims to simplify planning for trips and outings.
                   With Kaja, users can get a straightforward itinerary based on their interests, budget, and time.
                   Unlike many existing travel apps that offer a wide array of options but leave the hard work of planning to the user, Kaja focuses on streamlining this process to make decision-making easier.
                 </div>
-              </div>
-              <Link href="/Planner" className="font-mont bg-coral px-1 p-2 cursor-pointer rounded-md items-center lg:inline hidden text-off-white text-select">
+              </div> */}
+              <Link href="/Planner" className="font-mont mb-1 pt-2 lg:inline sm:hidden text-select ">
                 Planner
               </Link>
               {/* Login System */}
-              {!session ? (
-                <button onClick={() => signIn()}  className="flex items-center gap-2">
-                  <FontAwesomeIcon icon={faUserCircle} /> <span>Login</span>
-                </button>
-              ) : (
-                <button onClick={() => signOut()} className="flex items-center gap-2">
-                  <FontAwesomeIcon icon={faSignOutAlt} /> <span>Logout</span>
-                </button>
-              )}
+              <UserDropdown />
 
               
 

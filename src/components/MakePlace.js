@@ -32,7 +32,10 @@ const MakePlace = ({ onAddPlace, selectedDate }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onAddPlace({ ...newPlace, id: `manual-${Date.now()}-${Math.random().toString(36).substr(2, 9)}` }, selectedDate);
+    onAddPlace({
+      details: {...newPlace}, 
+      id: `manual-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+    }, selectedDate);
     setShowForm(false); // Hide form after submission
     setNewPlace({
       name: '',

@@ -1,5 +1,5 @@
 // components/PlanCreator.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import 'font-awesome/css/font-awesome.min.css';
 import PlaceCard from './PlaceCard';
 import BudgetCalculator from './BudgetCalculator';
@@ -7,9 +7,13 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import TransportationSelector from './TransportationSelector';
 import HousingSelector from './HousingSelector';
 import MapLoader from './MapLoader';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
 
 
 function PlanCreator({ selectedDate, addedPlacesByDate}) {
+  console.log("Places", addedPlacesByDate);
+  const { data: session } = useSession();
   const [addresses, setAddresses] = useState([]);
   const [placesForSelectedDate, setPlacesForSelectedDate] = useState([]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -17,20 +21,21 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
   const [userNotes, setUserNotes] = useState({});
   const [timeFrame, setTimeFrame] = useState({});
   const [budget, setBudget] = useState({});
+  const [placesLoaded, setPlacesLoaded] = useState(false);
+
+  const [budgetData, setBudgetData] = useState({});
   const [transportationData, setTransportationData] = useState({});
   const [housingData, setHousingData] = useState({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('planner');
-  console.log("HousingData: ", housingData);
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
+  console.log("Addresses", addresses)
+  console.log("userNotes in plancreator:", userNotes)
 
   const generateUniqueId = () => {
     return `id-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   };
   
-  useEffect(() => {
+  /* useEffect(() => {
     const initialBudget = JSON.parse(localStorage.getItem('budget')) || {};
     const initialUserNotes = JSON.parse(localStorage.getItem('userNotes')) || {};
     const initialTimeFrame = JSON.parse(localStorage.getItem('timeFrame')) || {};
@@ -42,11 +47,77 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
     setTimeFrame(initialTimeFrame);
     setTransportationData(savedTransportationData);
     setHousingData(savedHousingData);
-  }, []);
-  
+  }, []); */
+
   useEffect(() => {
+  if (placesForSelectedDate.length && session ) {
+
+    const newBudget = placesForSelectedDate.reduce((acc, place) => {
+      if (place.placesData && place.placesData.budget) {
+        acc[place.uniqueId] = place.placesData.budget[place.uniqueId];
+      }
+      return acc;
+    }, {});
+
+    const newUserNotes = placesForSelectedDate.reduce((acc, place) => {
+      if(place.placesData && place.placesData.userNotes) {
+        acc[place.uniqueId] = place.placesData.userNotes[place.uniqueId];
+      }
+      return acc;
+    }, {});
+
+    const newTimeFrame = placesForSelectedDate.reduce((acc, place) => {
+      if(place.placesData && place.placesData.timeFrame) {
+        acc[place.uniqueId] = place.placesData.timeFrame[place.uniqueId];
+      }
+      return acc;
+    }, {});
+
+    console.log("newBudget:::::::::::::: ", newBudget)
+    console.log("newUserNotes::::::::::", newUserNotes)
+    console.log("newTimeFrame::::::::::", newTimeFrame)
+    setBudget(newBudget);
+    setUserNotes(newUserNotes);
+    setTimeFrame(newTimeFrame)
+    
+    /* // Fetching transportation data
+    axios.get(`/api/transportation`).then(response => {
+      setTransportationData(response.data || {});
+    }).catch(console.error);
+
+    // Fetching housing data
+    axios.get(`/api/housing`).then(response => {
+      setHousingData(response.data || {});
+    }).catch(console.error);
+
+    // Fetching budget data
+    axios.get(`/api/budget`).then(response => {
+      setBudgetData(response.data || {});
+    }).catch(console.error); */
+
+  } else {
+    // Local storage keys should be predefined or dynamically set as needed
+    const localTransportationData = JSON.parse(localStorage.getItem('transportationData') || '{}');
+    const localHousingData = JSON.parse(localStorage.getItem('housingData') || '{}');
+    const localBudgetData = JSON.parse(localStorage.getItem('budgetData') || '{}');
+    const localBudget = JSON.parse(localStorage.getItem('budget')) || {};
+    const localUserNotes = JSON.parse(localStorage.getItem('userNotes')) || {};
+    const localTimeFrame = JSON.parse(localStorage.getItem('timeFrame')) || {};
+
+    setBudget(localBudget);
+    setTransportationData(localTransportationData);
+    setHousingData(localHousingData);
+    setBudgetData(localBudgetData);
+    setUserNotes(localUserNotes);
+    setTimeFrame(localTimeFrame);
+  }
+}, [selectedDate, session, placesForSelectedDate, placesLoaded]);
+
+  
+  /* useEffect(() => {
     const allPlacesByDate = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
     let updatedPlaces = allPlacesByDate[selectedDate] || [];
+    console.log(updatedPlaces);
     let isUpdated = false;
     updatedPlaces = updatedPlaces.map(place => {
       if (!place.uniqueId) {
@@ -54,6 +125,7 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
         const newUniqueId = generateUniqueId();
         place.uniqueId = newUniqueId;
       }
+      console.log("Place:", place);
       return place;
     });
   
@@ -64,22 +136,66 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
   
     setPlacesForSelectedDate(updatedPlaces);
 
-  }, [selectedDate, addedPlacesByDate]);
+  }, [selectedDate, addedPlacesByDate]); */
+
+  useEffect(() => {
+    let updatedPlaces = addedPlacesByDate[selectedDate] || [];
+    console.log("Initial Places:", updatedPlaces);
+
+    // Check if places are loaded from props or need to be fetched from localStorage
+    if (!updatedPlaces || updatedPlaces.length === 0) {
+        console.log("Loading places from localStorage");
+        const allPlacesByDate = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
+        updatedPlaces = allPlacesByDate[selectedDate] || [];
+    }
+
+    let isUpdated = false;
+    updatedPlaces = updatedPlaces.map(place => {
+        console.log("PlaceUniqueID:", place.uniqueId);
+        if (!place.uniqueId) {
+            isUpdated = true;
+            const newUniqueId = generateUniqueId();
+            console.log("Update Unique ID: ", newUniqueId)
+            place.uniqueId = newUniqueId;
+        }
+        return place;
+    });
+
+    if (isUpdated) {
+      setPlacesLoaded(prev => !prev);
+        if (session) {
+            console.log("Storing updated places for session user");
+            // You might want to sync these changes back to the server or handle them differently
+        } else {
+            console.log("Storing updated places in localStorage for offline user");
+            const allPlacesByDate = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
+            allPlacesByDate[selectedDate] = updatedPlaces;
+            localStorage.setItem('addedPlacesByDate', JSON.stringify(allPlacesByDate));
+        }
+    }
+
+    setPlacesForSelectedDate(updatedPlaces);
+    setPlacesLoaded(true);
+
+}, [selectedDate, addedPlacesByDate, session]);
+
   
   useEffect(() => {
     let newAddresses = placesForSelectedDate.map(place => {
-      if (place.address && !place.latlng) {
-        return Array.isArray(place.address) ? place.address.join(', ') : place.address;
+      console.log("newAddresses::::::", place.details, "::::", !place.details.address, "::::", !place.details.latlng )
+      if (place.details && place.details.address && !place.details.latlng) {
+        return Array.isArray(place.details.address) ? place.details.address.join(', ') : place.details.address;
       }
       return null;
     }).filter(address => address !== null);
-  
+    
+    console.log(newAddresses)
     setAddresses(newAddresses);
   
   }, [placesForSelectedDate]);
   
 
-  const removePlace = () => {
+  /* const removePlace = () => {
     if (indexToRemove === null) return;
 
     const placeToRemove = placesForSelectedDate[indexToRemove];
@@ -124,10 +240,69 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
     setPlacesForSelectedDate(updatedPlaces);
     setShowConfirmModal(false);
     setIndexToRemove(null);
+}; */
+
+const removePlace = async () => {
+  if (indexToRemove === null) return;
+
+  const placeToRemove = placesForSelectedDate[indexToRemove];
+  const uniqueIdToRemove = placeToRemove.uniqueId;
+  console.log("PlaceToRemove:", placeToRemove)
+  console.log("uniqueID:", uniqueIdToRemove)
+
+  // Filter out the removed place from placesForSelectedDate
+  const updatedPlaces = placesForSelectedDate.filter((_, idx) => idx !== indexToRemove);
+
+  if (session) {
+    // Send requests to the server to delete the place and related data from the database
+    try {
+      await Promise.all([
+        axios.delete(`/api/plans?uniqueIdDelete=${uniqueIdToRemove}`),
+        axios.delete(`/api/budget?uniqueIdDelete=${uniqueIdToRemove}`)
+      ]);
+      console.log('All related data removed successfully from the database');
+    } catch (error) {
+      console.error('Failed to remove data from the database', error);
+    }
+  } else {
+    // Update the localStorage for places
+    const allPlacesByDate = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
+    allPlacesByDate[selectedDate] = updatedPlaces;
+    localStorage.setItem('addedPlacesByDate', JSON.stringify(allPlacesByDate));
+
+    // Remove the corresponding budget entry from local storage
+    const storedBudgetData = JSON.parse(localStorage.getItem('budgetData')) || {};
+    if (storedBudgetData[selectedDate]) {
+      delete storedBudgetData[selectedDate][uniqueIdToRemove];
+      if (Object.keys(storedBudgetData[selectedDate]).length === 0) {
+        delete storedBudgetData[selectedDate];
+      }
+    }
+    localStorage.setItem('budgetData', JSON.stringify(storedBudgetData));
+
+    // Update remaining local storage items
+    const updatedBudget = { ...budget };
+    delete updatedBudget[uniqueIdToRemove];
+    localStorage.setItem('budget', JSON.stringify(updatedBudget));
+
+    const updatedUserNotes = { ...userNotes };
+    delete updatedUserNotes[uniqueIdToRemove];
+    localStorage.setItem('userNotes', JSON.stringify(updatedUserNotes));
+
+    const updatedTimeFrame = { ...timeFrame };
+    delete updatedTimeFrame[uniqueIdToRemove];
+    localStorage.setItem('timeFrame', JSON.stringify(updatedTimeFrame));
+  }
+
+  // Finally, update the state for places and close the modal
+  setPlacesForSelectedDate(updatedPlaces);
+  setShowConfirmModal(false);
+  setIndexToRemove(null);
 };
 
+
   
-  const handleBudgetChange = (uniqueId, amount) => {
+  /* const handleBudgetChange = (uniqueId, amount) => {
     // Update the budget state for this uniqueId
     const newBudget = { ...budget, [uniqueId]: amount };
     setBudget(newBudget);
@@ -142,32 +317,211 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
     // Save the updated budget data to local storage
     const newBudgetData = { ...storedBudgetData, [selectedDate]: updatedBudgetForSelectedDate };
     localStorage.setItem('budgetData', JSON.stringify(newBudgetData));
-  };
+  }; */
+
+  console.log("Updated Places:::::::::",placesForSelectedDate)
+  const handleBudgetChange = async (uniqueId, amount) => {
+    // Update local state for immediate UI response
+    const updatedPlaces = placesForSelectedDate.map(place => {
+        if (place.uniqueId === uniqueId) {
+            const updatedPlaceData = { ...place.placesData, budget: {[uniqueId]: amount} };
+            return { ...place, placesData: updatedPlaceData };
+        }
+        return place;
+    });
+
+    // Update the main state to re-render the component
+    console.log("updatedPlaces: in handle budget ", updatedPlaces);
+    setPlacesForSelectedDate(updatedPlaces);
+
+    // Update the local state for the budget to reflect UI changes immediately
+    const newBudget = { ...budget, [uniqueId]: amount };
+    console.log("budget:::: ",newBudget)
+    setBudget(newBudget);
+
+    // Update budgetData for local storage or session persistence
+    const storedBudgetData = JSON.parse(localStorage.getItem('budgetData') || '{}');
+    const budgetForSelectedDate = storedBudgetData[selectedDate] || {};
+    const updatedBudgetForSelectedDate = { ...budgetForSelectedDate, [uniqueId]: amount };
+    const newBudgetData = { ...storedBudgetData, [selectedDate]: updatedBudgetForSelectedDate };
+
+    if (!session) {
+        // Handle local storage updates for non-authenticated sessions
+        const allPlacesByDate = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
+        allPlacesByDate[selectedDate] = updatedPlaces;
+        localStorage.setItem('addedPlacesByDate', JSON.stringify(allPlacesByDate));
+        localStorage.setItem('budget', JSON.stringify(newBudget));
+        localStorage.setItem('budgetData', JSON.stringify(newBudgetData));
+    } else {
+        // Send update to the server for the placesData within the Plan
+        try {
+          const placesDataResponse = await axios.post('/api/plans/placesData', {
+            planId: uniqueId,  // This should be the plan's ID, ensure this is correctly referenced
+            updates: { budget: { [uniqueId]: amount } }
+          });
+          if(placesDataResponse.status == 200) {
+            console.log("Updated budget in placesData:", placesDataResponse.data);
+            fetchPlanData(uniqueId);
+          }
+          
+          
+          console.log(uniqueId);
+          // Optionally update budgetData on the server as well
+          const budgetDataResponse = await axios.post('/api/budget', {
+              date: selectedDate,
+              data: updatedBudgetForSelectedDate,
+              uniqueId: uniqueId
+          });
+          console.log("Updated overall budgetData on server:", budgetDataResponse.data);
+      } catch (error) {
+          console.error("Error updating budget in placesData:", error.response ? error.response.data : error);
+      }
+    }
+};
+
+const fetchPlanData = async (UniqueId) => {
+  try {
+      const response = await axios.get(`/api/plans?date=${selectedDate}&uniqueId=${UniqueId}`); // Ensure you use the correct ID to fetch
+      if (response.data) {
+         // Make sure this is what your component expects
+          console.log("placesforselectedDate in fetchPlanData: ",response.data);
+      }
+  } catch (error) {
+      console.error("Failed to fetch updated plan data:", error);
+  }
+};
+
   
-  const handleTransportationChange = (date, entries) => {
+  
+  
+  const handleTransportationChange = (entries) => {
+    setTransportationData(entries);
+    if (session) {
+      axios.post('/api/transportation', {
+        date: selectedDate,
+        data: entries
+      }).catch(console.error);
+    } else {
+      localStorage.setItem('transportationData', JSON.stringify(entries));
+    }
+  };
+
+  const handleHousingChange = (entries) => {
+    setHousingData(entries);
+    if (session) {
+      axios.post('/api/housing', {
+        date: selectedDate,
+        data: entries
+      }).catch(console.error);
+    } else {
+      localStorage.setItem('housingData', JSON.stringify(entries));
+    }
+  };
+
+  /* const handleTransportationChange = (date, entries) => {
     const newTransportationData = { ...transportationData, [date]: entries };
     setTransportationData(newTransportationData);
     localStorage.setItem('transportationData', JSON.stringify(newTransportationData));
-  };
+  }; */
 
-  const handleHousingChange = (date, entries) => {
-      const newHousingData = { ...housingData, [date]: entries };
-      setHousingData(newHousingData);
-      localStorage.setItem('housingData', JSON.stringify(newHousingData));
-  };
+  /* const handleHousingChange = (date, entries) => {
+        const newHousingData = { ...housingData, [date]: entries };
+        setHousingData(newHousingData);
+        localStorage.setItem('housingData', JSON.stringify(newHousingData));
+    }; */
 
-
-  const handleNoteChange = (id, note) => {
+  /* const handleNoteChange = (id, note) => {
     const newUserNotes = { ...userNotes, [id]: note };
     setUserNotes(newUserNotes);
     localStorage.setItem('userNotes', JSON.stringify(newUserNotes)); 
-  };
+  }; */
 
-  const handleTimeFrameChange = (uniqueId, frame) => {
+  const handleNoteChange = async (uniqueId, note) => {
+    // Update local state for immediate UI response
+    const updatedPlaces = placesForSelectedDate.map(place => {
+        if (place.uniqueId === uniqueId) {
+            const updatedPlaceData = { ...place.placesData, userNotes: {[uniqueId]: note} };
+            return { ...place, placesData: updatedPlaceData };
+        }
+        return place;
+    });
+
+    // Update the main state to re-render the component
+    setPlacesForSelectedDate(updatedPlaces);
+    
+    // Update the local state for user notes to reflect UI changes immediately
+    const newUserNotes = { ...userNotes, [uniqueId]: note };
+    console.log("NOTES:::::", newUserNotes)
+    setUserNotes(newUserNotes);
+
+    if (!session) {
+        // Handle local storage updates for non-authenticated sessions
+        const allPlacesByDate = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
+        allPlacesByDate[selectedDate] = updatedPlaces;
+        localStorage.setItem('addedPlacesByDate', JSON.stringify(allPlacesByDate));
+        localStorage.setItem('userNotes', JSON.stringify(newUserNotes));
+    } else {
+        // Send update to the server for the placesData within the Plan
+        try {
+          const placesDataResponse = await axios.post('/api/plans/placesData', {
+            planId: uniqueId,  // This should be the plan's ID, ensure this is correctly referenced
+            updates: { userNotes: { [uniqueId]: note } }
+          });
+          console.log("Updated userNotes in placesData:", placesDataResponse.data);
+      } catch (error) {
+          console.error("Error updating userNotes in placesData:", error.response ? error.response.data : error);
+      }
+    }
+};
+
+
+  
+
+  /* const handleTimeFrameChange = (uniqueId, frame) => {
     const newTimeFrame = { ...timeFrame, [uniqueId]: frame };
     setTimeFrame(newTimeFrame);
     localStorage.setItem('timeFrame', JSON.stringify(newTimeFrame));
-  };
+  }; */
+
+  
+
+  const handleTimeFrameChange = async (uniqueId, frame) => {
+    // Update local state for immediate UI response
+    const updatedPlaces = placesForSelectedDate.map(place => {
+        if (place.uniqueId === uniqueId) {
+            const updatedPlaceData = { ...place.placesData, timeFrame: {[uniqueId]: frame} };
+            return { ...place, placesData: updatedPlaceData };
+        }
+        return place;
+    });
+
+    // Update the main state to re-render the component
+    setPlacesForSelectedDate(updatedPlaces);
+
+    // Update the local state for user notes to reflect UI changes immediately
+    const newTimeFrame = { ...timeFrame, [uniqueId]: frame };
+    setTimeFrame(newTimeFrame);
+
+    if (!session) {
+        // Handle local storage updates for non-authenticated sessions
+        const allPlacesByDate = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
+        allPlacesByDate[selectedDate] = updatedPlaces;
+        localStorage.setItem('addedPlacesByDate', JSON.stringify(allPlacesByDate));
+        localStorage.setItem('timeFrame', JSON.stringify(newTimeFrame));
+    } else {
+        // Send update to the server for the placesData within the Plan
+        try {
+          const placesDataResponse = await axios.post('/api/plans/placesData', {
+            planId: uniqueId,  // This should be the plan's ID, ensure this is correctly referenced
+            updates: { timeFrame: { [uniqueId]: frame } }
+          });
+          console.log("Updated userNotes in placesData:", placesDataResponse.data);
+      } catch (error) {
+          console.error("Error updating userNotes in placesData:", error.response ? error.response.data : error);
+      }
+    }
+};
+  
   
 
   const onRemoveButtonClick = (index) => {
@@ -177,7 +531,7 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
   
   const totalPlaceholders = placesForSelectedDate.length < 5 ? 5 - placesForSelectedDate.length : 0;
 
-  const onDragEnd = (result) => {
+  /* const onDragEnd = (result) => {
     // Do nothing if dropped outside the list
     if (!result.destination) return;
   
@@ -193,7 +547,53 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
     const allPlacesByDate = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
     allPlacesByDate[selectedDate] = reorderedPlaces;
     localStorage.setItem('addedPlacesByDate', JSON.stringify(allPlacesByDate));
-  };
+  }; */
+
+  const onDragEnd = async (result) => {
+    // Do nothing if dropped outside the list
+    if (!result.destination) return;
+
+    // Reordering logic
+    const reorderedPlaces = Array.from(placesForSelectedDate);
+    const [reorderedItem] = reorderedPlaces.splice(result.source.index, 1);
+    reorderedPlaces.splice(result.destination.index, 0, reorderedItem);
+
+    // Update local state
+    setPlacesForSelectedDate(reorderedPlaces);
+
+    if (session) {
+        // Update on the server if session is present
+        try {
+            // Map reordered places to include new indexes
+            const updates = reorderedPlaces.map((place, index) => ({
+                ...place,
+                index
+            }));
+            const response = await axios.post('/api/plans/updateIndexes', {
+                userId: session.user.id,
+                date: selectedDate,
+                places: updates
+            });
+            if (response.status === 200) {
+                console.log('Indexes updated successfully on the server.');
+            } else {
+                console.error('Failed to update indexes on the server.');
+            }
+        } catch (error) {
+            console.error('Error updating indexes on the server:', error);
+        }
+    } else {
+        // Update localStorage if no session
+        
+        const allPlacesByDate = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
+        allPlacesByDate[selectedDate] = reorderedPlaces.map((place, index) => ({
+            ...place,
+            index  // Ensure each place has the updated index
+        }));
+        localStorage.setItem('addedPlacesByDate', JSON.stringify(allPlacesByDate));
+    }
+};
+
 
   const [updateTrigger, setUpdateTrigger] = useState(false);
 
@@ -201,6 +601,10 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
     setUpdateTrigger(prev => !prev);
   }
   
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   const renderContent = () => {
     return (
       <div>
@@ -231,7 +635,7 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
                               key={place.uniqueId}
                               uniqueKey={place.uniqueId}
                               index={index}
-                              place={place}
+                              place={place.details}
                               budget={budget}
                               handleBudgetChange={handleBudgetChange}
                               userNotes={userNotes}
@@ -239,6 +643,7 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
                               timeFrame={timeFrame[place.uniqueId] || "12:00 AM to 1:00 PM"}
                               handleTimeFrameChange={handleTimeFrameChange}
                               onRemoveButtonClick={onRemoveButtonClick}
+                              placesLoaded={placesLoaded}
                             />
                           </div>
                         )}

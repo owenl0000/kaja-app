@@ -37,6 +37,8 @@ export default function Map({ addresses, selectedDate, housingData, updateTrigge
     //console.log("Housing", housing)
     const onLoad = useCallback(map => (mapRef.current = map), []);
 
+    console.log("MARKERS::", markers)
+
     
     //Housing Pointer
     useEffect(() => {
@@ -162,19 +164,19 @@ export default function Map({ addresses, selectedDate, housingData, updateTrigge
         const geocodePlaces = async () => {
             const allPlacesByDate = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
             const newMarkers = [];
-
+            console.log("ALLPLACESBYDATE", allPlacesByDate[selectedDate])
             for (const place of allPlacesByDate[selectedDate] || []) {
                 // If coordinates are already available, use them
-                if (place.coordinates) {
-                    newMarkers.push(adaptCoordinates(place.coordinates));
+                if (place.details.coordinates) {
+                    newMarkers.push(adaptCoordinates(place.details.coordinates));
                 } else {
                     // Fetch new coordinates if they are not available
                     try {
-                        const results = await getGeocode({ address: place.address });
+                        const results = await getGeocode({ address: place.details.address });
                         const { lat, lng } = await getLatLng(results[0]);
                         if (!isCancelled) {
                             // Update place with new coordinates
-                            place.coordinates = { lat, lng };
+                            place.details.coordinates = { lat, lng };
                             newMarkers.push({ lat, lng });
                         }
                     } catch (error) {
@@ -236,6 +238,7 @@ export default function Map({ addresses, selectedDate, housingData, updateTrigge
                         setStarting={setStarting}
                         onAddressUpdate={handleAddressUpdate}
                         selectedDate={selectedDate}
+                        updateTrigger={updateTrigger}
                         className="bg-gray-100 rounded-md border border-gray-300"
                     /> 
                 </div>
@@ -243,6 +246,7 @@ export default function Map({ addresses, selectedDate, housingData, updateTrigge
                     <DestinationSelect 
                         setDestination={setDestination}
                         selectedDate={selectedDate}
+                        updateTrigger={updateTrigger}
                         className="bg-gray-100 rounded-md border border-gray-300"
                     /> 
                 </div>
@@ -276,18 +280,14 @@ export default function Map({ addresses, selectedDate, housingData, updateTrigge
             )}
 
             {markers.length > 0 && (
-                <MarkerClusterer >
-                    {(clusterer) =>
-                        markers.map((coord, index) => (
-                            <Marker 
-                                key={index} 
-                                position={coord} 
-                                clusterer={clusterer} 
-                                icon={createMarkerIcon(index + 1)}
-                            />
-                        ))
-                    }
-                </MarkerClusterer>
+                markers.map((coord, index) => (
+                    <Marker 
+                        key={index} 
+                        position={coord} 
+                        
+                        icon={createMarkerIcon(index + 1)}
+                    />
+                ))
             )}
             </GoogleMap>
         </div>

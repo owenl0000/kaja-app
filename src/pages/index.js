@@ -1,8 +1,5 @@
 import Header from '../components/Header.js';
 import Slideshow from '../components/Slideshow.js';
-import Footer from "../components/Footer";
-import Link from 'next/link';
-import {useEffect, useState} from "react";
 
 export default function Home() {
 

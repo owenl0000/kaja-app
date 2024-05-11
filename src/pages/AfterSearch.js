@@ -1,10 +1,12 @@
 import Image from 'next/image'
 import Header from '../components/Header.js';
-import Filters from "../components/Filters";
 import Sidebar from "@/components/Sidebar";
-import dynamic from 'next/dynamic';
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import Recommendations from '@/components/Recommendations.js';
+import { useSession } from 'next-auth/react';
+
+
 
 
 export default function AfterSearch() {
@@ -15,6 +17,10 @@ export default function AfterSearch() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   console.log(selectedDate);
   // Read places from localStorage on mount
+  const { data: session, status } = useSession();
+  console.log(session, status);
+
+
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -26,18 +32,6 @@ export default function AfterSearch() {
       setSelectedDate(savedDate);
     }
   }, []);
-  
-  useEffect(() => {
-    const savedPlaces = localStorage.getItem('addedPlacesByDate');
-    if (savedPlaces) {
-      setAddedPlacesByDate(JSON.parse(savedPlaces));
-    }
-  }, []);
-
-  // Write places to localStorage when they change
-  useEffect(() => {
-    localStorage.setItem('addedPlacesByDate', JSON.stringify(addedPlacesByDate));
-  }, [addedPlacesByDate]);
 
   const handleSortOrderChange = (newOrder) => {
     setSortOrder(newOrder);
@@ -47,16 +41,107 @@ export default function AfterSearch() {
     setPriceFilter(newPrice);
   };
 
-  const handleAddPlace = (place, selectedDate) => {
-    const newAddedPlaces = { ...addedPlacesByDate };
-    if (!newAddedPlaces[selectedDate]) {
-      newAddedPlaces[selectedDate] = [];
+
+
+  const handleAddPlace = async (newPlace, date) => {
+    const existingPlaces = addedPlacesByDate[date] || [];
+    const updatedPlaces = [
+        ...existingPlaces, 
+        { ...newPlace, index: existingPlaces.length }
+    ];
+    if (session) {
+        try {
+            // Since uniqueId will now be handled by the backend, you don't need to send it from the front-end
+            const response = await axios.post('/api/plans', {
+                userId: session.user.id,
+                details: newPlace,
+                date,
+                index: existingPlaces.length
+            });
+            // Assuming the response includes the newly created plan with the uniqueId
+            const updatedPlace = {
+                ...newPlace,
+                uniqueId: response.data.uniqueId,  // Use the uniqueId provided by the server
+                index: existingPlaces.length
+            };
+            // Replace the last element with updatedPlace containing uniqueId
+            updatedPlaces[updatedPlaces.length - 1] = updatedPlace;
+            
+            // Update state only after successful API call
+            setAddedPlacesByDate(prevState => ({
+                ...prevState,
+                [date]: updatedPlaces
+            }));
+        } catch (error) {
+            console.error('Failed to save plan:', error);
+        }
+    } else {
+        // Handle local storage for unauthenticated users (if you decide to store any temporary data)
+        const allPlacesByDate = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
+        const updatedPlaces = [...(allPlacesByDate[date] || []), {details: newPlace}]; // Append the new place to the existing array for the date
+        allPlacesByDate[date] = updatedPlaces; // Update local storage with the new array of places for the date
+        setAddedPlacesByDate(allPlacesByDate);
+        localStorage.setItem('addedPlacesByDate', JSON.stringify(allPlacesByDate));
     }
-    newAddedPlaces[selectedDate].push(place);
-  
-    setAddedPlacesByDate(newAddedPlaces);
-    localStorage.setItem('addedPlacesByDate', JSON.stringify(newAddedPlaces));
   };
+
+
+
+  /* const handleAddPlace = async (newPlace, date) => {
+    const updatedPlaces = [...(addedPlacesByDate[date] || []), newPlace];
+    if (session) {
+      try {
+        await axios.post('/api/plans', { userId: session.user.id, details: newPlace, date });
+        // Update state only after successful API call
+        setAddedPlacesByDate(prevState => ({
+          ...prevState,
+          [date]: updatedPlaces
+        }));
+      } catch (error) {
+        console.error('Failed to save plan:', error);
+      }
+    } else {
+    // localStorage.setItem('addedPlacesByDate', JSON.stringify(newAddedPlaces)); // Uncomment if you need to use localStorage
+    }
+  }; */
+
+
+
+  /* const handleAddPlace = async (newPlace, date) => {
+    const uniqueId = generateUniqueId();  // Generate unique ID for the new place
+
+    // Incorporate the uniqueId at the plan level
+    const updatedPlace = {
+        ...newPlace,
+        uniqueId: uniqueId  // Include uniqueId directly with place details
+    };
+
+    const updatedPlaces = [...(addedPlacesByDate[date] || []), updatedPlace];
+    
+    if (session) {
+        try {
+            await axios.post('/api/plans', {
+                userId: session.user.id,
+                details: updatedPlace, // send the updated place details including the uniqueId
+                date,
+                uniqueId  // this is assuming your backend can accept uniqueId at the top level for a plan
+            });
+            // Update state only after successful API call
+            setAddedPlacesByDate(prevState => ({
+                ...prevState,
+                [date]: updatedPlaces
+            }));
+        } catch (error) {
+            console.error('Failed to save plan:', error);
+        }
+    } else {
+        // Handle local storage for unauthenticated users
+        const allPlacesByDate = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
+        allPlacesByDate[date] = updatedPlaces;
+        localStorage.setItem('addedPlacesByDate', JSON.stringify(allPlacesByDate));
+    }
+}; */
+
   
   const formatDateToString = (dateObj) => {
     // Assuming dateObj is an object like {year: 2023, month: "January", day: 18}

@@ -8,7 +8,27 @@ import '../../styles/Header.css';
 import '../../styles/Planner.css';
 import Head from 'next/head'
 import { SessionProvider } from "next-auth/react";
+import React, { useEffect } from 'react';
+import axios from 'axios';
+
+
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
+  
+  useEffect(() => {
+    const initializeDb = async () => {
+        try {
+            const response = await axios.get('/api/initDb');
+            console.log('Database initialized:', response.data.message);
+        } catch (error) {
+            console.error('Error initializing database:', error);
+        }
+    };
+
+    initializeDb();
+  }, []);
+
+  
+
   return (
     <>
       <Head>

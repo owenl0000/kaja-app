@@ -1,35 +1,42 @@
 
 export const getPlaceData = (selectedDate) => {
-    const allPlacesByDate = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
-    const placeData = allPlacesByDate[selectedDate] || [];
-    
-    return placeData.map(place => {
-        // Replace latitude/longitude with lat/lng if necessary
-        const coordinates = place.coordinates 
-            ? {
-                lat: place.coordinates.latitude ?? place.coordinates.lat,
-                lng: place.coordinates.longitude ?? place.coordinates.lng
-            } 
-            : undefined;
+  const allPlacesByDate = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
+  const placeData = allPlacesByDate[selectedDate] || [];
+  
+  return placeData.map(place => {
+      // Access coordinates from place.details and replace latitude/longitude with lat/lng if necessary
+      const coordinates = place.details && place.details.coordinates
+          ? {
+              lat: place.details.coordinates.latitude ?? place.details.coordinates.lat,
+              lng: place.details.coordinates.longitude ?? place.details.coordinates.lng
+          } 
+          : undefined;
 
-        return {
-            ...place,
-            coordinates
-        };
-    });
+      return {
+          ...place,
+          coordinates
+      };
+  });
 };
 
 
+
 export function getPlacesOptions(selectedDate) {
-    const addedPlacesByDate = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
-    const places = addedPlacesByDate[selectedDate] || [];
-    return places.map((place, index) => ({
-        value: place.address,
-        label: `${place.address} (Place ${index + 1})`,
-        lat: place.coordinates.latitude ?? place.coordinates.lat,
-        lng: place.coordinates.longitude ?? place.coordinates.lng,
-        source: 'place'
-    }));
+  const addedPlacesByDate = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
+  const places = addedPlacesByDate[selectedDate] || [];
+
+  return places
+      .filter(place => 
+          place.details.coordinates && 
+          ((place.details.coordinates.latitude !== undefined && place.details.coordinates.longitude !== undefined) || 
+           (place.details.coordinates.lat !== undefined && place.details.coordinates.lng !== undefined)))
+      .map((place, index) => ({
+          value: place.details.address,
+          label: `${place.details.address} (Place ${index + 1})`,
+          lat: place.details.coordinates.latitude ?? place.details.coordinates.lat,
+          lng: place.details.coordinates.longitude ?? place.details.coordinates.lng,
+          source: 'place'
+      }));
 }
 
 import { getGeocode, getLatLng } from "use-places-autocomplete";

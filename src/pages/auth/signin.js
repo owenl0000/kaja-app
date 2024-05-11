@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 const SignInPage = () => {
   const { data: session } = useSession();
   const router = useRouter();
-
+  
   useEffect(() => {
     if (session) {
       router.replace('/');
@@ -17,6 +17,7 @@ const SignInPage = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
     signIn('credentials', { email, password, callbackUrl: '/' });
+    
   };
 
   return (

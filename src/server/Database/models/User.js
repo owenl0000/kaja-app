@@ -1,3 +1,4 @@
+//User.js under Model
 import mongoose, { Schema } from 'mongoose';
 
 const userSchema = new Schema({

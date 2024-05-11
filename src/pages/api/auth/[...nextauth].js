@@ -1,24 +1,12 @@
 // pages/api/auth/[...nextauth].js
 import User from "@/server/Database/models/User";
 import NextAuth from "next-auth";
-//import { MongoClient } from 'mongodb';
 import CredentialsProvider from "next-auth/providers/credentials";
-import GoogleProvider from "next-auth/providers/google"; // Import GoogleProvider
+import GoogleProvider from "next-auth/providers/google"; 
 import bcrypt from "bcrypt";
+import Plan from "@/server/Database/models/Plan";
 
-/* const MONGODB_URI = process.env.MONGODB_URI;
- */
-/* let mongoClient = null;
-
-async function getMongoClient() {
-  if (!mongoClient) {
-    mongoClient = new MongoClient(MONGODB_URI);
-    await mongoClient.connect();
-  }
-  return mongoClient;
-} */
-
-export default NextAuth({
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -26,24 +14,31 @@ export default NextAuth({
         email: { label: "email", type: "text", placeholder: "your-email" },
         password: { label: "Password", type: "password" }
       },
-      async authorize(credentials) {
-        try {
-          const foundUser = await User.findOne({email: credentials.email}).lean().exec();
-          if(foundUser) {
-            console.log("User Exists")
-            const match = await bcrypt.compare(credentials.password, foundUser.password);
-
-            if(match) {
-              console.log("Good Pass");
-              delete foundUser.password
-              return foundUser;
-            }
-          }
-        } catch(error) {
-          console.log(error);
+      authorize: async (credentials) => {
+        if (!credentials.email || !credentials.password) {
+          console.log("Authorize Error: Email or password not provided");
           return null;
         }
-      },
+      
+        try {
+          const foundUser = await User.findOne({ email: credentials.email });
+          if (!foundUser) {
+            console.log("Authorize Error: No user found with this email");
+            return null;
+          }
+          const match = await bcrypt.compare(credentials.password, foundUser.password);
+          if (!match) {
+            console.log("Authorize Error: Password does not match");
+            return null;
+          }
+          console.log("Password Match: Successful");
+          // Return user data with MongoDB _id
+          return { id: foundUser._id, name: foundUser.name, email: foundUser.email };
+        } catch (error) {
+          console.error("Authorize Error:", error);
+          return null;
+        }
+      }      
     }),
     // Add the Google provider
     GoogleProvider({
@@ -63,19 +58,48 @@ export default NextAuth({
   session: {
     strategy: "jwt"
   },
+  secret: process.env.NEXTAUTH_SECRET,
   database: process.env.MONGODB_URI,
   callbacks: {
     jwt: async ({ token, user }) => {
-      // Persist the OAuth access_token to the token right after signin
       if (user) {
-        token.accessToken = user.accessToken;
+        token.uid = user.id || user._id;
       }
+      const expiryTime = 24 * 60 * 60; // Set JWT expiry time (e.g., 24 hours in seconds)
+      token.exp = Math.floor(Date.now() / 1000) + expiryTime;
       return token;
     },
     session: async ({ session, token }) => {
-      // Send properties to the client, like an access_token from a provider.
-      session.accessToken = token.accessToken;
+      if (token.uid) {
+        session.user.id = token.uid;
+        const plans = await Plan.findAll({
+          where: { userId: token.uid.toString() }
+        });
+        session.user.plans = plans.map(plan => plan.toJSON());
+      }
+      
       return session;
+    },
+    async signIn({ user, account, profile }) {
+      if (account.provider === "google") {
+        // Check if the user exists in the database
+        const existingUser = await User.findOne({ email: user.email });
+
+        if (!existingUser) {
+          // Create a new user if it doesn't exist
+          const newUser = await User.create({
+            email: user.email,
+            name: user.name,
+            image: user.image
+          });
+          return newUser ? true : false;  // Return true to continue the sign-in process
+        } else {
+          // Optionally update user details if needed
+          existingUser.image = user.image || existingUser.image;
+          await existingUser.save();
+        }
+      }
+      return true;  // Return true to continue the sign-in process for other providers
     },
 
   },
@@ -83,5 +107,7 @@ export default NextAuth({
     signIn: '/auth/signin',
   },
   
-  // Additional NextAuth configuration...
-});
+};
+
+export default NextAuth(authOptions);
+

@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faMapMarkerAlt, faSearch} from '@fortawesome/free-solid-svg-icons';
 import { getPlacesOptions } from '@/utils/MapUtils';
 
-export default function Places({ setStarting, onAddressUpdate, selectedDate }) {
+export default function Places({ setStarting, onAddressUpdate, selectedDate, updateTrigger }) {
   const {
     ready,
     value,
@@ -17,6 +17,7 @@ export default function Places({ setStarting, onAddressUpdate, selectedDate }) {
   });
 
   const [existingAddresses, setExistingAddresses] = useState([]);
+  console.log("MAPPLACES:: ",existingAddresses)
   useEffect(() => {
     const storedHousingData = JSON.parse(localStorage.getItem('housingData')) || {};
     const housingOptions = storedHousingData[selectedDate]?.filter(entry => entry.address.trim() !== '').map(entry => ({
@@ -28,7 +29,7 @@ export default function Places({ setStarting, onAddressUpdate, selectedDate }) {
     })) || [];
     const placeOptions = getPlacesOptions(selectedDate);
     setExistingAddresses([...housingOptions, ...placeOptions]);
-  }, [selectedDate]);
+  }, [selectedDate, updateTrigger]);
 
 
   const handleInputChange = (inputValue) => {
@@ -56,7 +57,6 @@ export default function Places({ setStarting, onAddressUpdate, selectedDate }) {
         setValue(option.value);
         setStarting({ address: option.value, lat, lng });
 
-        onAddressUpdate && onAddressUpdate({ lat, lng });
       } else {
         
         setStarting({ address: option.value, lat: option.lat, lng: option.lng });

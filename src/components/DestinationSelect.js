@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome,faMapMarkerAlt, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { getPlacesOptions } from '@/utils/MapUtils';
 
-export default function DestinationSelect({ setDestination, selectedDate }) {
+export default function DestinationSelect({ setDestination, selectedDate, updateTrigger }) {
     const {
         ready,
         value,
