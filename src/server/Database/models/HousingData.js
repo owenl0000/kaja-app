@@ -11,10 +11,6 @@ const HousingData = sequelize.define('HousingData', {
       type: DataTypes.STRING,
       allowNull: false
     },
-    uniqueId: {
-      type: DataTypes.STRING,  // Add this field to store the frontend-generated unique ID
-      unique: true  // Ensure uniqueness across the table
-    },
     date: {
       type: DataTypes.STRING,
       allowNull: false

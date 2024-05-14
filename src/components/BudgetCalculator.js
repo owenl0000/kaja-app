@@ -7,6 +7,7 @@ function BudgetCalculator({ selectedDate, handleBudgetChange}) {
     const [currency, setCurrency] = useState('USD'); // State to hold the selected currency
     const [storedBudgetData, setStoredBudgetData] = useState({});
     // Function to calculate total budget
+    console.log("storedBudgetData", storedBudgetData) 
 
     useEffect(() => {
         // Retrieve budget data for the selected date from localStorage

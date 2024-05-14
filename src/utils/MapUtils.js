@@ -59,6 +59,7 @@ export const updateHousingCoordinates = async (address, selectedDate) => {
 
     housingData[selectedDate] = updatedHousing;
     localStorage.setItem('housingData', JSON.stringify(housingData));
+    return { lat, lng };
   } catch (error) {
     console.error('Error updating housing coordinates:', error);
     return { lat: null, lng: null };

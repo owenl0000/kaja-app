@@ -11,17 +11,12 @@ const TransportationData = sequelize.define('TransportationData', {
       type: DataTypes.STRING,
       allowNull: false
     },
-    uniqueId: {
-      type: DataTypes.STRING,  // Add this field to store the frontend-generated unique ID
-      unique: true  // Ensure uniqueness across the table
-    },
     date: {
       type: DataTypes.STRING,
       allowNull: false
     },
     data: {
       type: DataTypes.JSON,
-      
     }
   }, {
     tableName: 'TransportationData'

@@ -13,7 +13,7 @@ import DestinationSelect from "./DestinationSelect";
 import TravelModeSelector from "./TravelModeSelector";
 import { updateHousingCoordinates, getPlaceData } from '@/utils/MapUtils';
 
-export default function Map({ addresses, selectedDate, housingData, updateTrigger }) {
+export default function Map({ addresses, selectedDate, updateTrigger }) {
     const [markers, setMarkers] = useState([]);
     const [housing, setHousing] = useState();
     const [directions, setDirections] = useState({ routes: [] });
@@ -22,7 +22,6 @@ export default function Map({ addresses, selectedDate, housingData, updateTrigge
     const [starting, setStarting] = useState();
     const [travelMode, setTravelMode] = useState(google.maps.TravelMode.DRIVING);
     const mapRef = useRef();
-    const lastUpdatedAddressRef = useRef(null);
     const center = useMemo(() => ({ lat: 43, lng:-80 }), []);
     const [mapCenter, setMapCenter] = useState(center);
     const options = useMemo(() => ({
@@ -33,65 +32,67 @@ export default function Map({ addresses, selectedDate, housingData, updateTrigge
     //console.log(addresses)
     //console.log("Starting", starting);
     //console.log("Destination: ", destination);
-    //console.log("Markers ", markers);
+    console.log("Markers ", markers);
     //console.log("Housing", housing)
     const onLoad = useCallback(map => (mapRef.current = map), []);
 
-    console.log("MARKERS::", markers)
+    //console.log("MARKERS::", markers)
 
     
-    //Housing Pointer
+   
+    //housing pointers
     useEffect(() => {
         const initializeHousingData = async () => {
-            console.log("UpdateTrigger or selectedDate change detected");
             const housingData = JSON.parse(localStorage.getItem('housingData')) || {};
             const housingForDate = housingData[selectedDate] || [];
-            const hasValidAddress = housingForDate.some(h => h.address && h.address.trim() !== '');
-
-            if (hasValidAddress) {
-                const firstValidAddress = housingForDate.find(h => h.address && h.address.trim() !== '').address;
-
-                if (firstValidAddress && lastUpdatedAddressRef.current !== firstValidAddress) {
-                    console.log("Valid address detected, updating coordinates");
-                    await updateHousingCoordinates(firstValidAddress, selectedDate);
-                    lastUpdatedAddressRef.current = firstValidAddress;
-
-                    // Use the updated housingData
-                    const updatedHousingData = JSON.parse(localStorage.getItem('housingData'));
-                    const updatedHousing = updatedHousingData[selectedDate]?.find(h => h.address === firstValidAddress);
-
-                    if (updatedHousing) {
-                        setHousing({ lat: updatedHousing.lat, lng: updatedHousing.lng });
+            
+            // This will store the updated housing entries with their coordinates.
+            const updatedHousingEntries = [];
+    
+            for (const entry of housingForDate) {
+                console.log("entry: ",entry)
+                if (entry.address && entry.address.trim() !== '' && (!entry.lat || !entry.lng)) {
+                    // Update coordinates only if they are missing
+                    const coords = await updateHousingCoordinates(entry.address, selectedDate);
+                    if (coords.lat && coords.lng) {
+                        updatedHousingEntries.push({ ...entry, ...coords });
+                    } else {
+                        updatedHousingEntries.push({ ...entry, lat: null, lng: null }); // Explicitly set null if update fails
                     }
+                } else {
+                    // Push the entry as is if it already has valid coordinates or if the address is not valid
+                    updatedHousingEntries.push(entry);
                 }
-            } else {
-                console.log("No valid addresses for selected date, clearing coordinates in housingData");
-                // Clear out the coordinates for this date in housingData
-                const cleanedData = housingForDate.map(data => {
-                    if (data.lat != null || data.lng != null) {
-                        return { ...data, lat: null, lng: null };
-                    }
-                    return data;
-                });
-                housingData[selectedDate] = cleanedData;
-                localStorage.setItem('housingData', JSON.stringify(housingData));
-                setHousing(null);
-                lastUpdatedAddressRef.current = null;
             }
+            
+            if(updatedHousingEntries.length === 0) {
+                delete housingData[selectedDate];
+            }
+            else {
+                housingData[selectedDate] = updatedHousingEntries;
+            }
+            // Update the local storage with the new housing data for the selected date
+            console.log("housingEntre",updatedHousingEntries)
+            localStorage.setItem('housingData', JSON.stringify(housingData));
+    
+            // Update the state to trigger a re-render with the new housing data
+            setHousing(updatedHousingEntries);
         };
     
         initializeHousingData();
     }, [updateTrigger, selectedDate]);
+    
+    
 
     //Directions
     const fetchDirections = async () => {
         if (!starting || !destination || !travelMode) {
-            console.log("Required data not available for fetching directions");
+            //console.log("Required data not available for fetching directions");
             return; // Exit if data is not available
         }
 
         const directionsService = new google.maps.DirectionsService();
-        console.log("Fetching directions with travel mode:", travelMode);
+        //console.log("Fetching directions with travel mode:", travelMode);
 
         try {
             const response = await directionsService.route({
@@ -104,12 +105,12 @@ export default function Map({ addresses, selectedDate, housingData, updateTrigge
 
             if (response.status === 'OK') {
                 setDirections(response);
-                console.log("Directions fetched successfully", response);
+                //console.log("Directions fetched successfully", response);
             } else {
-                console.error("Directions API returned an error:", response.status);
+                //console.error("Directions API returned an error:", response.status);
             }
         } catch (error) {
-            console.error("Error during fetching directions:", error);
+            //console.error("Error during fetching directions:", error);
         }
     };
 
@@ -154,7 +155,7 @@ export default function Map({ addresses, selectedDate, housingData, updateTrigge
     useEffect(() => {
         let isCancelled = false;
         const placeData = getPlaceData(selectedDate);
-        console.log("PlaceData: ", placeData);
+        //console.log("PlaceData: ", placeData);
 
         const adaptCoordinates = (coordinates) => ({
             lat: coordinates.lat || coordinates.latitude,
@@ -164,7 +165,7 @@ export default function Map({ addresses, selectedDate, housingData, updateTrigge
         const geocodePlaces = async () => {
             const allPlacesByDate = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
             const newMarkers = [];
-            console.log("ALLPLACESBYDATE", allPlacesByDate[selectedDate])
+            //console.log("ALLPLACESBYDATE", allPlacesByDate[selectedDate])
             for (const place of allPlacesByDate[selectedDate] || []) {
                 // If coordinates are already available, use them
                 if (place.details.coordinates) {
@@ -180,7 +181,7 @@ export default function Map({ addresses, selectedDate, housingData, updateTrigge
                             newMarkers.push({ lat, lng });
                         }
                     } catch (error) {
-                        console.error('Error geocoding:', error);
+                        //console.error('Error geocoding:', error);
                     }
                 }
             }
@@ -218,7 +219,7 @@ export default function Map({ addresses, selectedDate, housingData, updateTrigge
     useEffect(() => {
         // If there's housing, center on it. Otherwise, center on the places.
         if (housing) {
-            setMapCenter({ lat: housing.lat, lng: housing.lng });
+            setMapCenter(calculateCenterFromMarkers(housing));
         } else if (markers.length > 0) {
             setMapCenter(calculateCenterFromMarkers(markers));
         } else {
@@ -273,11 +274,13 @@ export default function Map({ addresses, selectedDate, housingData, updateTrigge
                 onLoad={onLoad}
             >
             {renderSelectedRoute()}
-            {housing && (
-                <>
-                    <Marker position={housing} icon='images/home.png'/>
-                </>
-            )}
+            {housing && housing.length > 0 && housing.map((house, index) => (
+                <Marker 
+                    key={index} 
+                    position={{ lat: house.lat, lng: house.lng }}
+                    icon='images/home.png' // Ensure this path is correct
+                />
+            ))}
 
             {markers.length > 0 && (
                 markers.map((coord, index) => (

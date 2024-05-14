@@ -17,7 +17,7 @@ export default function Places({ setStarting, onAddressUpdate, selectedDate, upd
   });
 
   const [existingAddresses, setExistingAddresses] = useState([]);
-  console.log("MAPPLACES:: ",existingAddresses)
+  //console.log("MAPPLACES:: ",existingAddresses)
   useEffect(() => {
     const storedHousingData = JSON.parse(localStorage.getItem('housingData')) || {};
     const housingOptions = storedHousingData[selectedDate]?.filter(entry => entry.address.trim() !== '').map(entry => ({

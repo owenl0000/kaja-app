@@ -1,34 +1,50 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-function HousingSelector({ selectedDate, handleHousingChange }) {
-  const [housingEntries, setHousingEntries] = useState([{ type: '', price: '', notes: '', address: '' }]);
+
+function HousingSelector({ selectedDate, handleHousingChange, session }) {
+  const defaultEntry = [{ type: '', price: '', notes: '', address: '' }];
+  const [housingEntries, setHousingEntries] = useState(defaultEntry);
+  console.log("::::", housingEntries);
 
   useEffect(() => {
-    // Fetch the stored housing data for the selected date
-    const storedHousingData = JSON.parse(localStorage.getItem('housingData')) || {};
-    const housingForDate = storedHousingData[selectedDate] || [{ type: '', price: '', notes: '', address: '' }];
+    async function fetchHousingData() {
+      if(session) {
+        try {
+          const response = await axios.get(`/api/housing?date=${selectedDate}`);
+          //console.log("response", response)
+          setHousingEntries(response.data.length > 0 ? response.data : defaultEntry);
+          console.log("Try", housingEntries);
 
-    // Set the fetched data to the state
-    setHousingEntries(housingForDate);
-  }, [selectedDate]);
+        } catch(error) {
+          if(error.response && error.response.status === 404) {
+            setHousingEntries(defaultEntry);
+          } else {
+            console.error("Failed to fetch housing data:", error);
+          }
+        }
+      } else {
+        const storedHousingData = JSON.parse(localStorage.getItem('housingData')) || {};
+        const housingForDate = storedHousingData[selectedDate] || defaultEntry;
+        setHousingEntries(housingForDate.length > 0 ? housingForDate : defaultEntry);
+      }
+    }
+
+    fetchHousingData();
+  }, [selectedDate, session]);
 
   const handleEntryChange = (index, field, value) => {
+    let newEntries = [...housingEntries];
+    console.log("newEntries", newEntries)
+    
     if (value === "remove") {
-      // Remove the entry if "Remove" option is selected
-      const newEntries = housingEntries.filter((_, i) => i !== index);
-      setHousingEntries(newEntries);
-      handleHousingChange(selectedDate, newEntries);
+      newEntries.splice(index, 1);
     } else {
-      // Update the entry with new type or price
-      const newEntries = housingEntries.map((entry, i) => {
-        if (i === index) {
-          return { ...entry, [field]: value };
-        }
-        return entry;
-      });
-      setHousingEntries(newEntries);
-      handleHousingChange(selectedDate, newEntries);
+      newEntries[index] = { ...newEntries[index], [field]: value };
     }
+  
+    setHousingEntries(newEntries);
+    handleHousingChange(selectedDate, newEntries);
   };
 
   const addHousingEntry = () => {
@@ -43,7 +59,7 @@ function HousingSelector({ selectedDate, handleHousingChange }) {
           <div key={index} className="mb-2 small:mb-4">
             <select
               className="bg-gray-200 rounded small:p-2 p-1 mr-2 w-full"
-              value={entry.type}
+              value={entry.type || ''}
               onChange={(e) => handleEntryChange(index, 'type', e.target.value)}
             >
               <option value="">Select Housing</option>
@@ -59,7 +75,7 @@ function HousingSelector({ selectedDate, handleHousingChange }) {
                 className="bg-gray-200 rounded p-2 w-full mt-2"
                 type="text"
                 placeholder="Address"
-                value={entry.address}
+                value={entry.address || ''}
                 onChange={(e) => handleEntryChange(index, 'address', e.target.value)}
               />
             </div>
@@ -79,7 +95,7 @@ function HousingSelector({ selectedDate, handleHousingChange }) {
               className="bg-gray-200 rounded p-2 w-full mt-2 resize-none"
               type="text"
               placeholder="Notes (optional)"
-              value={entry.notes}
+              value={entry.notes || ''}
               onChange={(e) => handleEntryChange(index, 'notes', e.target.value)}
               />
             </div>

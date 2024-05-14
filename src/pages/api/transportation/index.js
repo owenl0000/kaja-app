@@ -8,54 +8,64 @@ export default async function handler(req, res) {
   }
 
   const { method } = req;
-  const userId = session.user.id; // Assuming you retrieve user ID from session
+  const userId = session.user.id; // Retrieving user ID from session
 
   try {
     switch (method) {
       case 'GET':
-        // Fetch by uniqueId
-        const { uniqueId } = req.query;
-        if (uniqueId) {
-          const data = await TransportationData.findOne({
-            where: { userId, uniqueId }
-          });
-          return data ? res.status(200).json(data) : res.status(404).json({ message: "Data not found" });
+        const { date } = req.query;
+        if (!date) {
+          return res.status(400).json({ message: "Date is required for fetching data" });
         }
-        return res.status(400).json({ message: "Unique ID is required for fetching data" });
+        const data = await TransportationData.findOne({
+          where: { userId, date }
+        });
+        
+        // Transform data here to match expected structure if needed
+        return res.status(200).json(data ? data.data : []); 
 
       case 'POST':
-        // Create or update data based on uniqueId presence
-        const { data, date: postData, uniqueId: postUniqueId } = req.body;
-        if (!postData) return res.status(400).json({ message: "Date is required" });
-
-        if (postUniqueId) {
-          // Update existing data
-          const existingData = await TransportationData.findOne({ where: { uniqueId: postUniqueId, userId } });
-          if (existingData) {
-            await existingData.update({ data });
-            return res.status(200).json({ message: 'Data updated successfully' });
-          }
-          // Fallback to creation if not found
-          const newData = await TransportationData.create({ userId, date: postData, data, uniqueId: postUniqueId });
-          return res.status(201).json(newData);
-        } else {
-          // Create new data entry with uniqueId
-          const newUniqueData = await TransportationData.create({
-            userId,
-            date: postData,
-            data,
-            uniqueId: postUniqueId  // Assume uniqueId is provided for creation
-          });
-          return res.status(201).json(newUniqueData);
+        const { data: postData, date: postDataDate } = req.body;
+        if (!postDataDate) {
+          return res.status(400).json({ message: "Date is required" });
         }
 
+        const existingData = await TransportationData.findOne({ where: { userId, date: postDataDate } });
+        if (existingData) {
+          
+          existingData.set('data', postData);
+          existingData.changed('data', true);
+          try {
+            const updatedData = await existingData.save();
+            //console.log("Updated data:", updatedData.data); // Log the result of the update
+            return res.status(200).json({ message: 'Data updated successfully', data: updatedData });
+          } catch (error) {
+            //console.error("Error updating data:", error); // Log any errors during update
+            return res.status(500).json({ message: "Error updating data" });
+          }
+        } else {
+          //console.log("No existing data found, creating new entry..."); // Log no existing data
+          try {
+            const newData = await TransportationData.create({
+              userId,
+              date: postDataDate,
+              data: postData
+            });
+            //console.log("New data created:", newData); // Log new data creation
+            return res.status(201).json(newData);
+          } catch (error) {
+            //console.error("Error creating new data:", error); // Log any errors during creation
+            return res.status(500).json({ message: "Error creating new data" });
+          }
+        }
+        
       case 'DELETE':
-        // Delete by uniqueId
-        const { uniqueIdDelete } = req.body;
-        if (!uniqueIdDelete) return res.status(400).json({ message: "Unique ID is required for deletion" });
+        // Delete transportation data by date
+        const { date: deleteDate } = req.query;
+        if (!deleteDate) return res.status(400).json({ message: "Date is required for deletion" });
 
         const deleted = await TransportationData.destroy({
-          where: { uniqueId: uniqueIdDelete, userId }
+          where: { userId, date: deleteDate }
         });
         if (deleted) {
           return res.status(200).json({ message: 'Data deleted successfully' });

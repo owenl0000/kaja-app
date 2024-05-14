@@ -1,35 +1,52 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-function TransportationSelector({ selectedDate, handleTransportationChange }) {
-  const [transportationEntries, setTransportationEntries] = useState([{ type: '', price: '', notes: '' }]);
+function TransportationSelector({ selectedDate, handleTransportationChange, session }) {
+  const defaultEntry = [{ type: '', price: '', notes: '' }];
+  const [transportationEntries, setTransportationEntries] = useState(defaultEntry);
+  //console.log("::::", transportationEntries);
 
   useEffect(() => {
-    // Fetch the stored transportation data for the selected date
-    const storedTransportationData = JSON.parse(localStorage.getItem('transportationData')) || {};
-    const transportationForDate = storedTransportationData[selectedDate] || [{ type: '', price: '', notes: '' }];
+    async function fetchTransportationData() {
+      if (session) {
+        try {
+          const response = await axios.get(`/api/transportation?date=${selectedDate}`);
+          //console.log("response", response)
+          setTransportationEntries(response.data.length > 0 ? response.data : defaultEntry);
+          
+          //console.log("TRY", transportationEntries);
+        } catch (error) {
+          if (error.response && error.response.status === 404) {
+            // No transportation data found for the date
+            setTransportationEntries(defaultEntry);
+          } else {
+            console.error("Failed to fetch transportation data:", error);
+          }
+        }
+      } else {
+        const storedTransportationData = JSON.parse(localStorage.getItem('transportationData')) || {};
+        const transportationForDate = storedTransportationData[selectedDate] || defaultEntry;
+        setTransportationEntries(transportationForDate.length > 0 ? transportationForDate : defaultEntry);
+      }
+    }
 
-    // Set the fetched data to the state
-    setTransportationEntries(transportationForDate);
-  }, [selectedDate]);
+    fetchTransportationData();
+  }, [selectedDate, session]);
 
   const handleEntryChange = (index, field, value) => {
+    let newEntries = [...transportationEntries];
+    //console.log("newEntries", newEntries)
+    
     if (value === "remove") {
-      // Remove the entry if "Remove" option is selected
-      const newEntries = transportationEntries.filter((_, i) => i !== index);
-      setTransportationEntries(newEntries);
-      handleTransportationChange(selectedDate, newEntries);
+      newEntries.splice(index, 1);
     } else {
-      // Update the entry with new type or price
-      const newEntries = transportationEntries.map((entry, i) => {
-        if (i === index) {
-          return { ...entry, [field]: value };
-        }
-        return entry;
-      });
-      setTransportationEntries(newEntries);
-      handleTransportationChange(selectedDate, newEntries);
+      newEntries[index] = { ...newEntries[index], [field]: value };
     }
+  
+    setTransportationEntries(newEntries);
+    handleTransportationChange(selectedDate, newEntries);
   };
+  
 
   const addTransportationEntry = () => {
     setTransportationEntries([...transportationEntries, { type: '', price: '', notes: '' }]);
@@ -43,7 +60,7 @@ function TransportationSelector({ selectedDate, handleTransportationChange }) {
           <div key={index} className="mb-2 small:mb-4">
             <select
               className="bg-gray-200 rounded small:p-2 p-1 mr-2 w-full"
-              value={entry.type}
+              value={entry.type || ''}
               onChange={(e) => handleEntryChange(index, 'type', e.target.value)}
             >
               <option value="">Select Transportation</option>
@@ -61,7 +78,7 @@ function TransportationSelector({ selectedDate, handleTransportationChange }) {
                 type="text"
                 pattern="\d*"
                 placeholder="Price"
-                value={entry.price}
+                value={entry.price || ''}
                 onChange={(e) => handleEntryChange(index, 'price', e.target.value)}
               />
             </div>
@@ -70,7 +87,7 @@ function TransportationSelector({ selectedDate, handleTransportationChange }) {
               className="bg-gray-200 rounded p-2 w-full mt-2 resize-none"
               type="text"
               placeholder="Notes (optional)"
-              value={entry.notes}
+              value={entry.notes || ''}
               onChange={(e) => handleEntryChange(index, 'notes', e.target.value)}
               />
             </div>

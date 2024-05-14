@@ -12,7 +12,7 @@ import { useSession } from 'next-auth/react';
 
 
 function PlanCreator({ selectedDate, addedPlacesByDate}) {
-  console.log("Places", addedPlacesByDate);
+  //console.log("Places", addedPlacesByDate);
   const { data: session } = useSession();
   const [addresses, setAddresses] = useState([]);
   const [placesForSelectedDate, setPlacesForSelectedDate] = useState([]);
@@ -21,6 +21,7 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
   const [userNotes, setUserNotes] = useState({});
   const [timeFrame, setTimeFrame] = useState({});
   const [budget, setBudget] = useState({});
+  console.log("budget",budget);
   const [placesLoaded, setPlacesLoaded] = useState(false);
 
   const [budgetData, setBudgetData] = useState({});
@@ -28,8 +29,10 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
   const [housingData, setHousingData] = useState({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('planner');
-  console.log("Addresses", addresses)
-  console.log("userNotes in plancreator:", userNotes)
+  //console.log("Addresses", addresses)
+  //console.log("userNotes in plancreator:", userNotes)
+  //console.log("housingData", housingData);
+  console.log("transportationData", transportationData);
 
   const generateUniqueId = () => {
     return `id-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -73,18 +76,18 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
       return acc;
     }, {});
 
-    console.log("newBudget:::::::::::::: ", newBudget)
-    console.log("newUserNotes::::::::::", newUserNotes)
-    console.log("newTimeFrame::::::::::", newTimeFrame)
+    //console.log("newBudget:::::::::::::: ", newBudget)
+    //console.log("newUserNotes::::::::::", newUserNotes)
+    //console.log("newTimeFrame::::::::::", newTimeFrame)
     setBudget(newBudget);
     setUserNotes(newUserNotes);
     setTimeFrame(newTimeFrame)
     
-    /* // Fetching transportation data
-    axios.get(`/api/transportation`).then(response => {
+     // Fetching transportation data
+    axios.get(`/api/transportation?date=${selectedDate}`).then(response => {
       setTransportationData(response.data || {});
     }).catch(console.error);
-
+    /*
     // Fetching housing data
     axios.get(`/api/housing`).then(response => {
       setHousingData(response.data || {});
@@ -144,14 +147,14 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
 
     // Check if places are loaded from props or need to be fetched from localStorage
     if (!updatedPlaces || updatedPlaces.length === 0) {
-        console.log("Loading places from localStorage");
+        //console.log("Loading places from localStorage");
         const allPlacesByDate = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
         updatedPlaces = allPlacesByDate[selectedDate] || [];
     }
 
     let isUpdated = false;
     updatedPlaces = updatedPlaces.map(place => {
-        console.log("PlaceUniqueID:", place.uniqueId);
+        //console.log("PlaceUniqueID:", place.uniqueId);
         if (!place.uniqueId) {
             isUpdated = true;
             const newUniqueId = generateUniqueId();
@@ -164,10 +167,10 @@ function PlanCreator({ selectedDate, addedPlacesByDate}) {
     if (isUpdated) {
       setPlacesLoaded(prev => !prev);
         if (session) {
-            console.log("Storing updated places for session user");
+            //console.log("Storing updated places for session user");
             // You might want to sync these changes back to the server or handle them differently
         } else {
-            console.log("Storing updated places in localStorage for offline user");
+            //console.log("Storing updated places in localStorage for offline user");
             const allPlacesByDate = JSON.parse(localStorage.getItem('addedPlacesByDate')) || {};
             allPlacesByDate[selectedDate] = updatedPlaces;
             localStorage.setItem('addedPlacesByDate', JSON.stringify(allPlacesByDate));
@@ -319,7 +322,7 @@ const removePlace = async () => {
     localStorage.setItem('budgetData', JSON.stringify(newBudgetData));
   }; */
 
-  console.log("Updated Places:::::::::",placesForSelectedDate)
+  //console.log("Updated Places:::::::::",placesForSelectedDate)
   const handleBudgetChange = async (uniqueId, amount) => {
     // Update local state for immediate UI response
     const updatedPlaces = placesForSelectedDate.map(place => {
@@ -393,30 +396,46 @@ const fetchPlanData = async (UniqueId) => {
 
   
   
-  
-  const handleTransportationChange = (entries) => {
-    setTransportationData(entries);
+    
+  const handleTransportationChange = (selectedDate, entries) => {
+    console.log("ENTRIES:", entries);
     if (session) {
       axios.post('/api/transportation', {
         date: selectedDate,
         data: entries
-      }).catch(console.error);
+      }).then(response => {
+        console.log("Server update successful:", response.data);
+      }).catch(error => {
+        console.error("Failed to update server:", error);
+      });
     } else {
-      localStorage.setItem('transportationData', JSON.stringify(entries));
+      localStorage.setItem('transportationData', JSON.stringify({
+        ...JSON.parse(localStorage.getItem('transportationData') || '{}'),
+        [selectedDate]: entries
+      }));
     }
   };
 
-  const handleHousingChange = (entries) => {
-    setHousingData(entries);
+  const handleHousingChange = (selectedDate, entries) => {
+    console.log("ENTRIES:", entries);
     if (session) {
       axios.post('/api/housing', {
         date: selectedDate,
         data: entries
-      }).catch(console.error);
+      }).then(response => {
+        console.log("Server update successful:", response.data);
+      }).catch(error => {
+        console.error("Failed to update server:", error);
+      });
     } else {
-      localStorage.setItem('housingData', JSON.stringify(entries));
+      localStorage.setItem('housingData', JSON.stringify({
+        ...JSON.parse(localStorage.getItem('housingData') || '{}'),
+        [selectedDate]: entries
+      }));
     }
   };
+
+  
 
   /* const handleTransportationChange = (date, entries) => {
     const newTransportationData = { ...transportationData, [date]: entries };
@@ -690,11 +709,13 @@ const fetchPlanData = async (UniqueId) => {
                       selectedDate={selectedDate} 
                       transportationData={transportationData[selectedDate] || []}
                       handleTransportationChange={handleTransportationChange }
+                      session={session}
                     />
                     <HousingSelector
                       selectedDate={selectedDate}
                       housingData={housingData[selectedDate] || []} 
                       handleHousingChange={handleHousingChange}
+                      session={session}
                     />
                   </div>
                   
