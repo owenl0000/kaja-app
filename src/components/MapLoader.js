@@ -15,7 +15,7 @@ export default function MapLoader({ addresses, selectedDate, housingData, update
     return (
         <>
             <div className="hidden md:block">
-                <Map addresses={addresses} selectedDate={selectedDate} updateTrigger={updateTrigger}/>
+                <Map addresses={addresses} selectedDate={selectedDate} updateTrigger={updateTrigger} />
             </div>
             <div className="md:hidden text-center p-4">
                 Sorry, the map feature isn&apos;t available for mobile devices yet.

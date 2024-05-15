@@ -725,7 +725,7 @@ const fetchPlanData = async (UniqueId) => {
           </DragDropContext>
         </div>
         <div className={`bg-gray-200 w-full rounded-md ${activeTab === 'map' ? 'block' : 'hidden'}`}>
-            <MapLoader addresses={addresses} selectedDate={selectedDate} housingData={housingData} updateTrigger={updateTrigger} />
+            <MapLoader addresses={addresses} selectedDate={selectedDate} housingData={housingData} updateTrigger={updateTrigger} addedPlacesByDate={addedPlacesByDate}/>
         </div>
       </div>
     );

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Select, { components } from 'react-select';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faMapMarkerAlt, faSearch} from '@fortawesome/free-solid-svg-icons';
 import { getPlacesOptions } from '@/utils/MapUtils';
 
-export default function Places({ setStarting, onAddressUpdate, selectedDate, updateTrigger }) {
+export default function Places({ setStarting, housing, selectedDate, updateTrigger }) {
   const {
     ready,
     value,
@@ -17,19 +17,30 @@ export default function Places({ setStarting, onAddressUpdate, selectedDate, upd
   });
 
   const [existingAddresses, setExistingAddresses] = useState([]);
-  //console.log("MAPPLACES:: ",existingAddresses)
+  const selectRef = useRef();
+  console.log("MAPPLACES:: ",existingAddresses)
   useEffect(() => {
-    const storedHousingData = JSON.parse(localStorage.getItem('housingData')) || {};
-    const housingOptions = storedHousingData[selectedDate]?.filter(entry => entry.address.trim() !== '').map(entry => ({
+    const housingOptions = housing?.filter(entry => {
+      console.log("Entry being processed:", entry);
+      return entry.address.trim() !== '' && entry.lat !== null && entry.lng !== null;
+    }).map(entry => ({
       value: entry.address,
       label: entry.address,
       lat: entry.lat,
       lng: entry.lng,
       source: 'housing'
     })) || [];
+    console.log("Housing Options after processing:", housingOptions);
     const placeOptions = getPlacesOptions(selectedDate);
+    console.log("PLACE OPTIONS:", placeOptions);
     setExistingAddresses([...housingOptions, ...placeOptions]);
-  }, [selectedDate, updateTrigger]);
+
+    if (selectRef.current) {
+      selectRef.current.clearValue();
+    }
+  }, [selectedDate, updateTrigger, housing]);
+  
+  
 
 
   const handleInputChange = (inputValue) => {
@@ -126,6 +137,7 @@ export default function Places({ setStarting, onAddressUpdate, selectedDate, upd
 
   return (
     <Select
+      ref={selectRef}
       isClearable
       onChange={handleSelect}
       onInputChange={handleInputChange}

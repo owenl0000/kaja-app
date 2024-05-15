@@ -37,6 +37,7 @@ export default function Map({ addresses, selectedDate, updateTrigger }) {
     const onLoad = useCallback(map => (mapRef.current = map), []);
 
     //console.log("MARKERS::", markers)
+    console.log("housing", housing)
 
     
    
@@ -59,8 +60,7 @@ export default function Map({ addresses, selectedDate, updateTrigger }) {
                     } else {
                         updatedHousingEntries.push({ ...entry, lat: null, lng: null }); // Explicitly set null if update fails
                     }
-                } else {
-                    // Push the entry as is if it already has valid coordinates or if the address is not valid
+                } else if (entry.lat && entry.lng && typeof entry.lat === 'number' && typeof entry.lng === 'number') {
                     updatedHousingEntries.push(entry);
                 }
             }
@@ -76,7 +76,12 @@ export default function Map({ addresses, selectedDate, updateTrigger }) {
             localStorage.setItem('housingData', JSON.stringify(housingData));
     
             // Update the state to trigger a re-render with the new housing data
+            console.log("initializeHousingData ", updatedHousingEntries)
             setHousing(updatedHousingEntries);
+
+            setDirections({ routes: [] });
+            setStarting(null);
+            setDestination(null);
         };
     
         initializeHousingData();
@@ -87,12 +92,13 @@ export default function Map({ addresses, selectedDate, updateTrigger }) {
     //Directions
     const fetchDirections = async () => {
         if (!starting || !destination || !travelMode) {
-            //console.log("Required data not available for fetching directions");
+            console.log("Required data not available for fetching directions");
+            
             return; // Exit if data is not available
         }
-
+        console.log("Starting", starting)
         const directionsService = new google.maps.DirectionsService();
-        //console.log("Fetching directions with travel mode:", travelMode);
+        console.log("Fetching directions with travel mode:", travelMode);
 
         try {
             const response = await directionsService.route({
@@ -105,17 +111,19 @@ export default function Map({ addresses, selectedDate, updateTrigger }) {
 
             if (response.status === 'OK') {
                 setDirections(response);
-                //console.log("Directions fetched successfully", response);
+                console.log("Directions fetched successfully", response);
             } else {
-                //console.error("Directions API returned an error:", response.status);
+                console.error("Directions API returned an error:", response.status);
             }
         } catch (error) {
-            //console.error("Error during fetching directions:", error);
+            console.error("Error during fetching directions:", error);
         }
     };
 
     useEffect(() => {
+        if(starting && destination) {
         fetchDirections();
+        }
     }, [starting, destination, travelMode]);
 
     const renderSelectedRoute = () => {
@@ -149,6 +157,7 @@ export default function Map({ addresses, selectedDate, updateTrigger }) {
     
     //Places Pointer
     const handleAddressUpdate = (newCoordinates) => {
+        console.log("NEW COORDS::::::::::::::::::::::::::::::::", newCoordinates)
         setStarting(newCoordinates);
     };
     
@@ -190,6 +199,16 @@ export default function Map({ addresses, selectedDate, updateTrigger }) {
                 setMarkers(newMarkers);
                 // Save updated places back to localStorage
                 localStorage.setItem('addedPlacesByDate', JSON.stringify(allPlacesByDate));
+                if (newMarkers.length > 0) {
+                    const center = calculateCenterFromMarkers(newMarkers);
+                    setMapCenter(center);
+                    if (mapRef.current) {
+                        mapRef.current.panTo(center);
+                    }
+                }
+                setDirections({ routes: [] });
+                setStarting(null);
+                setDestination(null);
             }
         };
     
@@ -202,30 +221,51 @@ export default function Map({ addresses, selectedDate, updateTrigger }) {
 
     //Centering
     const calculateCenterFromMarkers = (markers) => {
-        if (markers.length === 0) return { lat: 43, lng: -80 }; // Default center if no markers
+        const validMarkers = markers.filter(marker => {
+            return marker.lat !== null && marker.lng !== null && typeof marker.lat === 'number' && typeof marker.lng === 'number';
+        });
     
-        const sum = markers.reduce((acc, marker) => {
+        if (validMarkers.length === 0) return { lat: 43, lng: -80 }; // Default center if no valid markers
+    
+        const sum = validMarkers.reduce((acc, marker) => {
             acc.lat += marker.lat;
             acc.lng += marker.lng;
             return acc;
         }, { lat: 0, lng: 0 });
     
         return {
-            lat: sum.lat / markers.length,
-            lng: sum.lng / markers.length,
+            lat: sum.lat / validMarkers.length,
+            lng: sum.lng / validMarkers.length,
         };
     };
+    
+    
+    
 
     useEffect(() => {
-        // If there's housing, center on it. Otherwise, center on the places.
-        if (housing) {
-            setMapCenter(calculateCenterFromMarkers(housing));
-        } else if (markers.length > 0) {
-            setMapCenter(calculateCenterFromMarkers(markers));
+        const housingWithAddress = housing?.filter(house => house.address && typeof house.lat === 'number' && typeof house.lng === 'number') || [];
+        const centerHousing = housingWithAddress.length > 0 ? calculateCenterFromMarkers(housingWithAddress) : null;
+        const centerMarkers = markers.length > 0 ? calculateCenterFromMarkers(markers) : null;
+    
+        if (centerHousing) {
+            setMapCenter(centerHousing);
+            if (mapRef.current) {
+                mapRef.current.panTo(centerHousing);
+            }
+        } else if (centerMarkers) {
+            setMapCenter(centerMarkers);
+            if (mapRef.current) {
+                mapRef.current.panTo(centerMarkers);
+            }
         } else {
-            setMapCenter(center); // Fallback to default center
+            setMapCenter(center);
+            if (mapRef.current) {
+                mapRef.current.panTo(center);
+            }
         }
     }, [housing, markers]);
+    
+    
     
     
     return <div className="relative xl:flex xl:flex-row xl:h-[70vh] h-[90vh] rounded">
@@ -237,7 +277,7 @@ export default function Map({ addresses, selectedDate, updateTrigger }) {
                 <div className="mx-3 my-2 w-[250px] xl:w-auto">
                     <Places 
                         setStarting={setStarting}
-                        onAddressUpdate={handleAddressUpdate}
+                        housing={housing}
                         selectedDate={selectedDate}
                         updateTrigger={updateTrigger}
                         className="bg-gray-100 rounded-md border border-gray-300"
@@ -246,6 +286,7 @@ export default function Map({ addresses, selectedDate, updateTrigger }) {
                 <div className="mx-3 my-2 w-[250px] xl:w-auto">
                     <DestinationSelect 
                         setDestination={setDestination}
+                        housing={housing}
                         selectedDate={selectedDate}
                         updateTrigger={updateTrigger}
                         className="bg-gray-100 rounded-md border border-gray-300"
