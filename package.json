@@ -18,7 +18,7 @@
     "font-awesome": "^4.7.0",
     "next": "14.2.25",
     "next-images": "^1.8.5",
-    "postcss": "8.4.29",
+    "postcss": "8.5.3",
     "rc-progress": "^3.5.1",
     "react": "18.2.0",
     "react-beautiful-dnd": "^13.1.1",
