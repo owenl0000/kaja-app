@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import arrow from "public/arrow.svg"
+import arrow from "../../public/arrow.svg"
 
 export default function Filters(props){
 
